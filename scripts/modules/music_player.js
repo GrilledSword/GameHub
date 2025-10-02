@@ -3,8 +3,8 @@ export function onYouTubeIframeAPIReady() {
 }
 
 function initYouTubeMusicPlayer() {
-    const API_KEY = 'AIzaSyBlT9YiS55OWLZRqOthROVVNGPnahGpe0U';
-    const PLAYLIST_URL = 'https://www.youtube.com/watch?v=fSrwcaXLS5M&list=PLU3cs__9MK8Y4PHoHRH2eEdSKqSIpMsBn';
+    // API Key and dynamic playlist loading removed for security and functionality on GitHub Pages.
+    // The playlist is now hardcoded below.
 
     const playerContainer = document.getElementById('music-player-container');
     const playerElement = document.getElementById('music-player');
@@ -45,12 +45,7 @@ function initYouTubeMusicPlayer() {
 
     function onPlayerReady(event) {
         isReady = true;
-        if (API_KEY && API_KEY !== 'IDE_ILLESZD_BE_A_YOUTUBE_API_KULCSODAT') {
-            loadYouTubePlaylist();
-        } else {
-            title.textContent = "API kulcs hiányzik!";
-            console.error("Kérlek, add meg a YouTube Data API v3 kulcsodat a script.js fájlban!");
-        }
+        loadHardcodedPlaylist();
     }
 
     function onPlayerStateChange(event) {
@@ -63,37 +58,18 @@ function initYouTubeMusicPlayer() {
         }
     }
 
-    async function loadYouTubePlaylist() {
-        const playlistId = extractPlaylistId(PLAYLIST_URL);
-        if (!playlistId) {
-            title.textContent = "Érvénytelen lista URL";
-            return;
-        }
+    function loadHardcodedPlaylist() {
+        // Playlist is hardcoded here to avoid using an API key on the client-side.
+        // To add more songs, add new objects to this array with a videoId, title, and thumbnail URL.
+        playlist = [
+            { videoId: 'fSrwcaXLS5M', title: 'Lofi Girl - beats to relax/study to', thumbnail: 'https://i.ytimg.com/vi/fSrwcaXLS5M/default.jpg' },
+            { videoId: 'jfKfPfyJRdk', title: 'lofi hip hop radio 📚 - beats to relax/study to', thumbnail: 'https://i.ytimg.com/vi/jfKfPfyJRdk/default.jpg' }
+        ];
 
-        const apiUrl = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${API_KEY}`;
-
-        try {
-            const response = await fetch(apiUrl);
-            const data = await response.json();
-
-            if (data.error) {
-                throw new Error(data.error.message);
-            }
-            
-            playlist = data.items.map(item => ({
-                videoId: item.snippet.resourceId.videoId,
-                title: item.snippet.title,
-                thumbnail: item.snippet.thumbnails.default.url
-            }));
-
-            const videoIds = playlist.map(track => track.videoId);
-            ytPlayer.cuePlaylist(videoIds);
-            
-            updatePlayerUI(0);
-        } catch (error) {
-            title.textContent = "Hiba a lista betöltésekor";
-            console.error("YouTube API hiba:", error);
-        }
+        const videoIds = playlist.map(track => track.videoId);
+        ytPlayer.cuePlaylist(videoIds);
+        
+        updatePlayerUI(0);
     }
     
     function playTrack() {
@@ -179,12 +155,6 @@ function initYouTubeMusicPlayer() {
 
     function stopProgressUpdater() {
         clearInterval(progressInterval);
-    }
-
-    function extractPlaylistId(url) {
-        const regExp = /^.*(youtu.be\/|list=)([^#\&\?]*).*/;
-        const match = url.match(regExp);
-        return (match && match[2]) ? match[2] : null;
     }
 
     playBtn.addEventListener('click', (e) => {
