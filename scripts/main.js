@@ -26,7 +26,10 @@ window.addEventListener('pageshow', (event) => {
 });
 
 function initializeApp() {
-    lucide.createIcons();
+    // A lucide.createIcons() hívást helyezzük át ide
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
     
     initThemeSwitcher();
     initLanguageSwitcher();
