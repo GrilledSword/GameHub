@@ -649,11 +649,19 @@
     <script type="module" src="scripts/main.js"></script>
     <script>
         // Parallax SVG betöltése
-        fetch('parallax-svg.html')
-            .then(response => response.text())
+        fetch('./parallax-svg.html')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok: ' + response.statusText);
+                }
+                return response.text();
+            })
             .then(data => {
                 document.getElementById('parallax-placeholder').innerHTML = data;
-            });
+            })
+            .catch(error => {
+                console.error('Failed to fetch parallax SVG:', error);
+             });
     </script>
 </body>
 </html>
