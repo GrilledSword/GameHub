@@ -1,0 +1,52 @@
+/* === ALAP STÍLUSOK === */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8fafc;
+    color: #475569;
+    transition: background-color 0.5s ease, color 0.5s ease;
+    --accent-color: #0ea5e9; 
+    --player-bg: linear-gradient(135deg, #f1f5f9, #e2e8f0); 
+}
+.dark body {
+    background-color: #020617;
+    color: #94a3b8;
+    --accent-color: #38bdf8; 
+    --player-bg: linear-gradient(135deg, #1e293b, #0f172a);
+}
+
+/* === EGYEDI KURZOR === */
+html, body {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="rgba(56, 189, 248, 0.7)" stroke-width="2"/></svg>') 12 12, auto !important;
+}
+a, button, .toggle-switch, .timeline-card, .project-overlay a, input, textarea, label[for], .cursor-pointer {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="rgba(56, 189, 248, 0.9)" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2" fill="rgba(56, 189, 248, 0.9)"/></g></svg>') 12 12, pointer !important;
+}
+
+/* === GÖRGETŐSÁV === */
+#progress-bar { 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    height: 4px; 
+    background: linear-gradient(to right, #38bdf8, #0ea5e9); 
+    width: 0%; 
+    z-index: 100; 
+    transition: width 0.1s ease-out; 
+}
+
+/* === VISSZA A TETEJÉRE GOMB === */
+#back-to-top {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: opacity 0.4s ease, visibility 0.4s ease, transform 0.4s ease;
+    z-index: 40;
+}
+#back-to-top.visible { 
+    opacity: 1; 
+    visibility: visible; 
+    transform: translateY(0); 
+}

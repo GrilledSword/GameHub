@@ -1,0 +1,50 @@
+/* === BETÖLTŐ KÉPERNYŐ === */
+#loader-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #020617; 
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.75s ease, visibility 0.75s ease;
+    opacity: 1;
+    visibility: visible;
+}
+body.loaded #loader-wrapper {
+    opacity: 0;
+    visibility: hidden;
+}
+.loader-content { text-align: center; }
+.loader-svg { width: 150px; height: auto; }
+.loader-mountain {
+    fill: none;
+    stroke: #38bdf8;
+    stroke-width: 2;
+    stroke-dasharray: 500;
+    stroke-dashoffset: 500;
+    animation: draw-mountain 2s ease-in-out forwards;
+}
+.loader-sun {
+    fill: #FFD700;
+    transform-origin: center;
+    opacity: 0;
+    animation: rise-sun 1.5s ease-out 1s forwards;
+}
+.loader-text {
+    color: #f8fafc;
+    margin-top: 20px;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    opacity: 0;
+    animation: fade-in-text 1s ease 2s forwards;
+}
+@keyframes draw-mountain { to { stroke-dashoffset: 0; } }
+@keyframes rise-sun {
+    0% { transform: translateY(50px) scale(0.5); opacity: 0; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+@keyframes fade-in-text { to { opacity: 1; } }

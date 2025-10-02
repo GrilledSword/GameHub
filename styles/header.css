@@ -1,0 +1,198 @@
+/* === FEJLÉC ALAPBEÁLLÍTÁSOK === */
+#main-header {
+    background-color: transparent !important;
+}
+#main-header .container {
+    padding-right: 0.5rem;
+    transition: background-color 0.4s ease, border-radius 0.4s ease, padding-right 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+#main-header .container:has(#music-player:hover),
+#main-header .container:has(#music-player.expanded) {
+    padding-right: -1.5rem;
+}
+#main-header .container > .flex-1 {
+    transition: flex-basis 0.4s ease-in-out;
+}
+
+/* === NAVIGÁCIÓ === */
+#main-nav {
+    opacity: 0;
+    transform: scaleY(0.9) translateY(-10px);
+    pointer-events: none;
+    transform-origin: top;
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s, opacity 0.2s ease-out 0.1s;
+}
+#main-nav.is-open {
+    opacity: 1;
+    transform: scaleY(1) translateY(0);
+    pointer-events: auto;
+    background-color: rgba(248, 250, 252, 0.75); 
+    -webkit-backdrop-filter: blur(8px) url(#liquid-distortion);
+    backdrop-filter: blur(8px) url(#liquid-distortion);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+}
+.dark #main-nav.is-open {
+    background-color: rgba(2, 6, 23, 0.75); 
+}
+
+/* === HAMBURGER MENÜ === */
+#menu-toggle {
+    transition: transform .5s ease-in-out;
+    transform: translateX(0);
+}
+.hamburger-line {
+    display: block;
+    position: absolute;
+    height: 2px;
+    width: 24px;
+    background: currentColor;
+    border-radius: 9px;
+    opacity: 1;
+    left: 50%;
+    transform: translateX(-50%) rotate(0deg);
+    transition: .25s ease-in-out;
+}
+.hamburger-line.top { top: 10px; }
+.hamburger-line.middle { top: 19px; }
+.hamburger-line.bottom { top: 28px; }
+#menu-toggle.is-active {
+    transform: translateX(-3rem);
+}
+#menu-toggle.is-active .hamburger-line.top {
+    top: 19px;
+    transform: translateX(-50%) rotate(135deg);
+}
+#menu-toggle.is-active .hamburger-line.middle {
+    opacity: 0;
+    transform: translateX(-150%);
+}
+#menu-toggle.is-active .hamburger-line.bottom {
+    top: 19px;
+    transform: translateX(-50%) rotate(-135deg);
+}
+
+/* === MOBIL MENÜ NYITOTT ÁLLAPOTA === */
+header.menu-open .container {
+    background-color: #f8fafc !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.dark header.menu-open .container {
+    background-color: #020617 !important;
+}
+.header-logo, .header-logo a {
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.header-controls {
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+/* === RESZPONZÍV BEÁLLÍTÁSOK === */
+@media (min-width: 1700px) {
+    #main-nav, .dark #main-nav {
+        background-color: transparent;
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+        display: flex; 
+    }
+    #menu-toggle {
+        display: none !important;
+    }
+}
+@media (max-width: 1699px) {
+    .header-controls {
+        display: none !important;
+    }
+    .lang-toggle-container {
+        border-width: 0px;
+    }
+    header.menu-open .header-controls {
+        opacity: 0;
+        visibility: hidden;
+    }
+    header.menu-open .header-logo {
+        position: absolute;
+        transform: translate(center, 0);
+        flex: none; 
+        width: auto;
+    }
+    header.menu-open .header-logo a {
+        transform: translateX(3rem);
+    }
+}
+@media (min-width: 768px) and (max-width: 1699px) {
+    #main-nav {
+        display: block !important;
+        position: absolute !important;
+    }
+    #menu-toggle {
+        display: block !important;
+    }
+    #main-nav .md\:hidden {
+        display: flex !important;
+    }
+}
+
+/* === MOBIL MENÜ ELRENDEZÉSE === */
+#main-nav.is-open {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+}
+#main-nav.is-open #music-player-container {
+    order: 3;
+    border-top: 1px solid rgba(128, 128, 128, 0.2);
+    padding-top: 1.5rem;
+    margin: 0;
+}
+#main-nav.is-open ul {
+    order: 1;
+    width: 100%;
+    gap: auto;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: -0.5rem;
+    justify-content: center;
+    align-items: center;
+}
+#main-nav.is-open ul li a {
+    padding: 0.75rem 1rem;
+    display: block;
+    font-size: 1.125rem;
+    font-weight: 500;
+}
+#main-nav.is-open .md\:hidden {
+    order: 2;
+    display: flex;
+    border-top: 1px solid rgba(128, 128, 128, 0.2);
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: auto;
+    width: auto;
+    margin-bottom: 1.5rem;
+}
+#main-nav.is-open .md\:hidden > .flex > span {
+    text-align: left;
+    width: auto;
+    font-weight: 500;
+}
+
+@media (max-width: 767px) {
+    #main-nav.is-open ul {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    #main-nav.is-open .md\:hidden {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+}

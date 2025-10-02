@@ -1,0 +1,322 @@
+/* === PARALLAX HÁTTÉR === */
+#parallax-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: -2;
+    overflow: hidden;
+    transition: background 0.8s ease;
+    
+    /* Világos mód színei */
+    --sky-top: #BDEBFF;
+    --sky-bottom: #F0F9FF;
+    --mountain-most-far: #DDE8ED;
+    --mountain-far: #B1D4E0;
+    --mountain-mid: #75AABF;
+    --mountain-near: #4E8098;
+    --trees-far: #5E947A;
+    --trees-near: #2F6B52;
+    --ground: #739589;
+    --grass-light: #82a98c;
+    --grass-dark: #61896b;
+    --water: #a0d2eb;
+    --waterfall-foam: rgba(255, 255, 255, 0.8);
+    --rock: #6B7280;
+    --bush: #5a8a6f;
+    --shadow-color: rgba(40, 60, 50, 0.25);
+    --mountain-most-far-top: #EBF2F5;
+    --mountain-far-top: #C9DCE3;
+    --mountain-mid-top: #90B9CB;
+    --mountain-near-top: #6E97AB;
+    --ground-top: #8EAC9F;
+    --trees-far-top: #7BB09A;
+    --trees-near-top: #4F8B72;
+    --rock-top: #8A919C;
+    --bush-top: #7db093;
+}
+@media (max-width: 767px) {
+    #parallax-container { height: 100dvh; }
+}
+html:not(.dark) { --snow: #f0f8ff; --snow-top: #ffffff; }
+
+/* Sötét mód színei */
+.dark #parallax-container {
+    --sky-top: #011627;
+    --sky-bottom: #093A5B;
+    --mountain-most-far: #0D324D;
+    --mountain-far: #13425E;
+    --mountain-mid: #1A5B7D;
+    --mountain-near: #2776A1;
+    --trees-far: #133A2A;
+    --trees-near: #0B2118;
+    --ground: #214238;
+    --grass-light: #3a6b53;
+    --grass-dark: #2c513f;
+    --water: #4f8a9d;
+    --waterfall-foam: rgba(173, 216, 230, 0.6);
+    --rock: #4A5568;
+    --bush: #2a5a44;
+    --shadow-color: rgba(0,0,0,0.3);
+    --mountain-most-far-top: #1E4966;
+    --mountain-far-top: #2A5F7E;
+    --mountain-mid-top: #3A7B9D;
+    --mountain-near-top: #4796C1;
+    --ground-top: #3C6255;
+    --trees-far-top: #235A3A;
+    --trees-near-top: #1B3128;
+    --rock-top: #6A7588;
+    --bush-top: #4a8a6f;
+}
+.dark { --snow: #b0c4de; --snow-top: #d4e6f1; }
+
+.parallax-layer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.2s ease-out;
+}
+.parallax-svg {
+    position: absolute;
+    bottom: 0;
+    width: 100vw;
+    height: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+#p-sky { z-index: 1; }
+#p-stars { z-index: 2; }
+#p-shooting-stars { z-index: 3; }
+#p-clouds { z-index: 3; }
+#p-birds { z-index: 4; }
+#p-plane { z-index: 5; }
+#p-layer-0 { z-index: 6; }
+#p-layer-1 { z-index: 7; }
+#p-layer-3 { z-index: 8; }
+#p-layer-4 { z-index: 9; }
+#p-layer-5 { z-index: 10; }
+
+/* === ÉGI JELENSÉGEK === */
+html:not(.dark) #parallax-container {
+    background: linear-gradient(to bottom, var(--sky-top), var(--sky-bottom));
+    background-color: var(--sky-bottom);
+}
+.dark #parallax-container { 
+    background: linear-gradient(to bottom, var(--sky-top), var(--sky-bottom));
+    background-color: var(--sky-bottom);
+}
+
+#celestial-container {
+    position: absolute;
+    top: 120%;
+    left: 50%; 
+    width: 220vh;
+    height: 220vh; 
+    transform: translate(-50%, -50%) rotate(-25deg); 
+    transition: transform 1.5s cubic-bezier(0.4, 0, 0.6, 1);
+    will-change: transform;
+}
+#celestial-container.is-transitioning {
+    transition: none;
+}
+#celestial-container.is-night {
+    transform: translate(-50%, -50%) rotate(155deg); 
+}
+#p-sun {
+    position: absolute;
+    top: 0; left: 50%;
+    width: 80px; height: 80px;
+    background: #FFD700; border-radius: 50%; box-shadow: 0 0 50px #FFD700, inset 0 0 10px #fff;
+    transform: translate(-50%, -50%);
+    transition: transform 1.5s linear, opacity 0.75s ease;
+    opacity: 1;
+}
+#moon-wrapper {
+    position: absolute;
+    bottom: 0; left: 50%;
+    width: 70px; height: 70px;
+    transform: translate(-50%, 50%);
+    transition: transform 1.5s linear, opacity 0.75s ease;
+    opacity: 0;
+}
+#p-moon {
+    width: 100%; height: 100%;
+    background: transparent; border-radius: 50%;
+    box-shadow: -12px 8px 0 0 #f5f5f5; 
+    transition: transform 1.5s linear;
+    transform: rotate(0deg); 
+}
+#celestial-container.is-night #p-sun { opacity: 0; }
+#celestial-container.is-night #moon-wrapper { opacity: 1; }
+
+/* === CSILLAGOK === */
+#p-stars {
+    background-image: 
+        radial-gradient(1.5px 1.5px at 10% 30%, white, transparent), radial-gradient(2.5px 2.5px at 20% 80%, white, transparent),
+        radial-gradient(1.5px 1.5px at 35% 40%, white, transparent), radial-gradient(2.5px 2.5px at 50% 60%, white, transparent),
+        radial-gradient(1.5px 1.5px at 66% 25%, white, transparent), radial-gradient(1.5px 1.5px at 80% 75%, white, transparent),
+        radial-gradient(2.5px 2.5px at 90% 50%, white, transparent),
+        radial-gradient(1.5px 1.5px at 5% 5%, white, transparent), radial-gradient(1.5px 1.5px at 15% 60%, white, transparent),
+        radial-gradient(1.5px 1.5px at 25% 10%, white, transparent), radial-gradient(2.5px 2.5px at 45% 85%, white, transparent),
+        radial-gradient(1.5px 1.5px at 55% 15%, white, transparent), radial-gradient(1.5px 1.5px at 75% 90%, white, transparent),
+        radial-gradient(1.5px 1.5px at 85% 5%, white, transparent), radial-gradient(2.5px 2.5px at 95% 95%, white, transparent),
+        radial-gradient(1.5px 1.5px at 30% 95%, white, transparent), radial-gradient(1.5px 1.5px at 70% 5%, white, transparent),
+        radial-gradient(1.5px 1.5px at 40% 20%, white, transparent), radial-gradient(1.5px 1.5px at 85% 45%, white, transparent),
+        radial-gradient(1.5px 1.5px at 2% 35%, white, transparent), radial-gradient(1.5px 1.5px at 98% 65%, white, transparent),
+        radial-gradient(1.5px 1.5px at 58% 88%, white, transparent), radial-gradient(1.5px 1.5px at 28% 55%, white, transparent),
+        radial-gradient(1.5px 1.5px at 18% 22%, white, transparent), radial-gradient(1.5px 1.5px at 78% 32%, white, transparent),
+        radial-gradient(1.5px 1.5px at 3% 80%, white, transparent), radial-gradient(1.5px 1.5px at 12% 45%, white, transparent),
+        radial-gradient(2.5px 2.5px at 22% 65%, white, transparent), radial-gradient(1.5px 1.5px at 33% 88%, white, transparent),
+        radial-gradient(1.5px 1.5px at 42% 5%, white, transparent), radial-gradient(1.5px 1.5px at 53% 33%, white, transparent),
+        radial-gradient(2.5px 2.5px at 62% 95%, white, transparent), radial-gradient(1.5px 1.5px at 73% 68%, white, transparent),
+        radial-gradient(1.5px 1.5px at 82% 18%, white, transparent), radial-gradient(1.5px 1.5px at 93% 38%, white, transparent),
+        radial-gradient(1.5px 1.5px at 8% 92%, white, transparent), radial-gradient(1.5px 1.5px at 17% 8%, white, transparent),
+        radial-gradient(1.5px 1.5px at 27% 48%, white, transparent), radial-gradient(1.5px 1.5px at 37% 72%, white, transparent),
+        radial-gradient(2.5px 2.5px at 47% 28%, white, transparent), radial-gradient(1.5px 1.5px at 57% 52%, white, transparent),
+        radial-gradient(1.5px 1.5px at 67% 82%, white, transparent), radial-gradient(1.5px 1.5px at 77% 12%, white, transparent),
+        radial-gradient(1.5px 1.5px at 87% 62%, white, transparent), radial-gradient(2.5px 2.5px at 97% 22%, white, transparent),
+        radial-gradient(1.5px 1.5px at 4% 20%, white, transparent), radial-gradient(1.5px 1.5px at 9% 70%, white, transparent),
+        radial-gradient(1.5px 1.5px at 14% 35%, white, transparent), radial-gradient(2.5px 2.5px at 19% 90%, white, transparent),
+        radial-gradient(1.5px 1.5px at 24% 50%, white, transparent), radial-gradient(1.5px 1.5px at 29% 15%, white, transparent),
+        radial-gradient(1.5px 1.5px at 34% 60%, white, transparent), radial-gradient(1.5px 1.5px at 39% 25%, white, transparent),
+        radial-gradient(2.5px 2.5px at 44% 75%, white, transparent), radial-gradient(1.5px 1.5px at 49% 40%, white, transparent),
+        radial-gradient(1.5px 1.5px at 54% 90%, white, transparent), radial-gradient(1.5px 1.5px at 59% 10%, white, transparent),
+        radial-gradient(1.5px 1.5px at 64% 55%, white, transparent), radial-gradient(2.5px 2.5px at 69% 30%, white, transparent),
+        radial-gradient(1.5px 1.5px at 74% 85%, white, transparent), radial-gradient(1.5px 1.5px at 79% 50%, white, transparent),
+        radial-gradient(1.5px 1.5px at 84% 15%, white, transparent), radial-gradient(1.5px 1.5px at 89% 80%, white, transparent),
+        radial-gradient(2.5px 2.5px at 94% 45%, white, transparent), radial-gradient(1.5px 1.5px at 99% 10%, white, transparent),
+        radial-gradient(1.5px 1.5px at 6% 50%, white, transparent), radial-gradient(1.5px 1.5px at 96% 80%, white, transparent);
+    background-repeat: repeat;
+    background-size: 100vw 100vh;
+    opacity: 0;
+    transition: opacity 0.8s ease 0.4s;
+}
+.dark #p-stars { opacity: 1; }
+
+#p-shooting-stars {
+    opacity: 0;
+    transition: opacity 0.8s ease 1s;
+}
+.dark #p-shooting-stars { opacity: 1; }
+.shooting-star {
+    position: absolute;
+    width: 120px;
+    height: 2px;
+    background: linear-gradient(to left, rgba(255,255,255,0.6), transparent);
+    border-radius: 50%;
+    animation: shoot 5s linear infinite;
+    transform: rotate(-35deg);
+    top: var(--top); left: -150px;
+    animation-duration: var(--duration); animation-delay: var(--delay);
+    transform: rotate(-35deg) scaleX(var(--scale));
+    position: relative; 
+}
+.shooting-star::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    width: 0;
+    height: 100%;
+    background: linear-gradient(to left, rgba(255,255,255,0), rgba(255,255,255,0.4));
+    animation: tail-fade calc(var(--duration) * 0.4) linear forwards;
+    animation-delay: calc(var(--delay) + var(--duration) * 0.6);
+}
+@keyframes shoot {
+    from { transform: rotate(-35deg) translateX(0); opacity: 1; }
+    to { transform: rotate(-35deg) translateX(150vw); opacity: 0; }
+}
+@keyframes tail-fade { from { width: 100%; } to { width: 0; } }
+
+/* === FELHŐK === */
+.p-cloud { position: absolute; background: white; border-radius: 50%; opacity: 0.6; filter: blur(5px); }
+.p-cloud::before, .p-cloud::after { content: ''; position: absolute; background: white; border-radius: 50%; }
+.p-cloud.c1 { width: 150px; height: 40px; top: 15%; left: -20%; animation: drift 120s linear infinite alternate; }
+.p-cloud.c1::before { width: 70px; height: 70px; top: -35px; left: 20px; }
+.p-cloud.c1::after { width: 80px; height: 50px; top: -20px; right: 15px; }
+.p-cloud.c2 { width: 200px; height: 60px; top: 25%; left: 70%; animation: drift 180s linear infinite; animation-delay: -30s; }
+.p-cloud.c2::before { width: 100px; height: 100px; top: -50px; left: 30px; }
+.p-cloud.c3 { width: 120px; height: 30px; top: 35%; left: 0%; animation: drift 220s linear infinite alternate; animation-delay: -10s; }
+.p-cloud.c3::before { width: 50px; height: 50px; top: -25px; left: 30px; }
+.p-cloud.c4 { width: 250px; height: 50px; top: 5%; left: 20%; animation: drift 250s linear infinite; animation-delay: -50s; }
+.p-cloud.c5 { width: 220px; height: 55px; top: 20%; left: 40%; animation: drift 160s linear infinite alternate; animation-delay: -80s; }
+.p-cloud.c5::before { width: 110px; height: 80px; top: -40px; left: 40px; }
+.p-cloud.c6 { width: 180px; height: 45px; top: 40%; left: 80%; animation: drift 200s linear infinite; animation-delay: -120s; }
+.p-cloud.c6::before { width: 90px; height: 90px; top: -45px; left: 25px; }
+.p-cloud.c7 { width: 100px; height: 25px; top: 45%; left: 25%; animation: drift 190s linear infinite alternate; animation-delay: -95s; }
+.p-cloud.c7::before { width: 50px; height: 50px; top: -25px; left: 20px; }
+.p-cloud.c8 { width: 130px; height: 35px; top: 10%; left: 55%; animation: drift 230s linear infinite; animation-delay: -150s; }
+.p-cloud.c8::before { width: 60px; height: 60px; top: -30px; left: 30px; }
+.dark .p-cloud { opacity: 0.1; filter: brightness(0.2) blur(10px); }
+@keyframes drift { from { transform: translateX(-25vw); } to { transform: translateX(125vw); } }
+
+/* === MADARAK ÉS REPÜLŐ === */
+#p-birds { top: 0; left: 0; width: 100%; height: 100%; }
+.dark #p-birds { opacity: 0; }
+.bird {
+    position: absolute; width: 30px; height: 20px; fill: #333;
+    animation: fly-by 35s linear infinite;
+    top: var(--top); left: var(--left);
+    animation-duration: var(--duration);
+    animation-delay: var(--delay);
+    transform: scale(var(--scale));
+}
+.bird path { animation: flap 0.5s ease-in-out infinite alternate; transform-origin: center; }
+@keyframes flap { from { transform: scaleY(0.8) translateY(1px); } to { transform: scaleY(1.2) translateY(-1px); } }
+@keyframes fly-by { from { transform: translate(-10vw, 0); } 50% { transform: translate(60vw, -5vh); } to { transform: translate(120vw, 10vh); } }
+.bird.fly-reverse { animation-name: fly-by-reverse; }
+@keyframes fly-by-reverse { from { transform: translate(110vw, 5vh) scaleX(-1); } 50% { transform: translate(50vw, 0vh) scaleX(-1); } to { transform: translate(-20vw, -10vh) scaleX(-1); } }
+
+#p-plane { top: 15%; left: -20%; animation: fly-by-plane 25s linear infinite; animation-delay: 15s; }
+.dark #p-plane { opacity: 0; }
+.plane { color: #e5e7eb; transform: rotate(90deg); }
+.plane::after { content: ''; position: absolute; top: 50%; left: -200px; width: 200px; height: 2px; background: linear-gradient(to left, white, transparent); }
+@keyframes fly-by-plane { from { transform: translate(-10vw, 10vh); } to { transform: translate(120vw, -20vh); } }
+
+/* === NÖVÉNYZET ÉS VÍZ === */
+.tree-sway { 
+    transform-origin: bottom center; 
+    animation: sway 8s ease-in-out infinite alternate;
+}
+.tree-sway:nth-of-type(2n) { animation-duration: 6.5s; animation-delay: -2s; }
+.tree-sway:nth-of-type(3n) { animation-duration: 7.2s; animation-delay: -0.5s; }
+@keyframes sway { from { transform: skewX(-1.5deg); } to { transform: skewX(1.5deg); } }
+.flower-sway { transform-origin: bottom center; animation: flower-anim 7s ease-in-out infinite alternate; }
+@keyframes flower-anim { from { transform: skewX(-2.5deg); } to { transform: skewX(2.5deg); } }
+.grass-blade { transform-origin: bottom center; animation: wind-blow 4s ease-in-out infinite alternate; }
+@keyframes wind-blow { from { transform: skewX(-2deg); } to { transform: skewX(4deg); } }
+
+.waterfall-foam-animated { animation: waterfall-splash 2s ease-in-out infinite; transform-origin: center; }
+@keyframes waterfall-splash { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.08); opacity: 1; } }
+.water-flow-line { fill: none; stroke: var(--waterfall-foam); stroke-width: 1.5; opacity: 0; animation: flow-down 1.5s linear infinite; }
+.water-flow-line:nth-of-type(2) { animation-delay: -0.5s; }
+.water-flow-line:nth-of-type(3) { animation-delay: -1s; }
+@keyframes flow-down { 
+    0% { transform: translateY(-10px); opacity: 0; } 
+    50% { opacity: 0.7; }
+    100% { transform: translateY(70px); opacity: 0; }
+}
+
+/* === SZENTJÁNOSBOGARAK === */
+#p-fireflies { z-index: 11; opacity: 0; transition: opacity 0.8s ease; }
+.dark #p-fireflies { opacity: 1; }
+.firefly {
+    position: absolute;
+    width: 4px; height: 4px;
+    background-color: #ccff00;
+    border-radius: 50%;
+    box-shadow: 0 0 8px 3px #ccff00;
+    animation: firefly-blink 4s infinite, firefly-wander 10s linear infinite;
+}
+@keyframes firefly-blink {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+@keyframes firefly-wander {
+    0% { transform: translate(0, 0); } 25% { transform: translate(20px, -15px); }
+    50% { transform: translate(-10px, 10px); } 75% { transform: translate(15px, 20px); } 100% { transform: translate(0, 0); }
+}
