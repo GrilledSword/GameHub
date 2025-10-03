@@ -53,3 +53,4 @@ function initializeApp() {
 
     // Fetch and set up the background, which will then initialize its own components.
     setupBackground();
+}
