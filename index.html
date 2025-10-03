@@ -12,7 +12,6 @@
     <meta content="#" property="og:url"/> 
     <meta content="website" property="og:type"/>
     
-    <!-- Külső szkriptek és betűtípusok -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -20,7 +19,6 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://placehold.co/32x32/0ea5e9/ffffff?text=KN" rel="icon"/>
 
-    <!-- Saját stíluslapok -->
     <link rel="stylesheet" href="styles/base.css">
     <link rel="stylesheet" href="styles/animations.css">
     <link rel="stylesheet" href="styles/components.css">
@@ -32,7 +30,6 @@
 </head>
 <body class="antialiased">
 
-    <!-- Betöltő képernyő -->
     <div id="loader-wrapper">
         <div class="loader-content">
             <svg class="loader-svg" viewbox="0 0 100 100">
@@ -43,13 +40,127 @@
         </div>
     </div>
 
-    <!-- Parallax háttér helye (JS tölti be) -->
-    <div id="parallax-placeholder"></div>
-
-    <!-- Görgetési folyamatjelző -->
+    <div id="parallax-placeholder">
+      <svg style="display: none">
+        <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%" filterUnits="objectBoundingBox">
+          <feTurbulence type="fractalNoise" baseFrequency="0" numOctaves="0" seed="0" result="turbulence" />
+      
+          <feColorMatrix in="turbulence" type="matrix" result="colorMask"
+            values="1 0 0 0 0
+                    0 1 0 0 0
+                    0 0 1 0 0
+                    0 0 0 1 0" />
+      
+          <feFlood flood-color="black" result="base" />
+          <feFlood flood-color="white" result="highlight" />
+          <feComposite in="highlight" in2="base" operator="xor" result="maskShape" />
+          <feMerge result="maskedTurbulence">
+            <feMergeNode in="colorMask" />
+            <feMergeNode in="maskShape" />
+          </feMerge>
+      
+          <feGaussianBlur in="maskedTurbulence" stdDeviation="30" result="softMap" />
+      
+          <feSpecularLighting in="softMap" surfaceScale="50" specularConstant="6" specularExponent="100" lighting-color="white" result="specLight">
+            <fePointLight x="-200" y="-200" z="300" />
+          </feSpecularLighting>
+      
+          <feDisplacementMap 
+          in="SourceGraphic" 
+          in2="softMap" 
+          scale="100" 
+          xChannelSelector="B" 
+          yChannelSelector="A"
+          -xChannelSelector="B"
+          -yChannelSelector="A"/>
+        </filter>
+      </svg>
+      
+      <div id="parallax-container">
+      <div class="parallax-layer" data-speed="0" id="p-sky">
+      <div id="celestial-container">
+      <div id="p-sun"></div>
+      <div id="moon-wrapper">
+      <div id="p-moon"></div>
+      </div>
+      </div>
+      </div>
+      <div class="parallax-layer" data-speed="0.02" id="p-stars"></div>
+      <div class="parallax-layer" data-speed="0.05" id="p-shooting-stars">
+      <div class="shooting-star"></div>
+      <div class="shooting-star"></div>
+      <div class="shooting-star"></div>
+      <div class="shooting-star"></div>
+      <div class="shooting-star"></div>
+      </div>
+      <div class="parallax-layer" data-speed="0.1" id="p-clouds">
+      <div class="p-cloud c1"></div> <div class="p-cloud c2"></div> <div class="p-cloud c3"></div> <div class="p-cloud c4"></div>
+      <div class="p-cloud c5"></div> <div class="p-cloud c6"></div> <div class="p-cloud c7"></div> <div class="p-cloud c8"></div>
+      </div>
+      <div class="parallax-layer" data-speed="0.2" id="p-birds"></div>
+      <div class="parallax-layer" data-speed="0.3" id="p-plane">
+      <div class="plane"> <i class="w-8 h-8" data-lucide="send"></i> </div>
+      </div>
+      <div class="parallax-layer" data-speed="0.08" id="p-layer-0">
+      <svg class="parallax-svg" preserveaspectratio="xMidYMax slice" viewbox="0 0 1400 800">
+      <defs>
+      <lineargradient id="mountainMostFarGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--mountain-most-far-top)"></stop><stop offset="100%" stop-color="var(--mountain-most-far)"></stop></lineargradient>
+      <lineargradient id="mountainFarGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--mountain-far-top)"></stop><stop offset="100%" stop-color="var(--mountain-far)"></stop></lineargradient>
+      <lineargradient id="mountainMidGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--mountain-mid-top)"></stop><stop offset="100%" stop-color="var(--mountain-mid)"></stop></lineargradient>
+      <lineargradient id="mountainNearGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--mountain-near-top)"></stop><stop offset="100%" stop-color="var(--mountain-near)"></stop></lineargradient>
+      <lineargradient id="groundGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--ground-top)"></stop><stop offset="100%" stop-color="var(--ground)"></stop></lineargradient>
+      <lineargradient id="treesFarGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--trees-far-top)"></stop><stop offset="100%" stop-color="var(--trees-far)"></stop></lineargradient>
+      <lineargradient id="treesNearGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--trees-near-top)"></stop><stop offset="100%" stop-color="var(--trees-near)"></stop></lineargradient>
+      <lineargradient id="rockGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--rock-top)"></stop><stop offset="100%" stop-color="var(--rock)"></stop></lineargradient>
+      <lineargradient id="grassGradient" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="var(--grass-light)"></stop><stop offset="100%" stop-color="var(--grass-dark)"></stop></lineargradient>
+      <lineargradient id="bushGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--bush-top)"></stop><stop offset="100%" stop-color="var(--bush)"></stop></lineargradient>
+      <radialgradient cx="50%" cy="50%" fx="50%" fy="50%" id="softShadow" r="50%"><stop offset="0%" stop-color="var(--shadow-color)" stop-opacity="0.5"></stop><stop offset="100%" stop-color="var(--shadow-color)" stop-opacity="0"></stop></radialgradient>
+      <lineargradient id="snowGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--snow-top)"></stop><stop offset="100%" stop-color="var(--snow)"></stop></lineargradient>
+      </defs>
+      <path d="M-10,800V700 L 100,705 L 180,690 L 250,705 L 320,695 L 450,680 L 550,690 L 620,680 L 700,690 L 780,675 L 850,670 L 920,680 L 1000,690 L 1100,685 L 1180,675 L 1250,695 L 1320,685 L 1410,690 V800 Z" fill="url(#mountainMostFarGradient)"></path>
+      <path d="M-10,700 L 100,705 L 180,690 L 250,705 L 320,695 L 450,680 L 550,690 L 620,680 L 700,690 L 780,675 L 850,670 L 920,680 L 1000,690 L 1100,685 L 1180,675 L 1250,695 L 1320,685 L 1410,690 L 1410,693 L 1320,688 L 1250,698 L 1180,678 L 1100,688 L 1000,693 L 920,683 L 850,673 L 780,678 L 700,693 L 620,683 L 550,693 L 450,683 L 320,698 L 250,708 L 180,693 L 100,708 L -10,703 Z" fill="url(#snowGradient)"></path>
+      <path d="M180,693 L 220,700 L 250,708 M450,683 L 480,690 L 550,693 M850,673 L 880,678 L 920,683 M1180,678 L 1210,685 L 1250,698" fill="none" opacity="0.5" stroke="var(--mountain-most-far)" stroke-width="2"></path>
+      </svg>
+      </div>
+      <div class="parallax-layer" data-speed="0.15" id="p-layer-1">
+      <svg class="parallax-svg" preserveaspectratio="xMidYMax slice" viewbox="0 0 1400 800">
+      <path d="M-10,800V650 L 150,580 L 220,600 L 300,550 L 350,570 L 400,560 L 450,610 L 520,590 L 580,580 L 650,640 L 700,680 L 780,650 L 850,620 L 950,630 L 1020,600 L 1100,580 L 1180,600 L 1250,630 L 1350,650 L 1410,670 V800 Z" fill="url(#mountainFarGradient)"></path>
+      <path d="M150,580 L 220,600 L 300,550 L 350,570 L 400,560 L 450,610 L 520,590 L 580,580 L 650,640 L 700,680 L 780,650 L 850,620 L 950,630 L 1020,600 L 1100,580 L 1180,600 L 1250,630 L 1250,635 L 1180,605 L 1100,588 L 1020,605 L 950,635 L 850,628 L 780,655 L 700,685 L 650,645 L 580,588 L 520,595 L 450,615 L 400,565 L 350,575 L 300,558 L 220,605 L 150,585 Z" fill="url(#snowGradient)"></path>
+      <path d="M300,558 L 320,565 L 350,575 M580,588 L 610,610 L 650,645 M700,685 L 730,670 L 780,655 M1100,588 L 1130,595 L 1180,605" fill="none" opacity="0.5" stroke="var(--mountain-far)" stroke-width="3"></path>
+      </svg>
+      </div>
+      <div class="parallax-layer" data-speed="0.4" id="p-layer-3">
+      <svg class="parallax-svg" preserveaspectratio="xMidYMax slice" viewbox="0 0 1400 800">
+      <path d="M-10,800V700 L 100, 650 L 180,610 L 250,640 L 380, 690 L 450,720 L 550,680 L 700,650 L 820,700 L 950,740 L 1050, 700 L 1150, 720 L 1200,660 L 1300,690 L 1410,710 V800 Z" fill="url(#mountainMidGradient)"></path>
+      <g class="tree-sway"><path d="M280,680 L 300,630 L 320,680 L290,670 Z" fill="url(#treesFarGradient)"></path></g>
+      <g class="tree-sway"><path d="M330,710 L 350,660 L 370,710 L340,700 Z" fill="url(#treesFarGradient)"></path></g>
+      <g class="tree-sway"><path d="M980,720 L 1000,670 L 1020,720 L990,710 Z" fill="url(#treesFarGradient)"></path></g>
+      <g class="tree-sway" style="animation-delay: -1s;"><path d="M680,690 L 700,640 L 720,690 L690,680 Z" fill="url(#treesFarGradient)"></path></g>
+      <g class="tree-sway" style="animation-delay: -2.5s;"><path d="M1250,710 L 1270,660 L 1290,710 L1260,700 Z" fill="url(#treesFarGradient)"></path></g>
+      <g class="tree-sway" style="animation-delay: -0.8s;"><path d="M150,680 L 170,630 L 190,680 L160,670 Z" fill="url(#treesFarGradient)"></path></g>
+      <g class="tree-sway" style="animation-delay: -1.8s;"><path d="M500,720 L 520,670 L 540,720 L510,710 Z" fill="url(#treesFarGradient)"></path></g>
+      <g class="tree-sway" style="animation-delay: -3.2s;"><path d="M850,730 L 870,680 L 890,730 L860,720 Z" fill="url(#treesFarGradient)"></path></g>
+      </svg>
+      </div>
+      <div class="parallax-layer" data-speed="0.6" id="p-layer-4">
+      <svg class="parallax-svg" preserveaspectratio="xMidYMax slice" viewbox="0 0 1400 800">
+      <path d="M-10,800V750 C 150, 720, 250, 690, 350, 700 L 480, 760 L 600,780 L 750,720 C 900, 700, 1050, 750, 1200,770 L 1300, 750 L 1410,740 V800 Z" fill="url(#mountainNearGradient)"></path>
+      <path d="M400,730 L400,800 L430,800 L430,730 Q 415,720 400,730 Z" fill="var(--water)"></path>
+      <path class="water-flow-line" d="M410,730 v70"></path> <path class="water-flow-line" d="M415,730 v70"></path> <path class="water-flow-line" d="M420,730 v70"></path>
+      <circle class="waterfall-foam-animated" cx="415" cy="795" fill="var(--waterfall-foam)" r="30"></circle>
+      </svg>
+      </div>
+      <div class="parallax-layer" data-speed="0.8" id="p-layer-5">
+      <svg class="parallax-svg" preserveaspectratio="xMidYMax slice" viewbox="0 0 1400 800">
+      <path d="M-10,800 V780 L100,740 L250,790 L400,770 L600,730 L800,760 L1000,790 L1200,740 L1410,790 V800 Z" fill="url(#groundGradient)" id="ground-path"></path>
+      <g id="foreground-elements"></g>
+      </svg>
+      <div id="p-fireflies"></div>
+      </div>
+      </div>
+    </div>
     <div id="progress-bar"></div>
 
-    <!-- Fejléc -->
     <header class="fixed top-0 left-0 right-0 z-50 p-4 transition-all duration-300" id="main-header">
         <div class="container mx-auto px-6 flex items-center justify-between md:gap-6 h-20 relative bg-card glass-effect rounded-full border">
             <div class="flex-1 flex justify-start header-logo">
@@ -152,9 +263,7 @@
         </div>
     </header>
 
-    <!-- Főtartalom -->
     <main class="container mx-auto px-4 pt-20 relative z-10">
-        <!-- Kezdőlap szekció -->
         <section class="min-h-[calc(100dvh-5rem)] flex items-center" id="home">
             <div class="w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div class="order-2 lg:order-1 text-center lg:text-left">
@@ -184,7 +293,6 @@
             </div>
         </section>
 
-        <!-- Rólam szekció -->
         <section class="py-16 sm:py-24" id="about">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 <div class="scroll-animate">
@@ -218,7 +326,6 @@
             </div>
         </section>
 
-        <!-- Tapasztalat szekció -->
         <section class="py-16 sm:py-24" id="experience">
             <div class="text-center mb-16 scroll-animate">
                 <h2 class="text-4xl font-bold text-header" data-lang-key="experience_title">Szakmai Tapasztalat</h2>
@@ -289,7 +396,6 @@
             </div>
         </section>
 
-        <!-- Tanulmányok szekció -->
         <section class="py-16 sm:py-24" id="education">
             <div class="text-center mb-16 scroll-animate">
                 <h2 class="text-4xl font-bold text-header" data-lang-key="education_title">Tanulmányok</h2>
@@ -372,7 +478,6 @@
             </div>
         </section>
 
-        <!-- Képességek szekció -->
         <section class="py-16 sm:py-24" id="skills">
             <div class="text-center mb-16 scroll-animate">
                 <h2 class="text-4xl font-bold text-header" data-lang-key="skills_title">Képességek</h2>
@@ -443,7 +548,6 @@
             </div>
         </section>
 
-        <!-- Projektek szekció -->
         <section class="py-16 sm:py-24" id="projects">
             <div class="text-center mb-16 scroll-animate">
                 <h2 class="text-4xl font-bold text-header" data-lang-key="projects_title">Kiemelt Projektjeim</h2>
@@ -569,7 +673,6 @@
             </div>
         </section>
 
-        <!-- Kapcsolat szekció -->
         <section class="py-16 sm:py-24" id="contact">
             <div class="text-center mb-16 scroll-animate">
                 <h2 class="text-4xl font-bold text-header" data-lang-key="contact_title">Lépjünk kapcsolatba!</h2>
@@ -631,20 +734,16 @@
         </section>
     </main>
 
-    <!-- Lábléc -->
     <footer class="bg-card glass-effect text-center py-6 sm:py-8 border-t relative z-10 mt-16 sm:mt-24">
         <p class="text-sm" data-lang-key="footer_copyright">© 2025 Kiss Norbert. Minden jog fenntartva.</p>
     </footer>
 
-    <!-- Vissza a tetejére gomb -->
     <a class="w-20 h-20 flex items-center justify-center bg-card glass-effect rounded-full shadow-lg border hover:border-sky-500 transition-all" href="#home" id="back-to-top">
         <i class="w-10 h-10 text-header" data-lucide="arrow-up"></i>
     </a>
 
-    <!-- YouTube lejátszó helye -->
     <div id="youtube-player"></div>
 
-    <!-- Saját szkriptek -->
     <script src="https://www.youtube.com/iframe_api"></script>
     <script type="module" src="scripts/main.js"></script>
 

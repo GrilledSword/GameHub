@@ -25,36 +25,17 @@ window.addEventListener('pageshow', (event) => {
     if (event.persisted) hideLoader();
 });
 
-async function setupBackground() {
-    try {
-        const response = await fetch('./parallax-svg.html');
-        if (!response.ok) {
-            throw new Error(`Network response was not ok: ${response.statusText}`);
-        }
-        const data = await response.text();
-        const placeholder = document.getElementById('parallax-placeholder');
-        if (placeholder) {
-            placeholder.innerHTML = data;
-        }
-
-        // Now that the SVG content is loaded, initialize the components that depend on it.
-        initParallaxEffect();
-        initShootingStars();
-        initBirds();
-        initFireflies();
-        generateForeground();
-
-        // The parallax SVG might contain new icons that need to be rendered by Lucide.
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
-        }
-
-    } catch (error) {
-        console.error('Failed to fetch and setup parallax background:', error);
+//async function setupBackground() {
+    initParallaxEffect();
+    initShootingStars();
+    initBirds();
+    initFireflies();
+    generateForeground();
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
     }
-}
 
-function initializeApp() {
+//function initializeApp() {
     // Initialize components that do not depend on the fetched SVG content.
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();
@@ -71,4 +52,3 @@ function initializeApp() {
 
     // Fetch and set up the background, which will then initialize its own components.
     setupBackground();
-}
