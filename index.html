@@ -1,751 +1,726 @@
 <!DOCTYPE html>
 <html class="dark" lang="hu" style="scroll-behavior: smooth;">
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>GrilledSword</title>
-    <meta content="Kiss Norbert portfóliója: Game Developer, Technical Artist és Workflow Innovator. Fedezd fel a projektjeimet, tapasztalataimat és képességeimet." name="description"/>
-    <meta content="Kiss Norbert, portfolio, game developer, technical artist, unity, blender, c#, szoftverfejlesztő, játékfejlesztő" name="keywords"/>
-    <meta content="Kiss Norbert - Professzionális Portfólió" property="og:title"/>
-    <meta content="Szenvedélyem a problémamegoldás és az alkotás, legyen szó játékfelesztésről vagy egyedi szoftveres megoldásokról." property="og:description"/>
-    <meta content="https://scontent.fbud7-3.fna.fbcdn.net/v/t39.30808-6/490218317_4299900466922719_7116602731487334346_n.jpg?_nc_cat=109&amp;ccb=1-7&amp;_nc_sid=6ee11a&amp;_nc_ohc=p_Jz-VjxapQQ7kNvwF6VSdo&amp;_nc_oc=Adke8-8TM3nJQb8Rw81cDzt7TGtK2KhCUG4FDdH3c_YaxI4W-htlBU2M_OwgyApw4gAdneHPE5izYON4Gxd4sQ3u&amp;_nc_zt=23&amp;_nc_ht=scontent.fbud7-3.fna&amp;_nc_gid=Gk3C5hU9MaQYuIQARJIzFw&amp;oh=00_AfbG3lAk3xhZdJik4AZhS90qtM-SEa21K-oKxbFr8ELDXg&amp;oe=68DCE3CD" property="og:image"/>
-    <meta content="#" property="og:url"/> 
-    <meta content="website" property="og:type"/>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com" rel="preconnect"/>
-    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://placehold.co/32x32/0ea5e9/ffffff?text=KN" rel="icon"/>
-
-    <link rel="stylesheet" href="styles/base.css">
-    <link rel="stylesheet" href="styles/animations.css">
-    <link rel="stylesheet" href="styles/components.css">
-    <link rel="stylesheet" href="styles/header.css">
-    <link rel="stylesheet" href="styles/loader.css">
-    <link rel="stylesheet" href="styles/music-player.css">
-    <link rel="stylesheet" href="styles/parallax.css">
-    <link rel="stylesheet" href="styles/theme.css">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kiss Norbert - Portfólió</title>
+<meta content="Kiss Norbert portfóliója: Game Developer, Technical Artist és Workflow Innovator. Fedezd fel a projektjeimet, tapasztalataimat és képességeimet." name="description"/>
+<meta content="Kiss Norbert, portfolio, game developer, technical artist, unity, blender, c#, szoftverfejlesztő, játékfejlesztő" name="keywords"/>
+<meta content="Kiss Norbert - Professzionális Portfólió" property="og:title"/>
+<meta content="Szenvedélyem a problémamegoldás és az alkotás, legyen szó játékfelesztésről vagy egyedi szoftveres megoldásokról." property="og:description"/>
+<meta content="https://scontent.fbud7-3.fna.fbcdn.net/v/t39.30808-6/490218317_4299900466922719_7116602731487334346_n.jpg?_nc_cat=109&amp;ccb=1-7&amp;_nc_sid=6ee11a&amp;_nc_ohc=p_Jz-VjxapQQ7kNvwF6VSdo&amp;_nc_oc=Adke8-8TM3nJQb8Rw81cDzt7TGtK2KhCUG4FDdH3c_YaxI4W-htlBU2M_OwgyApw4gAdneHPE5izYON4Gxd4sQ3u&amp;_nc_zt=23&amp;_nc_ht=scontent.fbud7-3.fna&amp;_nc_gid=Gk3C5hU9MaQYuIQARJIzFw&amp;oh=00_AfbG3lAk3xhZdJik4AZhS90qtM-SEa21K-oKxbFr8ELDXg&amp;oe=68DCE3CD" property="og:image"/>
+<meta content="#" property="og:url"/> <meta content="website" property="og:type"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link href="https://placehold.co/32x32/0ea5e9/ffffff?text=KN" rel="icon"/>
+<link rel="stylesheet" href="style.css">
 </head>
 <body class="antialiased">
 
-    <div id="loader-wrapper">
-        <div class="loader-content">
-            <svg class="loader-svg" viewbox="0 0 100 100">
-                <path class="loader-mountain" d="M0 100 L40 50 L60 70 L80 40 L100 100 Z"></path>
-                <circle class="loader-sun" cx="75" cy="30" r="10"></circle>
-            </svg>
-            <p class="loader-text" data-lang-key="loader_text">Töltés...</p>
-        </div>
+<svg style="display: none">
+  <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%" filterUnits="objectBoundingBox">
+    <feTurbulence type="fractalNoise" baseFrequency="0" numOctaves="0" seed="0" result="turbulence" />
+
+    <feColorMatrix in="turbulence" type="matrix" result="colorMask"
+      values="1 0 0 0 0
+              0 1 0 0 0
+              0 0 1 0 0
+              0 0 0 1 0" />
+
+    <feFlood flood-color="black" result="base" />
+    <feFlood flood-color="white" result="highlight" />
+    <feComposite in="highlight" in2="base" operator="xor" result="maskShape" />
+    <feMerge result="maskedTurbulence">
+      <feMergeNode in="colorMask" />
+      <feMergeNode in="maskShape" />
+    </feMerge>
+
+    <feGaussianBlur in="maskedTurbulence" stdDeviation="30" result="softMap" />
+
+    <feSpecularLighting in="softMap" surfaceScale="50" specularConstant="6" specularExponent="100" lighting-color="white" result="specLight">
+      <fePointLight x="-200" y="-200" z="300" />
+    </feSpecularLighting>
+
+    <feDisplacementMap 
+    in="SourceGraphic" 
+    in2="softMap" 
+    scale="100" 
+    xChannelSelector="B" 
+    yChannelSelector="A"
+    -xChannelSelector="B"
+    -yChannelSelector="A"/>
+  </filter>
+</svg>
+
+<div id="loader-wrapper">
+<div class="loader-content">
+<svg class="loader-svg" viewbox="0 0 100 100">
+<path class="loader-mountain" d="M0 100 L40 50 L60 70 L80 40 L100 100 Z"></path>
+<circle class="loader-sun" cx="75" cy="30" r="10"></circle>
+</svg>
+<p class="loader-text" data-lang-key="loader_text">Töltés...</p>
+</div>
+</div>
+
+<div id="parallax-container">
+<div class="parallax-layer" data-speed="0" id="p-sky">
+<div id="celestial-container">
+<div id="p-sun"></div>
+<div id="moon-wrapper">
+<div id="p-moon"></div>
+</div>
+</div>
+</div>
+<div class="parallax-layer" data-speed="0.02" id="p-stars"></div>
+<div class="parallax-layer" data-speed="0.05" id="p-shooting-stars">
+<div class="shooting-star"></div>
+<div class="shooting-star"></div>
+<div class="shooting-star"></div>
+<div class="shooting-star"></div>
+<div class="shooting-star"></div>
+</div>
+<div class="parallax-layer" data-speed="0.1" id="p-clouds">
+<div class="p-cloud c1"></div> <div class="p-cloud c2"></div> <div class="p-cloud c3"></div> <div class="p-cloud c4"></div>
+<div class="p-cloud c5"></div> <div class="p-cloud c6"></div> <div class="p-cloud c7"></div> <div class="p-cloud c8"></div>
+</div>
+<div class="parallax-layer" data-speed="0.2" id="p-birds"></div>
+<div class="parallax-layer" data-speed="0.3" id="p-plane">
+<div class="plane"> <i class="w-8 h-8" data-lucide="send"></i> </div>
+</div>
+<div class="parallax-layer" data-speed="0.08" id="p-layer-0">
+<svg class="parallax-svg" preserveaspectratio="xMidYMax slice" viewbox="0 0 1400 800">
+<defs>
+<lineargradient id="mountainMostFarGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--mountain-most-far-top)"></stop><stop offset="100%" stop-color="var(--mountain-most-far)"></stop></lineargradient>
+<lineargradient id="mountainFarGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--mountain-far-top)"></stop><stop offset="100%" stop-color="var(--mountain-far)"></stop></lineargradient>
+<lineargradient id="mountainMidGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--mountain-mid-top)"></stop><stop offset="100%" stop-color="var(--mountain-mid)"></stop></lineargradient>
+<lineargradient id="mountainNearGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--mountain-near-top)"></stop><stop offset="100%" stop-color="var(--mountain-near)"></stop></lineargradient>
+<lineargradient id="groundGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--ground-top)"></stop><stop offset="100%" stop-color="var(--ground)"></stop></lineargradient>
+<lineargradient id="treesFarGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--trees-far-top)"></stop><stop offset="100%" stop-color="var(--trees-far)"></stop></lineargradient>
+<lineargradient id="treesNearGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--trees-near-top)"></stop><stop offset="100%" stop-color="var(--trees-near)"></stop></lineargradient>
+<lineargradient id="rockGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--rock-top)"></stop><stop offset="100%" stop-color="var(--rock)"></stop></lineargradient>
+<lineargradient id="grassGradient" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="var(--grass-light)"></stop><stop offset="100%" stop-color="var(--grass-dark)"></stop></lineargradient>
+<lineargradient id="bushGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--bush-top)"></stop><stop offset="100%" stop-color="var(--bush)"></stop></lineargradient>
+<radialgradient cx="50%" cy="50%" fx="50%" fy="50%" id="softShadow" r="50%"><stop offset="0%" stop-color="var(--shadow-color)" stop-opacity="0.5"></stop><stop offset="100%" stop-color="var(--shadow-color)" stop-opacity="0"></stop></radialgradient>
+<lineargradient id="snowGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--snow-top)"></stop><stop offset="100%" stop-color="var(--snow)"></stop></lineargradient>
+</defs>
+<path d="M-10,800V700 L 100,705 L 180,690 L 250,705 L 320,695 L 450,680 L 550,690 L 620,680 L 700,690 L 780,675 L 850,670 L 920,680 L 1000,690 L 1100,685 L 1180,675 L 1250,695 L 1320,685 L 1410,690 V800 Z" fill="url(#mountainMostFarGradient)"></path>
+<path d="M-10,700 L 100,705 L 180,690 L 250,705 L 320,695 L 450,680 L 550,690 L 620,680 L 700,690 L 780,675 L 850,670 L 920,680 L 1000,690 L 1100,685 L 1180,675 L 1250,695 L 1320,685 L 1410,690 L 1410,693 L 1320,688 L 1250,698 L 1180,678 L 1100,688 L 1000,693 L 920,683 L 850,673 L 780,678 L 700,693 L 620,683 L 550,693 L 450,683 L 320,698 L 250,708 L 180,693 L 100,708 L -10,703 Z" fill="url(#snowGradient)"></path>
+<path d="M180,693 L 220,700 L 250,708 M450,683 L 480,690 L 550,693 M850,673 L 880,678 L 920,683 M1180,678 L 1210,685 L 1250,698" fill="none" opacity="0.5" stroke="var(--mountain-most-far)" stroke-width="2"></path>
+</svg>
+</div>
+<div class="parallax-layer" data-speed="0.15" id="p-layer-1">
+<svg class="parallax-svg" preserveaspectratio="xMidYMax slice" viewbox="0 0 1400 800">
+<path d="M-10,800V650 L 150,580 L 220,600 L 300,550 L 350,570 L 400,560 L 450,610 L 520,590 L 580,580 L 650,640 L 700,680 L 780,650 L 850,620 L 950,630 L 1020,600 L 1100,580 L 1180,600 L 1250,630 L 1350,650 L 1410,670 V800 Z" fill="url(#mountainFarGradient)"></path>
+<path d="M150,580 L 220,600 L 300,550 L 350,570 L 400,560 L 450,610 L 520,590 L 580,580 L 650,640 L 700,680 L 780,650 L 850,620 L 950,630 L 1020,600 L 1100,580 L 1180,600 L 1250,630 L 1250,635 L 1180,605 L 1100,588 L 1020,605 L 950,635 L 850,628 L 780,655 L 700,685 L 650,645 L 580,588 L 520,595 L 450,615 L 400,565 L 350,575 L 300,558 L 220,605 L 150,585 Z" fill="url(#snowGradient)"></path>
+<path d="M300,558 L 320,565 L 350,575 M580,588 L 610,610 L 650,645 M700,685 L 730,670 L 780,655 M1100,588 L 1130,595 L 1180,605" fill="none" opacity="0.5" stroke="var(--mountain-far)" stroke-width="3"></path>
+</svg>
+</div>
+<div class="parallax-layer" data-speed="0.4" id="p-layer-3">
+<svg class="parallax-svg" preserveaspectratio="xMidYMax slice" viewbox="0 0 1400 800">
+<path d="M-10,800V700 L 100, 650 L 180,610 L 250,640 L 380, 690 L 450,720 L 550,680 L 700,650 L 820,700 L 950,740 L 1050, 700 L 1150, 720 L 1200,660 L 1300,690 L 1410,710 V800 Z" fill="url(#mountainMidGradient)"></path>
+<g class="tree-sway"><path d="M280,680 L 300,630 L 320,680 L290,670 Z" fill="url(#treesFarGradient)"></path></g>
+<g class="tree-sway"><path d="M330,710 L 350,660 L 370,710 L340,700 Z" fill="url(#treesFarGradient)"></path></g>
+<g class="tree-sway"><path d="M980,720 L 1000,670 L 1020,720 L990,710 Z" fill="url(#treesFarGradient)"></path></g>
+<g class="tree-sway" style="animation-delay: -1s;"><path d="M680,690 L 700,640 L 720,690 L690,680 Z" fill="url(#treesFarGradient)"></path></g>
+<g class="tree-sway" style="animation-delay: -2.5s;"><path d="M1250,710 L 1270,660 L 1290,710 L1260,700 Z" fill="url(#treesFarGradient)"></path></g>
+<g class="tree-sway" style="animation-delay: -0.8s;"><path d="M150,680 L 170,630 L 190,680 L160,670 Z" fill="url(#treesFarGradient)"></path></g>
+<g class="tree-sway" style="animation-delay: -1.8s;"><path d="M500,720 L 520,670 L 540,720 L510,710 Z" fill="url(#treesFarGradient)"></path></g>
+<g class="tree-sway" style="animation-delay: -3.2s;"><path d="M850,730 L 870,680 L 890,730 L860,720 Z" fill="url(#treesFarGradient)"></path></g>
+</svg>
+</div>
+<div class="parallax-layer" data-speed="0.6" id="p-layer-4">
+<svg class="parallax-svg" preserveaspectratio="xMidYMax slice" viewbox="0 0 1400 800">
+<path d="M-10,800V750 C 150, 720, 250, 690, 350, 700 L 480, 760 L 600,780 L 750,720 C 900, 700, 1050, 750, 1200,770 L 1300, 750 L 1410,740 V800 Z" fill="url(#mountainNearGradient)"></path>
+<path d="M400,730 L400,800 L430,800 L430,730 Q 415,720 400,730 Z" fill="var(--water)"></path>
+<path class="water-flow-line" d="M410,730 v70"></path> <path class="water-flow-line" d="M415,730 v70"></path> <path class="water-flow-line" d="M420,730 v70"></path>
+<circle class="waterfall-foam-animated" cx="415" cy="795" fill="var(--waterfall-foam)" r="30"></circle>
+</svg>
+</div>
+<div class="parallax-layer" data-speed="0.8" id="p-layer-5">
+<svg class="parallax-svg" preserveaspectratio="xMidYMax slice" viewbox="0 0 1400 800">
+<path d="M-10,800 V780 L100,740 L250,790 L400,770 L600,730 L800,760 L1000,790 L1200,740 L1410,790 V800 Z" fill="url(#groundGradient)" id="ground-path"></path>
+<g id="foreground-elements"></g>
+</svg>
+<div id="p-fireflies"></div>
+</div>
+</div>
+
+<div id="progress-bar"></div>
+<header class="fixed top-0 left-0 right-0 z-50 p-4 transition-all duration-300" id="main-header">
+<div class="container mx-auto px-6 flex items-center justify-between md:gap-6 h-20 relative bg-card glass-effect rounded-full border">
+    <div class="flex-1 flex justify-start header-logo">
+        <a class="font-bold text-xl text-header" href="#home">GRILLEDSWORD</a>
     </div>
 
-    <div id="parallax-placeholder">
-      <svg style="display: none">
-        <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%" filterUnits="objectBoundingBox">
-          <feTurbulence type="fractalNoise" baseFrequency="0" numOctaves="0" seed="0" result="turbulence" />
-      
-          <feColorMatrix in="turbulence" type="matrix" result="colorMask"
-            values="1 0 0 0 0
-                    0 1 0 0 0
-                    0 0 1 0 0
-                    0 0 0 1 0" />
-      
-          <feFlood flood-color="black" result="base" />
-          <feFlood flood-color="white" result="highlight" />
-          <feComposite in="highlight" in2="base" operator="xor" result="maskShape" />
-          <feMerge result="maskedTurbulence">
-            <feMergeNode in="colorMask" />
-            <feMergeNode in="maskShape" />
-          </feMerge>
-      
-          <feGaussianBlur in="maskedTurbulence" stdDeviation="30" result="softMap" />
-      
-          <feSpecularLighting in="softMap" surfaceScale="50" specularConstant="6" specularExponent="100" lighting-color="white" result="specLight">
-            <fePointLight x="-200" y="-200" z="300" />
-          </feSpecularLighting>
-      
-          <feDisplacementMap 
-          in="SourceGraphic" 
-          in2="softMap" 
-          scale="100" 
-          xChannelSelector="B" 
-          yChannelSelector="A"
-          -xChannelSelector="B"
-          -yChannelSelector="A"/>
-        </filter>
-      </svg>
-      
-      <div id="parallax-container">
-      <div class="parallax-layer" data-speed="0" id="p-sky">
-      <div id="celestial-container">
-      <div id="p-sun"></div>
-      <div id="moon-wrapper">
-      <div id="p-moon"></div>
-      </div>
-      </div>
-      </div>
-      <div class="parallax-layer" data-speed="0.02" id="p-stars"></div>
-      <div class="parallax-layer" data-speed="0.05" id="p-shooting-stars">
-      <div class="shooting-star"></div>
-      <div class="shooting-star"></div>
-      <div class="shooting-star"></div>
-      <div class="shooting-star"></div>
-      <div class="shooting-star"></div>
-      </div>
-      <div class="parallax-layer" data-speed="0.1" id="p-clouds">
-      <div class="p-cloud c1"></div> <div class="p-cloud c2"></div> <div class="p-cloud c3"></div> <div class="p-cloud c4"></div>
-      <div class="p-cloud c5"></div> <div class="p-cloud c6"></div> <div class="p-cloud c7"></div> <div class="p-cloud c8"></div>
-      </div>
-      <div class="parallax-layer" data-speed="0.2" id="p-birds"></div>
-      <div class="parallax-layer" data-speed="0.3" id="p-plane">
-      <div class="plane"> <i class="w-8 h-8" data-lucide="send"></i> </div>
-      </div>
-      <div class="parallax-layer" data-speed="0.08" id="p-layer-0">
-      <svg class="parallax-svg" preserveaspectratio="xMidYMax slice" viewbox="0 0 1400 800">
-      <defs>
-      <lineargradient id="mountainMostFarGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--mountain-most-far-top)"></stop><stop offset="100%" stop-color="var(--mountain-most-far)"></stop></lineargradient>
-      <lineargradient id="mountainFarGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--mountain-far-top)"></stop><stop offset="100%" stop-color="var(--mountain-far)"></stop></lineargradient>
-      <lineargradient id="mountainMidGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--mountain-mid-top)"></stop><stop offset="100%" stop-color="var(--mountain-mid)"></stop></lineargradient>
-      <lineargradient id="mountainNearGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--mountain-near-top)"></stop><stop offset="100%" stop-color="var(--mountain-near)"></stop></lineargradient>
-      <lineargradient id="groundGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--ground-top)"></stop><stop offset="100%" stop-color="var(--ground)"></stop></lineargradient>
-      <lineargradient id="treesFarGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--trees-far-top)"></stop><stop offset="100%" stop-color="var(--trees-far)"></stop></lineargradient>
-      <lineargradient id="treesNearGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--trees-near-top)"></stop><stop offset="100%" stop-color="var(--trees-near)"></stop></lineargradient>
-      <lineargradient id="rockGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--rock-top)"></stop><stop offset="100%" stop-color="var(--rock)"></stop></lineargradient>
-      <lineargradient id="grassGradient" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="var(--grass-light)"></stop><stop offset="100%" stop-color="var(--grass-dark)"></stop></lineargradient>
-      <lineargradient id="bushGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--bush-top)"></stop><stop offset="100%" stop-color="var(--bush)"></stop></lineargradient>
-      <radialgradient cx="50%" cy="50%" fx="50%" fy="50%" id="softShadow" r="50%"><stop offset="0%" stop-color="var(--shadow-color)" stop-opacity="0.5"></stop><stop offset="100%" stop-color="var(--shadow-color)" stop-opacity="0"></stop></radialgradient>
-      <lineargradient id="snowGradient" x1="0.5" x2="0.5" y1="0" y2="1"><stop offset="0%" stop-color="var(--snow-top)"></stop><stop offset="100%" stop-color="var(--snow)"></stop></lineargradient>
-      </defs>
-      <path d="M-10,800V700 L 100,705 L 180,690 L 250,705 L 320,695 L 450,680 L 550,690 L 620,680 L 700,690 L 780,675 L 850,670 L 920,680 L 1000,690 L 1100,685 L 1180,675 L 1250,695 L 1320,685 L 1410,690 V800 Z" fill="url(#mountainMostFarGradient)"></path>
-      <path d="M-10,700 L 100,705 L 180,690 L 250,705 L 320,695 L 450,680 L 550,690 L 620,680 L 700,690 L 780,675 L 850,670 L 920,680 L 1000,690 L 1100,685 L 1180,675 L 1250,695 L 1320,685 L 1410,690 L 1410,693 L 1320,688 L 1250,698 L 1180,678 L 1100,688 L 1000,693 L 920,683 L 850,673 L 780,678 L 700,693 L 620,683 L 550,693 L 450,683 L 320,698 L 250,708 L 180,693 L 100,708 L -10,703 Z" fill="url(#snowGradient)"></path>
-      <path d="M180,693 L 220,700 L 250,708 M450,683 L 480,690 L 550,693 M850,673 L 880,678 L 920,683 M1180,678 L 1210,685 L 1250,698" fill="none" opacity="0.5" stroke="var(--mountain-most-far)" stroke-width="2"></path>
-      </svg>
-      </div>
-      <div class="parallax-layer" data-speed="0.15" id="p-layer-1">
-      <svg class="parallax-svg" preserveaspectratio="xMidYMax slice" viewbox="0 0 1400 800">
-      <path d="M-10,800V650 L 150,580 L 220,600 L 300,550 L 350,570 L 400,560 L 450,610 L 520,590 L 580,580 L 650,640 L 700,680 L 780,650 L 850,620 L 950,630 L 1020,600 L 1100,580 L 1180,600 L 1250,630 L 1350,650 L 1410,670 V800 Z" fill="url(#mountainFarGradient)"></path>
-      <path d="M150,580 L 220,600 L 300,550 L 350,570 L 400,560 L 450,610 L 520,590 L 580,580 L 650,640 L 700,680 L 780,650 L 850,620 L 950,630 L 1020,600 L 1100,580 L 1180,600 L 1250,630 L 1250,635 L 1180,605 L 1100,588 L 1020,605 L 950,635 L 850,628 L 780,655 L 700,685 L 650,645 L 580,588 L 520,595 L 450,615 L 400,565 L 350,575 L 300,558 L 220,605 L 150,585 Z" fill="url(#snowGradient)"></path>
-      <path d="M300,558 L 320,565 L 350,575 M580,588 L 610,610 L 650,645 M700,685 L 730,670 L 780,655 M1100,588 L 1130,595 L 1180,605" fill="none" opacity="0.5" stroke="var(--mountain-far)" stroke-width="3"></path>
-      </svg>
-      </div>
-      <div class="parallax-layer" data-speed="0.4" id="p-layer-3">
-      <svg class="parallax-svg" preserveaspectratio="xMidYMax slice" viewbox="0 0 1400 800">
-      <path d="M-10,800V700 L 100, 650 L 180,610 L 250,640 L 380, 690 L 450,720 L 550,680 L 700,650 L 820,700 L 950,740 L 1050, 700 L 1150, 720 L 1200,660 L 1300,690 L 1410,710 V800 Z" fill="url(#mountainMidGradient)"></path>
-      <g class="tree-sway"><path d="M280,680 L 300,630 L 320,680 L290,670 Z" fill="url(#treesFarGradient)"></path></g>
-      <g class="tree-sway"><path d="M330,710 L 350,660 L 370,710 L340,700 Z" fill="url(#treesFarGradient)"></path></g>
-      <g class="tree-sway"><path d="M980,720 L 1000,670 L 1020,720 L990,710 Z" fill="url(#treesFarGradient)"></path></g>
-      <g class="tree-sway" style="animation-delay: -1s;"><path d="M680,690 L 700,640 L 720,690 L690,680 Z" fill="url(#treesFarGradient)"></path></g>
-      <g class="tree-sway" style="animation-delay: -2.5s;"><path d="M1250,710 L 1270,660 L 1290,710 L1260,700 Z" fill="url(#treesFarGradient)"></path></g>
-      <g class="tree-sway" style="animation-delay: -0.8s;"><path d="M150,680 L 170,630 L 190,680 L160,670 Z" fill="url(#treesFarGradient)"></path></g>
-      <g class="tree-sway" style="animation-delay: -1.8s;"><path d="M500,720 L 520,670 L 540,720 L510,710 Z" fill="url(#treesFarGradient)"></path></g>
-      <g class="tree-sway" style="animation-delay: -3.2s;"><path d="M850,730 L 870,680 L 890,730 L860,720 Z" fill="url(#treesFarGradient)"></path></g>
-      </svg>
-      </div>
-      <div class="parallax-layer" data-speed="0.6" id="p-layer-4">
-      <svg class="parallax-svg" preserveaspectratio="xMidYMax slice" viewbox="0 0 1400 800">
-      <path d="M-10,800V750 C 150, 720, 250, 690, 350, 700 L 480, 760 L 600,780 L 750,720 C 900, 700, 1050, 750, 1200,770 L 1300, 750 L 1410,740 V800 Z" fill="url(#mountainNearGradient)"></path>
-      <path d="M400,730 L400,800 L430,800 L430,730 Q 415,720 400,730 Z" fill="var(--water)"></path>
-      <path class="water-flow-line" d="M410,730 v70"></path> <path class="water-flow-line" d="M415,730 v70"></path> <path class="water-flow-line" d="M420,730 v70"></path>
-      <circle class="waterfall-foam-animated" cx="415" cy="795" fill="var(--waterfall-foam)" r="30"></circle>
-      </svg>
-      </div>
-      <div class="parallax-layer" data-speed="0.8" id="p-layer-5">
-      <svg class="parallax-svg" preserveaspectratio="xMidYMax slice" viewbox="0 0 1400 800">
-      <path d="M-10,800 V780 L100,740 L250,790 L400,770 L600,730 L800,760 L1000,790 L1200,740 L1410,790 V800 Z" fill="url(#groundGradient)" id="ground-path"></path>
-      <g id="foreground-elements"></g>
-      </svg>
-      <div id="p-fireflies"></div>
-      </div>
-      </div>
-    </div>
-    <div id="progress-bar"></div>
-
-    <header class="fixed top-0 left-0 right-0 z-50 p-4 transition-all duration-300" id="main-header">
-        <div class="container mx-auto px-6 flex items-center justify-between md:gap-6 h-20 relative bg-card glass-effect rounded-full border">
-            <div class="flex-1 flex justify-start header-logo">
-                <a class="font-bold text-xl text-header" href="#home">GRILLEDSWORD</a>
+    <nav class="absolute top-20 left-0 right-0 p-6 shadow-lg rounded-3xl z-40 md:shadow-none md:bg-transparent md:p-0 md:static md:flex md:items-center md:justify-center" id="main-nav">
+        <ul class="flex flex-col md:flex-row items-center gap-6 md:gap-8">
+            <li><a class="nav-link font-medium hover:text-accent transition-colors" data-lang-key="nav_home" href="#home">Kezdőlap</a></li>
+            <li><a class="nav-link font-medium hover:text-accent transition-colors" data-lang-key="nav_about" href="#about">Rólam</a></li>
+            <li><a class="nav-link font-medium hover:text-accent transition-colors" data-lang-key="nav_experience" href="#experience">Tapasztalat</a></li>
+            <li><a class="nav-link font-medium hover:text-accent transition-colors" data-lang-key="nav_skills" href="#skills">Képességek</a></li>
+            <li><a class="nav-link font-medium hover:text-accent transition-colors" data-lang-key="nav_projects" href="#projects">Projektek</a></li>
+            <li><a class="nav-link font-medium hover:text-accent transition-colors" data-lang-key="nav_contact" href="#contact">Kapcsolat</a></li>
+        </ul>
+        <div class="mt-8 pt-6 flex md:hidden items-center justify-center gap-6">
+             <div class="flex items-center gap-2">
+                <span class="font-medium text-header w-16 text-right" id="lang-label-mobile">Nyelv</span>
+                <label class="lang-switch toggle-switch" for="lang-checkbox-mobile">
+                    <input id="lang-checkbox-mobile" type="checkbox"/>
+                    <div class="lang-slider toggle-slider">
+                        <div class="lang-bg lang-bg-hu"></div>
+                        <div class="lang-bg lang-bg-en"></div>
+                        <div class="lang-thumb toggle-thumb"></div>
+                    </div>
+                </label>
             </div>
+            <div class="flex items-center gap-2">
+                <span class="font-medium text-header w-16 text-right" id="theme-label-mobile">Világos</span>
+                <label class="theme-switch toggle-switch" for="theme-checkbox-mobile">
+                    <input id="theme-checkbox-mobile" type="checkbox"/>
+                    <div class="toggle-slider">
+                        <div class="toggle-thumb theme-thumb"></div>
+                        <div class="cloud c1"></div><div class="cloud c2"></div>
+                        <div class="star s1"></div><div class="star s2"></div><div class="star s3"></div><div class="star s4"></div>
+                    </div>
+                </label>
+            </div>
+        </div>
+    </nav>
 
-            <nav class="absolute top-20 left-0 right-0 p-6 shadow-lg rounded-3xl z-40 md:shadow-none md:bg-transparent md:p-0 md:static md:flex md:items-center md:justify-center" id="main-nav">
-                <ul class="flex flex-col md:flex-row items-center gap-6 md:gap-8">
-                    <li><a class="nav-link font-medium hover:text-accent transition-colors" data-lang-key="nav_home" href="#home">Kezdőlap</a></li>
-                    <li><a class="nav-link font-medium hover:text-accent transition-colors" data-lang-key="nav_about" href="#about">Rólam</a></li>
-                    <li><a class="nav-link font-medium hover:text-accent transition-colors" data-lang-key="nav_experience" href="#experience">Tapasztalat</a></li>
-                    <li><a class="nav-link font-medium hover:text-accent transition-colors" data-lang-key="nav_skills" href="#skills">Képességek</a></li>
-                    <li><a class="nav-link font-medium hover:text-accent transition-colors" data-lang-key="nav_projects" href="#projects">Projektek</a></li>
-                    <li><a class="nav-link font-medium hover:text-accent transition-colors" data-lang-key="nav_contact" href="#contact">Kapcsolat</a></li>
-                </ul>
-                <div class="mt-8 pt-6 flex md:hidden items-center justify-center gap-6">
-                     <div class="flex items-center gap-2">
-                        <span class="font-medium text-header w-16 text-right" id="lang-label-mobile">Nyelv</span>
-                        <label class="lang-switch toggle-switch" for="lang-checkbox-mobile">
-                            <input id="lang-checkbox-mobile" type="checkbox"/>
-                            <div class="lang-slider toggle-slider">
-                                <div class="lang-bg lang-bg-hu"></div>
-                                <div class="lang-bg lang-bg-en"></div>
-                                <div class="lang-thumb toggle-thumb"></div>
-                            </div>
-                        </label>
+    <div class="flex-1 flex justify-end items-center">
+        <div class="hidden md:flex items-center gap-3 header-controls">
+            <div class="lang-toggle-container border-r border-slate-200 dark:border-slate-700 pr-3 mr-1 flex items-center gap-2">
+                <span class="font-medium text-header hidden sm:inline w-16 text-right" id="lang-label">Nyelv</span>
+                <label class="lang-switch toggle-switch" for="lang-checkbox">
+                    <input id="lang-checkbox" type="checkbox"/>
+                    <div class="lang-slider toggle-slider">
+                        <div class="lang-bg lang-bg-hu"></div>
+                        <div class="lang-bg lang-bg-en"></div>
+                        <div class="lang-thumb toggle-thumb"></div>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <span class="font-medium text-header w-16 text-right" id="theme-label-mobile">Világos</span>
-                        <label class="theme-switch toggle-switch" for="theme-checkbox-mobile">
-                            <input id="theme-checkbox-mobile" type="checkbox"/>
-                            <div class="toggle-slider">
-                                <div class="toggle-thumb theme-thumb"></div>
-                                <div class="cloud c1"></div><div class="cloud c2"></div>
-                                <div class="star s1"></div><div class="star s2"></div><div class="star s3"></div><div class="star s4"></div>
-                            </div>
-                        </label>
+                </label>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="font-medium text-header hidden sm:inline w-16 text-right" id="theme-label">Világos</span>
+                <label class="theme-switch toggle-switch" for="theme-checkbox">
+                    <input id="theme-checkbox" type="checkbox"/>
+                    <div class="toggle-slider">
+                        <div class="toggle-thumb theme-thumb"></div>
+                        <div class="cloud c1"></div><div class="cloud c2"></div>
+                        <div class="star s1"></div><div class="star s2"></div><div class="star s3"></div><div class="star s4"></div>
                     </div>
-                </div>
-            </nav>
-
-            <div class="flex-1 flex justify-end items-center">
-                <div class="hidden md:flex items-center gap-3 header-controls">
-                    <div class="lang-toggle-container border-r border-slate-200 dark:border-slate-700 pr-3 mr-1 flex items-center gap-2">
-                        <span class="font-medium text-header hidden sm:inline w-16 text-right" id="lang-label">Nyelv</span>
-                        <label class="lang-switch toggle-switch" for="lang-checkbox">
-                            <input id="lang-checkbox" type="checkbox"/>
-                            <div class="lang-slider toggle-slider">
-                                <div class="lang-bg lang-bg-hu"></div>
-                                <div class="lang-bg lang-bg-en"></div>
-                                <div class="lang-thumb toggle-thumb"></div>
-                            </div>
-                        </label>
+                </label>
+            </div>
+            <div id="music-player-container" class="ml-3">
+                <div id="music-player" class="flex items-center justify-center rounded-full glass-effect shadow-lg cursor-pointer" style="contain: content;">
+                    <div id="mini-player-icon">
+                        <i data-lucide="music-2" class="text-header animate-pulse"></i>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <span class="font-medium text-header hidden sm:inline w-16 text-right" id="theme-label">Világos</span>
-                        <label class="theme-switch toggle-switch" for="theme-checkbox">
-                            <input id="theme-checkbox" type="checkbox"/>
-                            <div class="toggle-slider">
-                                <div class="toggle-thumb theme-thumb"></div>
-                                <div class="cloud c1"></div><div class="cloud c2"></div>
-                                <div class="star s1"></div><div class="star s2"></div><div class="star s3"></div><div class="star s4"></div>
+                    <div id="full-player">
+                        <img id="player-album-art" src="https://placehold.co/64x64/020617/38bdf8?text=KN" alt="Album Art" class="w-12 h-12 rounded-full shadow-md flex-shrink-0">
+                        <div class="flex-grow min-w-0">
+                            <p id="player-title" class="font-bold text-header whitespace-nowrap text-ellipsis overflow-hidden">Válassz egy dalt</p>
+                            <div id="player-progress-container" class="h-1 bg-white/20 rounded-full mt-1 overflow-hidden cursor-pointer">
+                                <div id="player-progress" class="h-full bg-accent rounded-full" style="width: 0%;"></div>
                             </div>
-                        </label>
-                    </div>
-                    <div id="music-player-container" class="ml-3">
-                        <div id="music-player" class="flex items-center justify-center rounded-full glass-effect shadow-lg cursor-pointer" style="contain: content;">
-                            <div class="progress-ring">
-                                <svg class="progress-ring__svg" width="100%" height="100%">
-                                    <circle class="progress-ring__circle" stroke="var(--accent-color)" stroke-width="4" fill="transparent" r="28" cx="50%" cy="50%"/>
-                                </svg>
-                            </div>
-                            <div id="mini-player-icon">
-                                <i data-lucide="music-2" class="text-header animate-pulse"></i>
-                            </div>
-                            <div id="full-player">
-                                <img id="player-album-art" src="https://placehold.co/64x64/020617/38bdf8?text=KN" alt="Album Art" class="w-12 h-12 rounded-full shadow-md flex-shrink-0">
-                                <div class="flex-grow min-w-0">
-                                    <p id="player-title" class="font-bold text-header whitespace-nowrap text-ellipsis overflow-hidden">Válassz egy dalt</p>
-                                    <div id="player-progress-container" class="h-1 bg-white/20 rounded-full mt-1 overflow-hidden cursor-pointer">
-                                        <div id="player-progress" class="h-full bg-accent rounded-full" style="width: 0%;"></div>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-1 text-header">
-                                    <button id="player-prev" class="p-2 rounded-full hover:bg-white/20 transition-colors flex-shrink-0"><i data-lucide="skip-back" class="w-5 h-5"></i></button>
-                                    <button id="player-play" class="p-2 rounded-full hover:bg-white/20 transition-colors flex-shrink-0"><i data-lucide="play" class="w-6 h-6"></i></button>
-                                    <button id="player-next" class="p-2 rounded-full hover:bg-white/20 transition-colors flex-shrink-0"><i data-lucide="skip-forward" class="w-5 h-5"></i></button>
-                                </div>
-                            </div>
+                        </div>
+                        <div class="flex items-center gap-1 text-header">
+                            <button id="player-prev" class="p-2 rounded-full hover:bg-white/20 transition-colors flex-shrink-0"><i data-lucide="skip-back" class="w-5 h-5"></i></button>
+                            <button id="player-play" class="p-2 rounded-full hover:bg-white/20 transition-colors flex-shrink-0"><i data-lucide="play" class="w-6 h-6"></i></button>
+                            <button id="player-next" class="p-2 rounded-full hover:bg-white/20 transition-colors flex-shrink-0"><i data-lucide="skip-forward" class="w-5 h-5"></i></button>
                         </div>
                     </div>
                 </div>
-
-                <button class="md:hidden p-2 rounded-md text-header transition-colors relative w-10 h-10 ml-2" id="menu-toggle">
-                    <span class="hamburger-line top"></span>
-                    <span class="hamburger-line middle"></span>
-                    <span class="hamburger-line bottom"></span>
-                </button>
             </div>
         </div>
-    </header>
 
-    <main class="container mx-auto px-4 pt-20 relative z-10">
-        <section class="min-h-[calc(100dvh-5rem)] flex items-center" id="home">
-            <div class="w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div class="order-2 lg:order-1 text-center lg:text-left">
-                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-header scroll-animate" data-lang-key="hero_name" id="main-headline">
+        <button class="md:hidden p-2 rounded-md text-header transition-colors relative w-10 h-10 ml-2" id="menu-toggle">
+            <span class="hamburger-line top"></span>
+            <span class="hamburger-line middle"></span>
+            <span class="hamburger-line bottom"></span>
+        </button>
+    </div>
+</div>
+</header>
+
+<main class="container mx-auto px-4 pt-20 relative z-10">
+<section class="min-h-[calc(100dvh-5rem)] flex items-center" id="home">
+<div class="w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+<div class="order-2 lg:order-1 text-center lg:text-left">
+<h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-header scroll-animate" data-lang-key="hero_name" id="main-headline">
                         Kiss Norbert
                     </h1>
-                    <p class="mt-4 text-lg sm:text-xl font-medium text-header scroll-animate" data-lang-key="hero_roles" style="transition-delay: 150ms;">
+<p class="mt-4 text-lg sm:text-xl font-medium text-header scroll-animate" data-lang-key="hero_roles" style="transition-delay: 150ms;">
                         Game Developer • Technical Artist • Workflow Innovator
                     </p>
-                    <p class="mt-6 max-w-xl mx-auto lg:mx-0 text-lg scroll-animate" data-lang-key="hero_intro" style="transition-delay: 300ms;">
+<p class="mt-6 max-w-xl mx-auto lg:mx-0 text-lg scroll-animate" data-lang-key="hero_intro" style="transition-delay: 300ms;">
                         Szenvedélyem a problémamegoldás és az alkotás, legyen szó építőipari tervekről vagy egyedi szoftveres megoldásokról. Folyamatosan keresem az új kihívásokat és a fejlődési lehetőségeket.
                     </p>
-                    <div class="mt-8 flex justify-center lg:justify-start gap-4 scroll-animate" style="transition-delay: 450ms;">
-                        <a class="inline-flex items-center gap-2 px-6 py-3 bg-card glass-effect border rounded-lg shadow-lg hover:border-sky-500 transition-all" href="mailto:kiss.norbert.reall@gmail.com">
-                            <i class="w-5 h-5 text-header" data-lucide="mail"></i> <span class="text-header font-semibold" data-lang-key="hero_contact_btn">Kapcsolat</span>
-                        </a>
-                        <a class="inline-flex items-center gap-2 px-6 py-3 bg-card glass-effect border rounded-lg shadow-lg hover:border-sky-500 transition-all" href="#projects">
-                            <i class="w-5 h-5 text-header" data-lucide="folder"></i> <span class="text-header font-semibold" data-lang-key="hero_projects_btn">Projektjeim</span>
-                        </a>
-                    </div>
-                </div>
-                <div class="order-1 lg:order-2 flex justify-center scroll-animate" style="transition-delay: 150ms;">
-                    <div class="w-64 h-64 sm:w-80 sm:h-80 rounded-full overflow-hidden shadow-2xl ring-4 ring-offset-4 ring-offset-slate-50 dark:ring-offset-slate-900 ring-accent">
-                        <img alt="Kiss Norbert portréja" class="w-full h-full object-cover" src="https://scontent.fbud7-3.fna.fbcdn.net/v/t39.30808-6/490218317_4299900466922719_7116602731487334346_n.jpg?_nc_cat=109&amp;ccb=1-7&amp;_nc_sid=6ee11a&amp;_nc_ohc=p_Jz-VjxapQQ7kNvwF6VSdo&amp;_nc_oc=Adke8-8TM3nJQb8Rw81cDzt7TGtK2KhCUG4FDdH3c_YaxI4W-htlBU2M_OwgyApw4gAdneHPE5izYON4Gxd4sQ3u&amp;_nc_zt=23&amp;_nc_ht=scontent.fbud7-3.fna&amp;_nc_gid=Gk3C5hU9MaQYuIQARJIzFw&amp;oh=00_AfbG3lAk3xhZdJik4AZhS90qtM-SEa21K-oKxbFr8ELDXg&amp;oe=68DCE3CD"/>
-                    </div>
-                </div>
-            </div>
-        </section>
+<div class="mt-8 flex justify-center lg:justify-start gap-4 scroll-animate" style="transition-delay: 450ms;">
+<a class="inline-flex items-center gap-2 px-6 py-3 bg-card glass-effect border rounded-lg shadow-lg hover:border-sky-500 transition-all" href="mailto:kiss.norbert.reall@gmail.com">
+<i class="w-5 h-5 text-header" data-lucide="mail"></i> <span class="text-header font-semibold" data-lang-key="hero_contact_btn">Kapcsolat</span>
+</a>
+<a class="inline-flex items-center gap-2 px-6 py-3 bg-card glass-effect border rounded-lg shadow-lg hover:border-sky-500 transition-all" href="#projects">
+<i class="w-5 h-5 text-header" data-lucide="folder"></i> <span class="text-header font-semibold" data-lang-key="hero_projects_btn">Projektjeim</span>
+</a>
+</div>
+</div>
+<div class="order-1 lg:order-2 flex justify-center scroll-animate" style="transition-delay: 150ms;">
+<div class="w-64 h-64 sm:w-80 sm:h-80 rounded-full overflow-hidden shadow-2xl ring-4 ring-offset-4 ring-offset-slate-50 dark:ring-offset-slate-900 ring-accent">
+<img alt="Kiss Norbert portréja" class="w-full h-full object-cover" src="https://scontent.fbud7-3.fna.fbcdn.net/v/t39.30808-6/490218317_4299900466922719_7116602731487334346_n.jpg?_nc_cat=109&amp;ccb=1-7&amp;_nc_sid=6ee11a&amp;_nc_ohc=p_Jz-VjxapQQ7kNvwF6VSdo&amp;_nc_oc=Adke8-8TM3nJQb8Rw81cDzt7TGtK2KhCUG4FDdH3c_YaxI4W-htlBU2M_OwgyApw4gAdneHPE5izYON4Gxd4sQ3u&amp;_nc_zt=23&amp;_nc_ht=scontent.fbud7-3.fna&amp;_nc_gid=Gk3C5hU9MaQYuIQARJIzFw&amp;oh=00_AfbG3lAk3xhZdJik4AZhS90qtM-SEa21K-oKxbFr8ELDXg&amp;oe=68DCE3CD"/>
+</div>
+</div>
+</div>
+</section>
+<section class="py-16 sm:py-24" id="about">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<div class="scroll-animate">
+<div class="flex items-center gap-4">
+<svg class="text-accent" fill="none" height="50" viewbox="0 0 150 50" width="150">
+<path class="signature-line" d="M5,25 C15,10 30,10 40,25 C50,40 60,40 70,25 M60,15 C70,5 85,5 95,15 C105,25 115,25 125,15 C135,5 145,10 145,20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<h2 class="text-4xl font-bold text-header" data-lang-key="about_title">Rólam</h2>
+</div>
+<p class="mt-6 text-lg" data-lang-key="about_p1">Mélyépítő és magasépítő technikusként precíz és strukturált gondolkodásmódot sajátítottam el, amit a programozás világában is kamatoztatok. A két terület ötvözése egyedi perspektívát ad: egyszerre látom a nagy képet és a legapróbb részleteket is. Szabadidőmben szeretek új technológiákat felfedezni (mint a C# és .NET), adat-analitikával foglalkozni, és kreatív projekteken dolgozni, mint például a Pekka Kana 2 játék remake-je Unity-ben.</p>
+<p class="mt-4 text-lg" data-lang-key="about_p2">Hiszek az élethosszig tartó tanulásban és abban, hogy a legjobb eredményeket csapatmunkával lehet elérni. Célom, hogy olyan megoldásokat hozzak létre, amik nem csak funkcionálisak, de felhasználói élményt is nyújtanak.</p>
+</div>
+<div class="scroll-animate" style="transition-delay: 150ms;">
+<div class="bg-card glass-effect p-8 rounded-2xl shadow-xl border">
+<div class="flex items-center gap-4 mb-6">
+<i class="w-6 h-6 text-accent" data-lucide="zap"></i>
+<div>
+<h3 class="text-lg font-bold text-header" data-lang-key="about_philosophy_title">Filozófiám</h3>
+<p data-lang-key="about_philosophy_text">Tiszta kód, átgondolt dizájn, hatékony megoldások.</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<i class="w-6 h-6 text-accent" data-lucide="crosshair"></i>
+<div>
+<h3 class="text-lg font-bold text-header" data-lang-key="about_goal_title">Célom</h3>
+<p data-lang-key="about_goal_text">Folyamatos fejlődés és maradandó érték teremtése.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-16 sm:py-24" id="experience">
+<div class="text-center mb-16 scroll-animate">
+<h2 class="text-4xl font-bold text-header" data-lang-key="experience_title">Szakmai Tapasztalat</h2>
+<p class="mt-4 text-lg max-w-2xl mx-auto" data-lang-key="experience_subtitle">Az építőipartól a szoftverfejlesztésig, szerteágazó területeken szereztem tapasztalatot.</p>
+</div>
+<div class="relative max-w-3xl mx-auto">
+<div class="absolute left-4 -translate-x-1/2 top-0 h-full w-0.5 bg-slate-200 dark:bg-slate-700 lg:left-1/2"></div>
+<div class="relative scroll-animate mb-12">
+<div class="lg:flex items-center">
+<div class="ml-10 lg:ml-0 lg:w-1/2 lg:pr-8 lg:text-right">
+<div class="p-6 rounded-2xl shadow-xl bg-card glass-effect border inline-block timeline-card w-full text-left lg:text-right">
+<p class="text-sm text-accent font-semibold">2022 - 2025</p>
+<h3 class="text-xl font-bold text-header mt-2 flex items-center justify-start lg:justify-end gap-2"><span>🏭</span> Wittur Hungária Kft.</h3>
+<p class="mt-1 font-medium" data-lang-key="exp_1_role">Összeszerelő operátor</p>
+</div>
+</div>
+</div>
+<div class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2"></div>
+</div>
+<div class="relative scroll-animate mb-12">
+<div class="lg:flex items-center flex-row-reverse">
+<div class="ml-10 lg:ml-0 lg:w-1/2 lg:pl-8">
+<div class="p-6 rounded-2xl shadow-xl bg-card glass-effect border timeline-card w-full text-left">
+<p class="text-sm text-accent font-semibold">2020 - 2022</p>
+<h3 class="text-xl font-bold text-header mt-2 flex items-center gap-2"><span>📐</span> Wetterbest®</h3>
+<p class="mt-1 font-medium" data-lang-key="exp_2_role">Tetőtervező és rajzoló</p>
+</div>
+</div>
+</div>
+<div class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2"></div>
+</div>
+<div class="relative scroll-animate mb-12">
+<div class="lg:flex items-center">
+<div class="ml-10 lg:ml-0 lg:w-1/2 lg:pr-8 lg:text-right">
+<div class="p-6 rounded-2xl shadow-xl bg-card glass-effect border inline-block timeline-card w-full text-left lg:text-right">
+<p class="text-sm text-accent font-semibold">2019</p>
+<h3 class="text-xl font-bold text-header mt-2 flex items-center justify-start lg:justify-end gap-2"><span>🎨</span> INCI Ajándékgyár</h3>
+<p class="mt-1 font-medium" data-lang-key="exp_3_role">Grafikus, Webshop kezelés</p>
+</div>
+</div>
+</div>
+<div class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2"></div>
+</div>
+<div class="relative scroll-animate mb-12">
+<div class="lg:flex items-center flex-row-reverse">
+<div class="ml-10 lg:ml-0 lg:w-1/2 lg:pl-8">
+<div class="p-6 rounded-2xl shadow-xl bg-card glass-effect border timeline-card w-full text-left">
+<p class="text-sm text-accent font-semibold">2017</p>
+<h3 class="text-xl font-bold text-header mt-2 flex items-center gap-2"><span>🏛️</span> Sóstói Múzeumfalu</h3>
+<p class="mt-1 font-medium" data-lang-key="exp_4_role">Épület-karbantartó (Gyakorlat)</p>
+</div>
+</div>
+</div>
+<div class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2"></div>
+</div>
+<div class="relative scroll-animate mb-12">
+<div class="lg:flex items-center">
+<div class="ml-10 lg:ml-0 lg:w-1/2 lg:pr-8 lg:text-right">
+<div class="p-6 rounded-2xl shadow-xl bg-card glass-effect border inline-block timeline-card w-full text-left lg:text-right">
+<p class="text-sm text-accent font-semibold">2016</p>
+<h3 class="text-xl font-bold text-header mt-2 flex items-center justify-start lg:justify-end gap-2"><span>🏗️</span> Ép-Okit Kft.</h3>
+<p class="mt-1 font-medium" data-lang-key="exp_5_role">Segédmunkás (Gyakorlat)</p>
+</div>
+</div>
+</div>
+<div class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2"></div>
+</div>
+</div>
+</section>
+<section class="py-16 sm:py-24" id="education">
+<div class="text-center mb-16 scroll-animate">
+<h2 class="text-4xl font-bold text-header" data-lang-key="education_title">Tanulmányok</h2>
+<p class="mt-4 text-lg max-w-2xl mx-auto" data-lang-key="education_subtitle">Ahol a tudásomat szereztem.</p>
+</div>
+<div class="relative max-w-3xl mx-auto">
+<div class="absolute left-4 -translate-x-1/2 top-0 h-full w-0.5 bg-slate-200 dark:bg-slate-700 lg:left-1/2"></div>
+<div class="relative scroll-animate mb-12">
+<div class="lg:flex items-center">
+<div class="ml-10 lg:ml-0 lg:w-1/2 lg:pr-8 lg:text-right">
+<div class="p-6 rounded-2xl shadow-xl bg-card glass-effect border inline-block timeline-card w-full text-left lg:text-right">
+<p class="text-sm text-accent font-semibold" data-lang-key="edu_1_date">2024 - Jelenleg</p>
+<h3 class="text-xl font-bold text-header mt-2 flex items-center justify-start lg:justify-end gap-2"><span>🎓</span> Nyíregyházi SZC Bencs László</h3>
+<p class="mt-1 font-medium" data-lang-key="edu_1_degree">Ács</p>
+</div>
+</div>
+</div>
+<div class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2"></div>
+</div>
+<div class="relative scroll-animate mb-12">
+<div class="lg:flex items-center flex-row-reverse">
+<div class="ml-10 lg:ml-0 lg:w-1/2 lg:pl-8">
+<div class="p-6 rounded-2xl shadow-xl bg-card glass-effect border timeline-card w-full text-left">
+<p class="text-sm text-accent font-semibold">2022 - 2024</p>
+<h3 class="text-xl font-bold text-header mt-2 flex items-center gap-2"><span>🎓</span> Nyíregyházi SZC Bencs László</h3>
+<p class="mt-1 font-medium" data-lang-key="edu_2_degree">Tetőfedő</p>
+</div>
+</div>
+</div>
+<div class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2"></div>
+</div>
+<div class="relative scroll-animate mb-12">
+<div class="lg:flex items-center">
+<div class="ml-10 lg:ml-0 lg:w-1/2 lg:pr-8 lg:text-right">
+<div class="p-6 rounded-2xl shadow-xl bg-card glass-effect border inline-block timeline-card w-full text-left lg:text-right">
+<p class="text-sm text-accent font-semibold">2023</p>
+<h3 class="text-xl font-bold text-header mt-2 flex items-center justify-start lg:justify-end gap-2"><span>💻</span> PRO OKTATÁS</h3>
+<p class="mt-1 font-medium" data-lang-key="edu_3_degree">C# programozás és .NET</p>
+</div>
+</div>
+</div>
+<div class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2"></div>
+</div>
+<div class="relative scroll-animate mb-12">
+<div class="lg:flex items-center flex-row-reverse">
+<div class="ml-10 lg:ml-0 lg:w-1/2 lg:pl-8">
+<div class="p-6 rounded-2xl shadow-xl bg-card glass-effect border timeline-card w-full text-left">
+<p class="text-sm text-accent font-semibold">2023</p>
+<h3 class="text-xl font-bold text-header mt-2 flex items-center gap-2"><span>📊</span> CODECOOL</h3>
+<p class="mt-1 font-medium" data-lang-key="edu_4_degree">Data Analyst képzés</p>
+</div>
+</div>
+</div>
+<div class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2"></div>
+</div>
+<div class="relative scroll-animate mb-12">
+<div class="lg:flex items-center">
+<div class="ml-10 lg:ml-0 lg:w-1/2 lg:pr-8 lg:text-right">
+<div class="p-6 rounded-2xl shadow-xl bg-card glass-effect border inline-block timeline-card w-full text-left lg:text-right">
+<p class="text-sm text-accent font-semibold">2019 - 2020</p>
+<h3 class="text-xl font-bold text-header mt-2 flex items-center justify-start lg:justify-end gap-2"><span>🎓</span> Nyíregyházi SZC Vásárhelyi Pál</h3>
+<p class="mt-1 font-medium" data-lang-key="edu_5_degree">Magasépítő Technikus</p>
+</div>
+</div>
+</div>
+<div class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2"></div>
+</div>
+<div class="relative scroll-animate mb-12">
+<div class="lg:flex items-center flex-row-reverse">
+<div class="ml-10 lg:ml-0 lg:w-1/2 lg:pl-8">
+<div class="p-6 rounded-2xl shadow-xl bg-card glass-effect border timeline-card w-full text-left">
+<p class="text-sm text-accent font-semibold">2018 - 2019</p>
+<h3 class="text-xl font-bold text-header mt-2 flex items-center gap-2"><span>🎓</span> Nyíregyházi SZC Vásárhelyi Pál</h3>
+<p class="mt-1 font-medium" data-lang-key="edu_6_degree">Mélyépítő Technikus</p>
+</div>
+</div>
+</div>
+<div class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2"></div>
+</div>
+</div>
+</section>
+<section class="py-16 sm:py-24" id="skills">
+<div class="text-center mb-16 scroll-animate">
+<h2 class="text-4xl font-bold text-header" data-lang-key="skills_title">Képességek</h2>
+<p class="mt-4 text-lg max-w-2xl mx-auto" data-lang-key="skills_subtitle">Folyamatosan fejlesztem magam a legújabb technológiák terén.</p>
+</div>
+<div class="scroll-animate mb-16">
+<h3 class="text-2xl font-bold text-header text-center mb-8" data-lang-key="skills_tech_stack_title">Tech Stack Highlights</h3>
+<div class="max-w-4xl mx-auto bg-card glass-effect p-6 rounded-2xl shadow-lg border flex justify-center items-center gap-x-8 gap-y-4 flex-wrap">
+<p class="font-bold text-lg text-header" data-lang-key="skills_tech_stack_tools">Kiemelt Eszközeim:</p>
+<div class="flex items-center gap-2 font-semibold"><img class="w-7 h-7" src="https://cdn.brandfetch.io/idEc0EPR9J/theme/dark/symbol.svg?c=1bxid64Mup7aczewSAYMX&amp;t=1668070683125"> Unity</img></div>
+<div class="flex items-center gap-2 font-semibold"><img class="w-7 h-7" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg"/> Blender</div>
+<div class="flex items-center gap-2 font-semibold"><img class="w-7 h-7" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/visualstudio/visualstudio-plain.svg"/> Visual Studio</div>
+<div class="flex items-center gap-2 font-semibold"><img class="w-7 h-7" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg"/> VS Code</div>
+<div class="flex items-center gap-2 font-semibold"><img class="w-7 h-7" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/android/android-plain.svg"/> Android SDK</div>
+<div class="flex items-center gap-2 font-semibold"><img class="w-7 h-7" src="https://upload.wikimedia.org/wikipedia/commons/a/af/Adobe_Photoshop_CC_icon.svg"/> Photoshop</div>
+<div class="flex items-center gap-2 font-semibold"><img class="w-7 h-7" src="https://upload.wikimedia.org/wikipedia/commons/f/f6/Audacity_Logo.svg"/> Audacity</div>
+</div>
+</div>
+<h3 class="text-2xl font-bold text-header text-center mb-8 scroll-animate" data-lang-key="skills_technical_title">Technikai Képességek</h3>
+<div class="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 text-center">
+<div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border flex flex-col items-center justify-center gap-3 transition-transform transform hover:-translate-y-2">
+<img class="w-12 h-12" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg"/>
+<span class="font-semibold text-header">C# &amp; .NET</span>
+</div>
+<div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border flex flex-col items-center justify-center gap-3 transition-transform transform hover:-translate-y-2" style="transition-delay: 100ms;">
+<img class="w-12 h-12" src="https://cdn.brandfetch.io/idEc0EPR9J/theme/dark/symbol.svg?c=1bxid64Mup7aczewSAYMX&amp;t=1668070683125"/>
+<span class="font-semibold text-header">Unity</span>
+</div>
+<div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border flex flex-col items-center justify-center gap-3 transition-transform transform hover:-translate-y-2" style="transition-delay: 200ms;">
+<img class="w-12 h-12" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg"/>
+<span class="font-semibold text-header">Blender</span>
+</div>
+<div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border flex flex-col items-center justify-center gap-3 transition-transform transform hover:-translate-y-2" style="transition-delay: 300ms;">
+<img class="w-12 h-12" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg"/>
+<span class="font-semibold text-header">HTML5</span>
+</div>
+<div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border flex flex-col items-center justify-center gap-3 transition-transform transform hover:-translate-y-2" style="transition-delay: 400ms;">
+<img class="w-12 h-12" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg"/>
+<span class="font-semibold text-header">CSS3</span>
+</div>
+<div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border flex flex-col items-center justify-center gap-3 transition-transform transform hover:-translate-y-2" style="transition-delay: 500ms;">
+<img class="w-12 h-12" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg"/>
+<span class="font-semibold text-header">JavaScript</span>
+</div>
+<div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border flex flex-col items-center justify-center gap-3 transition-transform transform hover:-translate-y-2" style="transition-delay: 600ms;">
+<i class="w-12 h-12 text-sky-500" data-lucide="database"></i>
+<span class="font-semibold text-header">Data Analysis</span>
+</div>
+</div>
+<h3 class="text-2xl font-bold text-header text-center mt-20 mb-8 scroll-animate" data-lang-key="skills_soft_title">Soft Skillek</h3>
+<div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
+<div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border text-center">
+<i class="w-10 h-10 text-accent mx-auto" data-lucide="lightbulb"></i>
+<h4 class="mt-4 font-bold text-header" data-lang-key="skill_soft_1">Problémamegoldás</h4>
+</div>
+<div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border text-center" style="transition-delay: 100ms;">
+<i class="w-10 h-10 text-accent mx-auto" data-lucide="users"></i>
+<h4 class="mt-4 font-bold text-header" data-lang-key="skill_soft_2">Csapatmunka</h4>
+</div>
+<div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border text-center" style="transition-delay: 200ms;">
+<i class="w-10 h-10 text-accent mx-auto" data-lucide="trending-up"></i>
+<h4 class="mt-4 font-bold text-header" data-lang-key="skill_soft_3">Fejlődési vágy</h4>
+</div>
+<div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border text-center" style="transition-delay: 300ms;">
+<i class="w-10 h-10 text-accent mx-auto" data-lucide="message-square"></i>
+<h4 class="mt-4 font-bold text-header" data-lang-key="skill_soft_4">Kommunikáció</h4>
+</div>
+</div>
+</section>
+<section class="py-16 sm:py-24" id="projects">
+<div class="text-center mb-16 scroll-animate">
+<h2 class="text-4xl font-bold text-header" data-lang-key="projects_title">Kiemelt Projektjeim</h2>
+<p class="mt-4 text-lg max-w-2xl mx-auto" data-lang-key="projects_subtitle">Néhány munka, amire büszke vagyok.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<div class="bg-card glass-effect rounded-2xl shadow-xl border overflow-hidden group flex flex-col scroll-animate relative">
+<img alt="Projekt kép" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500" src="https://pk2.m-h.org.uk/pk2.gif"/>
+<div class="absolute inset-0 bg-slate-900/70 project-overlay flex items-center justify-center p-4">
+<div class="text-center">
+<h3 class="text-xl font-bold text-white" data-lang-key="project_1_title">Pekka Kana 3D</h3>
+<div class="mt-5 flex items-center justify-center gap-4">
+<a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" href="#" rel="noopener noreferrer" target="_blank" title="GitHub"><i class="text-white" data-lucide="github"></i></a>
+<a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" data-lang-title-key="project_gallery_link" href="#" title="Galéria"><i class="text-white" data-lucide="image"></i></a>
+<a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" data-lang-title-key="project_demo_link" href="#" title="Demó"><i class="text-white" data-lucide="gamepad-2"></i></a>
+</div>
+</div>
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<h3 class="text-lg font-bold text-header" data-lang-key="project_1_title">Pekka Kana 3D</h3>
+<p class="mt-2 text-sm flex-grow" data-lang-key="project_1_desc">A klasszikus játék modern köntösben, Unity motorral és Blenderben készített modellekkel.</p>
+<div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<img class="w-7 h-7" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unity/unity-original.svg" title="Unity">
+<img class="w-7 h-7" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg" title="C#"/>
+<img class="w-7 h-7" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg" title="Blender"/>
+</img></div>
+<div class="flex gap-1">
+<div class="w-4 h-4 rounded-full" style="background-color: #38bdf8;"></div>
+<div class="w-4 h-4 rounded-full" style="background-color: #fbbf24;"></div>
+<div class="w-4 h-4 rounded-full" style="background-color: #34d399;"></div>
+</div>
+</div>
+</div>
+<div class="color-palette" style="background: linear-gradient(to right, #38bdf8, #fbbf24, #34d399);"></div>
+</div>
+<div class="bg-card glass-effect rounded-2xl shadow-xl border overflow-hidden group flex flex-col scroll-animate relative" style="transition-delay: 150ms;">
+<img alt="Projekt kép" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500" src="https://img.itch.zone/aW1nLzIxNjQ2ODg2LmpwZw==/original/yYwtqf.jpg"/>
+<div class="absolute inset-0 bg-slate-900/70 project-overlay flex items-center justify-center p-4">
+<div class="text-center">
+<h3 class="text-xl font-bold text-white" data-lang-key="project_2_title">Mindscape</h3>
+<div class="mt-5 flex items-center justify-center gap-4">
+<a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" href="#" rel="noopener noreferrer" target="_blank" title="GitHub"><i class="text-white" data-lucide="github"></i></a>
+<a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" data-lang-title-key="project_gallery_link" href="#" title="Galéria"><i class="text-white" data-lucide="image"></i></a>
+<a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" data-lang-title-key="project_demo_link" href="#" rel="noopener noreferrer" target="_blank" title="Demó"><i class="text-white" data-lucide="gamepad-2"></i></a>
+</div>
+</div>
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<h3 class="text-lg font-bold text-header" data-lang-key="project_2_title">Mindscape</h3>
+<p class="mt-2 text-sm flex-grow" data-lang-key="project_2_desc">Egy interaktív horror anomália kereső játék.</p>
+<div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<img class="w-7 h-7" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unity/unity-original.svg" title="Unity">
+<img class="w-7 h-7" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg" title="C#"/>
+<img class="w-7 h-7" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg" title="Blender"/>
+</img></div>
+<div class="flex gap-1">
+<div class="w-4 h-4 rounded-full" style="background-color: #020617;"></div>
+<div class="w-4 h-4 rounded-full" style="background-color: #38bdf8;"></div>
+<div class="w-4 h-4 rounded-full" style="background-color: #f8fafc;"></div>
+</div>
+</div>
+</div>
+<div class="color-palette" style="background: linear-gradient(to right, #020617, #38bdf8, #f8fafc);"></div>
+</div>
+<div class="bg-card glass-effect rounded-2xl shadow-xl border overflow-hidden group flex flex-col scroll-animate relative" style="transition-delay: 300ms;">
+<img alt="Projekt kép" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500" src="https://scontent.fbud7-3.fna.fbcdn.net/v/t39.30808-6/498693994_4339973242915441_3638509467370022001_n.jpg?_nc_cat=103&amp;ccb=1-7&amp;_nc_sid=cf85f3&amp;_nc_ohc=LI9HuE0IgrUQ7kNvwH1TIkL&amp;_nc_oc=Adk8YD4gJvmKdt1CTcjgC38Ov-jSsKVx9xQbCHrMbuixHKcp3hSDU6WWNkLnsqreqToKiWLySaqvbqFXM5-4uHaB&amp;_nc_zt=23&amp;_nc_ht=scontent.fbud7-3.fna&amp;_nc_gid=HEshfCmdlsi2VQNBs0rFQg&amp;oh=00_AfbDFgoK8asy2R_kkwRLrGnQGsOKciK4_zpdLrr2VhGQ2g&amp;oe=68DCD662"/>
+<div class="absolute inset-0 bg-slate-900/70 project-overlay flex items-center justify-center p-4">
+<div class="text-center">
+<h3 class="text-xl font-bold text-white" data-lang-key="project_3_title">3D Modell Galéria</h3>
+<div class="mt-5 flex items-center justify-center gap-4">
+<a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" href="#" rel="noopener noreferrer" target="_blank" title="GitHub"><i class="text-white" data-lucide="github"></i></a>
+<a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" data-lang-title-key="project_gallery_link" href="#" title="Galéria"><i class="text-white" data-lucide="image"></i></a>
+<a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" href="#" title="Sketchfab"><i class="text-white" data-lucide="box"></i></a>
+</div>
+</div>
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<h3 class="text-lg font-bold text-header" data-lang-key="project_3_title">3D Modell Galéria</h3>
+<p class="mt-2 text-sm flex-grow" data-lang-key="project_3_desc">Blenderben készült 3D modellek bemutatása, a koncepciótól a végső renderelésig.</p>
+<div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<img class="w-7 h-7" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg" title="Blender">
+</img></div>
+<div class="flex gap-1">
+<div class="w-4 h-4 rounded-full" style="background-color: #f59e0b;"></div>
+<div class="w-4 h-4 rounded-full" style="background-color: #4f46e5;"></div>
+<div class="w-4 h-4 rounded-full" style="background-color: #64748b;"></div>
+</div>
+</div>
+</div>
+<div class="color-palette" style="background: linear-gradient(to right, #f59e0b, #4f46e5, #64748b);"></div>
+</div>
+<div class="bg-card glass-effect rounded-2xl shadow-xl border overflow-hidden group flex flex-col scroll-animate relative" style="transition-delay: 150ms;">
+<img alt="Projekt kép" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500" src="https://wallpapers.com/images/high/dj-background-xuknuzdbw76k9r2n.webp"/>
+<div class="absolute inset-0 bg-slate-900/70 project-overlay flex items-center justify-center p-4">
+<div class="text-center">
+<h3 class="text-xl font-bold text-white" data-lang-key="project_4_title">Zenéim</h3>
+<div class="mt-5 flex items-center justify-center gap-4">
+<a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" href="https://soundcloud.com/norbert-kiss-13" rel="noopener noreferrer" target="_blank" title="SoundCloud"><i class="text-white" data-lucide="soundcloud"></i></a>
+<a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" href="https://www.youtube.com/@NorbertKiss-Music/videos" rel="noopener noreferrer" target="_blank" title="YouTube"><i class="text-white" data-lucide="youtube"></i></a>
+<a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" href="#" title="Spotify"><i class="text-white" data-lucide="spotify"></i></a>
+</div>
+</div>
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<h3 class="text-lg font-bold text-header" data-lang-key="project_4_title">Zenéim</h3>
+<p class="mt-2 text-sm flex-grow" data-lang-key="project_4_desc">Audacityben készült zenéim bemutatása.</p>
+<div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<img class="w-7 h-7" src="https://upload.wikimedia.org/wikipedia/commons/f/f6/Audacity_Logo.svg" title="Audacity">
+</img></div>
+<div class="flex gap-1">
+<div class="w-4 h-4 rounded-full" style="background-color: #170a02;"></div>
+<div class="w-4 h-4 rounded-full" style="background-color: #f8df38;"></div>
+<div class="w-4 h-4 rounded-full" style="background-color: #b43884;"></div>
+</div>
+</div>
+</div>
+<div class="color-palette" style="background: linear-gradient(to right, #830981, #3bf838, #0d4c8b);"></div>
+</div>
+</div>
+</section>
+<section class="py-16 sm:py-24" id="contact">
+<div class="text-center mb-16 scroll-animate">
+<h2 class="text-4xl font-bold text-header" data-lang-key="contact_title">Lépjünk kapcsolatba!</h2>
+<p class="mt-4 text-lg max-w-2xl mx-auto" data-lang-key="contact_subtitle">Nyitott vagyok új lehetőségekre és együttműködésekre. Keress bizalommal!</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-16">
+<div class="scroll-animate">
+<form class="space-y-6" id="contact-form">
+<div>
+<label class="font-medium text-header" data-lang-key="form_name" for="name">Név</label>
+<input class="w-full mt-2 p-3 rounded-lg bg-card glass-effect border focus:outline-none focus:ring-2 ring-sky-500" data-lang-placeholder-key="form_name_placeholder" id="name" name="name" required="" type="text"/>
+</div>
+<div>
+<label class="font-medium text-header" data-lang-key="form_email" for="email">Email</label>
+<input class="w-full mt-2 p-3 rounded-lg bg-card glass-effect border focus:outline-none focus:ring-2 ring-sky-500" data-lang-placeholder-key="form_email_placeholder" id="email" name="email" required="" type="email"/>
+</div>
+<div>
+<label class="font-medium text-header" data-lang-key="form_message" for="message">Üzenet</label>
+<textarea class="w-full mt-2 p-3 rounded-lg bg-card glass-effect border focus:outline-none focus:ring-2 ring-sky-500" data-lang-placeholder-key="form_message_placeholder" id="message" name="message" required="" rows="5"></textarea>
+</div>
+<div class="flex items-start gap-3">
+<input class="h-4 w-4 mt-1 rounded border-slate-300 dark:border-slate-600 bg-transparent text-sky-600 focus:ring-sky-500 dark:focus:ring-offset-slate-900" id="privacy-checkbox" required="" type="checkbox"/>
+<label class="text-sm" data-lang-key="form_privacy" for="privacy-checkbox">Elolvastam és elfogadom az <a class="underline hover:text-accent" data-lang-key="form_privacy_link" href="#">Adatvédelmi Tájékoztatót</a>.</label>
+</div>
+<button class="breathing-button w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-card glass-effect border dark:border-slate-700 text-header font-semibold rounded-lg shadow-lg hover:border-sky-500 dark:hover:border-sky-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:border-slate-200 dark:disabled:hover:border-slate-700 disabled:transform-none disabled:shadow-none" disabled="" id="submit-button" type="submit">
+<span data-lang-key="form_submit_btn">Üzenet Küldése</span>
+</button>
+</form>
+<p class="text-center mt-4" id="form-status"></p>
+</div>
+<div class="scroll-animate" style="transition-delay: 150ms;">
+<div class="bg-card glass-effect p-8 rounded-2xl shadow-xl border">
+<h3 class="text-xl font-bold text-header" data-lang-key="contact_info_title">Elérhetőségek</h3>
+<div class="mt-4 space-y-4">
+<div class="flex items-center gap-4">
+<i class="w-6 h-6 text-accent" data-lucide="mail"></i>
+<a class="hover:text-accent" href="mailto:kiss.norbert.reall@gmail.com">kiss.norbert.reall@gmail.com</a>
+</div>
+<div class="flex items-center gap-4">
+<i class="w-6 h-6 text-accent" data-lucide="phone"></i>
+<a class="hover:text-accent" href="tel:+36702992948">06 (70) 299-2948</a>
+</div>
+<div class="flex items-center gap-4">
+<i class="w-6 h-6 text-accent" data-lucide="map-pin"></i>
+<span data-lang-key="contact_location">Nyíregyháza, Magyarország</span>
+</div>
+</div>
+</div>
+<div class="mt-8 text-center">
+<p class="font-semibold text-header mb-4" data-lang-key="contact_social_prompt">Vagy keress meg itt:</p>
+<div class="flex justify-center gap-6">
+<a class="text-header hover:text-accent transition-colors" href="https://github.com/Norbert-Kiss-Hub" rel="noopener noreferrer" target="_blank"><i class="w-8 h-8" data-lucide="github"></i></a>
+<a class="text-header hover:text-accent transition-colors" href="https://www.linkedin.com/in/norbert-kiss-722509263/" rel="noopener noreferrer" target="_blank"><i class="w-8 h-8" data-lucide="linkedin"></i></a>
+<a class="text-header hover:text-accent transition-colors" href="https://www.facebook.com/profile.php?id=100086384070034" rel="noopener noreferrer" target="_blank"><i class="w-8 h-8" data-lucide="facebook"></i></a>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
 
-        <section class="py-16 sm:py-24" id="about">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                <div class="scroll-animate">
-                    <div class="flex items-center gap-4">
-                        <svg class="text-accent" fill="none" height="50" viewbox="0 0 150 50" width="150">
-                            <path class="signature-line" d="M5,25 C15,10 30,10 40,25 C50,40 60,40 70,25 M60,15 C70,5 85,5 95,15 C105,25 115,25 125,15 C135,5 145,10 145,20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                        </svg>
-                        <h2 class="text-4xl font-bold text-header" data-lang-key="about_title">Rólam</h2>
-                    </div>
-                    <p class="mt-6 text-lg" data-lang-key="about_p1">Mélyépítő és magasépítő technikusként precíz és strukturált gondolkodásmódot sajátítottam el, amit a programozás világában is kamatoztatok. A két terület ötvözése egyedi perspektívát ad: egyszerre látom a nagy képet és a legapróbb részleteket is. Szabadidőmben szeretek új technológiákat felfedezni (mint a C# és .NET), adat-analitikával foglalkozni, és kreatív projekteken dolgozni, mint például a Pekka Kana 2 játék remake-je Unity-ben.</p>
-                    <p class="mt-4 text-lg" data-lang-key="about_p2">Hiszek az élethosszig tartó tanulásban és abban, hogy a legjobb eredményeket csapatmunkával lehet elérni. Célom, hogy olyan megoldásokat hozzak létre, amik nem csak funkcionálisak, de felhasználói élményt is nyújtanak.</p>
-                </div>
-                <div class="scroll-animate" style="transition-delay: 150ms;">
-                    <div class="bg-card glass-effect p-8 rounded-2xl shadow-xl border">
-                        <div class="flex items-center gap-4 mb-6">
-                            <i class="w-6 h-6 text-accent" data-lucide="zap"></i>
-                            <div>
-                                <h3 class="text-lg font-bold text-header" data-lang-key="about_philosophy_title">Filozófiám</h3>
-                                <p data-lang-key="about_philosophy_text">Tiszta kód, átgondolt dizájn, hatékony megoldások.</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <i class="w-6 h-6 text-accent" data-lucide="crosshair"></i>
-                            <div>
-                                <h3 class="text-lg font-bold text-header" data-lang-key="about_goal_title">Célom</h3>
-                                <p data-lang-key="about_goal_text">Folyamatos fejlődés és maradandó érték teremtése.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+<footer class="bg-card glass-effect text-center py-6 sm:py-8 border-t relative z-10 mt-16 sm:mt-24">
+<p class="text-sm" data-lang-key="footer_copyright">© 2025 Kiss Norbert. Minden jog fenntartva.</p>
+</footer>
 
-        <section class="py-16 sm:py-24" id="experience">
-            <div class="text-center mb-16 scroll-animate">
-                <h2 class="text-4xl font-bold text-header" data-lang-key="experience_title">Szakmai Tapasztalat</h2>
-                <p class="mt-4 text-lg max-w-2xl mx-auto" data-lang-key="experience_subtitle">Az építőipartól a szoftverfejlesztésig, szerteágazó területeken szereztem tapasztalatot.</p>
-            </div>
-            <div class="relative max-w-3xl mx-auto">
-                <div class="absolute left-4 -translate-x-1/2 top-0 h-full w-0.5 bg-slate-200 dark:bg-slate-700 lg:left-1/2"></div>
-                <div class="relative scroll-animate mb-12">
-                    <div class="lg:flex items-center">
-                        <div class="ml-10 lg:ml-0 lg:w-1/2 lg:pr-8 lg:text-right">
-                            <div class="p-6 rounded-2xl shadow-xl bg-card glass-effect border inline-block timeline-card w-full text-left lg:text-right">
-                                <p class="text-sm text-accent font-semibold">2022 - 2025</p>
-                                <h3 class="text-xl font-bold text-header mt-2 flex items-center justify-start lg:justify-end gap-2"><span>🏭</span> Wittur Hungária Kft.</h3>
-                                <p class="mt-1 font-medium" data-lang-key="exp_1_role">Összeszerelő operátor</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2"></div>
-                </div>
-                <div class="relative scroll-animate mb-12">
-                    <div class="lg:flex items-center flex-row-reverse">
-                        <div class="ml-10 lg:ml-0 lg:w-1/2 lg:pl-8">
-                            <div class="p-6 rounded-2xl shadow-xl bg-card glass-effect border timeline-card w-full text-left">
-                                <p class="text-sm text-accent font-semibold">2020 - 2022</p>
-                                <h3 class="text-xl font-bold text-header mt-2 flex items-center gap-2"><span>📐</span> Wetterbest®</h3>
-                                <p class="mt-1 font-medium" data-lang-key="exp_2_role">Tetőtervező és rajzoló</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2"></div>
-                </div>
-                <div class="relative scroll-animate mb-12">
-                    <div class="lg:flex items-center">
-                        <div class="ml-10 lg:ml-0 lg:w-1/2 lg:pr-8 lg:text-right">
-                            <div class="p-6 rounded-2xl shadow-xl bg-card glass-effect border inline-block timeline-card w-full text-left lg:text-right">
-                                <p class="text-sm text-accent font-semibold">2019</p>
-                                <h3 class="text-xl font-bold text-header mt-2 flex items-center justify-start lg:justify-end gap-2"><span>🎨</span> INCI Ajándékgyár</h3>
-                                <p class="mt-1 font-medium" data-lang-key="exp_3_role">Grafikus, Webshop kezelés</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2"></div>
-                </div>
-                <div class="relative scroll-animate mb-12">
-                    <div class="lg:flex items-center flex-row-reverse">
-                        <div class="ml-10 lg:ml-0 lg:w-1/2 lg:pl-8">
-                            <div class="p-6 rounded-2xl shadow-xl bg-card glass-effect border timeline-card w-full text-left">
-                                <p class="text-sm text-accent font-semibold">2017</p>
-                                <h3 class="text-xl font-bold text-header mt-2 flex items-center gap-2"><span>🏛️</span> Sóstói Múzeumfalu</h3>
-                                <p class="mt-1 font-medium" data-lang-key="exp_4_role">Épület-karbantartó (Gyakorlat)</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2"></div>
-                </div>
-                <div class="relative scroll-animate mb-12">
-                    <div class="lg:flex items-center">
-                        <div class="ml-10 lg:ml-0 lg:w-1/2 lg:pr-8 lg:text-right">
-                            <div class="p-6 rounded-2xl shadow-xl bg-card glass-effect border inline-block timeline-card w-full text-left lg:text-right">
-                                <p class="text-sm text-accent font-semibold">2016</p>
-                                <h3 class="text-xl font-bold text-header mt-2 flex items-center justify-start lg:justify-end gap-2"><span>🏗️</span> Ép-Okit Kft.</h3>
-                                <p class="mt-1 font-medium" data-lang-key="exp_5_role">Segédmunkás (Gyakorlat)</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2"></div>
-                </div>
-            </div>
-        </section>
+<a class="w-20 h-20 flex items-center justify-center bg-card glass-effect rounded-full shadow-lg border hover:border-sky-500 transition-all" href="#home" id="back-to-top">
+<i class="w-10 h-10 text-header" data-lucide="arrow-up"></i>
+</a>
+<div id="youtube-player"></div>
 
-        <section class="py-16 sm:py-24" id="education">
-            <div class="text-center mb-16 scroll-animate">
-                <h2 class="text-4xl font-bold text-header" data-lang-key="education_title">Tanulmányok</h2>
-                <p class="mt-4 text-lg max-w-2xl mx-auto" data-lang-key="education_subtitle">Ahol a tudásomat szereztem.</p>
-            </div>
-            <div class="relative max-w-3xl mx-auto">
-                <div class="absolute left-4 -translate-x-1/2 top-0 h-full w-0.5 bg-slate-200 dark:bg-slate-700 lg:left-1/2"></div>
-                <div class="relative scroll-animate mb-12">
-                    <div class="lg:flex items-center">
-                        <div class="ml-10 lg:ml-0 lg:w-1/2 lg:pr-8 lg:text-right">
-                            <div class="p-6 rounded-2xl shadow-xl bg-card glass-effect border inline-block timeline-card w-full text-left lg:text-right">
-                                <p class="text-sm text-accent font-semibold" data-lang-key="edu_1_date">2024 - Jelenleg</p>
-                                <h3 class="text-xl font-bold text-header mt-2 flex items-center justify-start lg:justify-end gap-2"><span>🎓</span> Nyíregyházi SZC Bencs László</h3>
-                                <p class="mt-1 font-medium" data-lang-key="edu_1_degree">Ács</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2"></div>
-                </div>
-                <div class="relative scroll-animate mb-12">
-                    <div class="lg:flex items-center flex-row-reverse">
-                        <div class="ml-10 lg:ml-0 lg:w-1/2 lg:pl-8">
-                            <div class="p-6 rounded-2xl shadow-xl bg-card glass-effect border timeline-card w-full text-left">
-                                <p class="text-sm text-accent font-semibold">2022 - 2024</p>
-                                <h3 class="text-xl font-bold text-header mt-2 flex items-center gap-2"><span>🎓</span> Nyíregyházi SZC Bencs László</h3>
-                                <p class="mt-1 font-medium" data-lang-key="edu_2_degree">Tetőfedő</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2"></div>
-                </div>
-                <div class="relative scroll-animate mb-12">
-                    <div class="lg:flex items-center">
-                        <div class="ml-10 lg:ml-0 lg:w-1/2 lg:pr-8 lg:text-right">
-                            <div class="p-6 rounded-2xl shadow-xl bg-card glass-effect border inline-block timeline-card w-full text-left lg:text-right">
-                                <p class="text-sm text-accent font-semibold">2023</p>
-                                <h3 class="text-xl font-bold text-header mt-2 flex items-center justify-start lg:justify-end gap-2"><span>💻</span> PRO OKTATÁS</h3>
-                                <p class="mt-1 font-medium" data-lang-key="edu_3_degree">C# programozás és .NET</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2"></div>
-                </div>
-                <div class="relative scroll-animate mb-12">
-                    <div class="lg:flex items-center flex-row-reverse">
-                        <div class="ml-10 lg:ml-0 lg:w-1/2 lg:pl-8">
-                            <div class="p-6 rounded-2xl shadow-xl bg-card glass-effect border timeline-card w-full text-left">
-                                <p class="text-sm text-accent font-semibold">2023</p>
-                                <h3 class="text-xl font-bold text-header mt-2 flex items-center gap-2"><span>📊</span> CODECOOL</h3>
-                                <p class="mt-1 font-medium" data-lang-key="edu_4_degree">Data Analyst képzés</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2"></div>
-                </div>
-                <div class="relative scroll-animate mb-12">
-                    <div class="lg:flex items-center">
-                        <div class="ml-10 lg:ml-0 lg:w-1/2 lg:pr-8 lg:text-right">
-                            <div class="p-6 rounded-2xl shadow-xl bg-card glass-effect border inline-block timeline-card w-full text-left lg:text-right">
-                                <p class="text-sm text-accent font-semibold">2019 - 2020</p>
-                                <h3 class="text-xl font-bold text-header mt-2 flex items-center justify-start lg:justify-end gap-2"><span>🎓</span> Nyíregyházi SZC Vásárhelyi Pál</h3>
-                                <p class="mt-1 font-medium" data-lang-key="edu_5_degree">Magasépítő Technikus</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2"></div>
-                </div>
-                <div class="relative scroll-animate mb-12">
-                    <div class="lg:flex items-center flex-row-reverse">
-                        <div class="ml-10 lg:ml-0 lg:w-1/2 lg:pl-8">
-                            <div class="p-6 rounded-2xl shadow-xl bg-card glass-effect border timeline-card w-full text-left">
-                                <p class="text-sm text-accent font-semibold">2018 - 2019</p>
-                                <h3 class="text-xl font-bold text-header mt-2 flex items-center gap-2"><span>🎓</span> Nyíregyházi SZC Vásárhelyi Pál</h3>
-                                <p class="mt-1 font-medium" data-lang-key="edu_6_degree">Mélyépítő Technikus</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2"></div>
-                </div>
-            </div>
-        </section>
-
-        <section class="py-16 sm:py-24" id="skills">
-            <div class="text-center mb-16 scroll-animate">
-                <h2 class="text-4xl font-bold text-header" data-lang-key="skills_title">Képességek</h2>
-                <p class="mt-4 text-lg max-w-2xl mx-auto" data-lang-key="skills_subtitle">Folyamatosan fejlesztem magam a legújabb technológiák terén.</p>
-            </div>
-            <div class="scroll-animate mb-16">
-                <h3 class="text-2xl font-bold text-header text-center mb-8" data-lang-key="skills_tech_stack_title">Tech Stack Highlights</h3>
-                <div class="max-w-4xl mx-auto bg-card glass-effect p-6 rounded-2xl shadow-lg border flex justify-center items-center gap-x-8 gap-y-4 flex-wrap">
-                    <p class="font-bold text-lg text-header" data-lang-key="skills_tech_stack_tools">Kiemelt Eszközeim:</p>
-                    <div class="flex items-center gap-2 font-semibold"><img class="w-7 h-7" src="https://cdn.brandfetch.io/idEc0EPR9J/theme/dark/symbol.svg?c=1bxid64Mup7aczewSAYMX&amp;t=1668070683125"> Unity</img></div>
-                    <div class="flex items-center gap-2 font-semibold"><img class="w-7 h-7" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg"/> Blender</div>
-                    <div class="flex items-center gap-2 font-semibold"><img class="w-7 h-7" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/visualstudio/visualstudio-plain.svg"/> Visual Studio</div>
-                    <div class="flex items-center gap-2 font-semibold"><img class="w-7 h-7" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg"/> VS Code</div>
-                    <div class="flex items-center gap-2 font-semibold"><img class="w-7 h-7" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/android/android-plain.svg"/> Android SDK</div>
-                    <div class="flex items-center gap-2 font-semibold"><img class="w-7 h-7" src="https://upload.wikimedia.org/wikipedia/commons/a/af/Adobe_Photoshop_CC_icon.svg"/> Photoshop</div>
-                    <div class="flex items-center gap-2 font-semibold"><img class="w-7 h-7" src="https://upload.wikimedia.org/wikipedia/commons/f/f6/Audacity_Logo.svg"/> Audacity</div>
-                </div>
-            </div>
-            <h3 class="text-2xl font-bold text-header text-center mb-8 scroll-animate" data-lang-key="skills_technical_title">Technikai Képességek</h3>
-            <div class="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 text-center">
-                <div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border flex flex-col items-center justify-center gap-3 transition-transform transform hover:-translate-y-2">
-                    <img class="w-12 h-12" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg"/>
-                    <span class="font-semibold text-header">C# &amp; .NET</span>
-                </div>
-                <div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border flex flex-col items-center justify-center gap-3 transition-transform transform hover:-translate-y-2" style="transition-delay: 100ms;">
-                    <img class="w-12 h-12" src="https://cdn.brandfetch.io/idEc0EPR9J/theme/dark/symbol.svg?c=1bxid64Mup7aczewSAYMX&amp;t=1668070683125"/>
-                    <span class="font-semibold text-header">Unity</span>
-                </div>
-                <div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border flex flex-col items-center justify-center gap-3 transition-transform transform hover:-translate-y-2" style="transition-delay: 200ms;">
-                    <img class="w-12 h-12" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg"/>
-                    <span class="font-semibold text-header">Blender</span>
-                </div>
-                <div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border flex flex-col items-center justify-center gap-3 transition-transform transform hover:-translate-y-2" style="transition-delay: 300ms;">
-                    <img class="w-12 h-12" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg"/>
-                    <span class="font-semibold text-header">HTML5</span>
-                </div>
-                <div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border flex flex-col items-center justify-center gap-3 transition-transform transform hover:-translate-y-2" style="transition-delay: 400ms;">
-                    <img class="w-12 h-12" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg"/>
-                    <span class="font-semibold text-header">CSS3</span>
-                </div>
-                <div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border flex flex-col items-center justify-center gap-3 transition-transform transform hover:-translate-y-2" style="transition-delay: 500ms;">
-                    <img class="w-12 h-12" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg"/>
-                    <span class="font-semibold text-header">JavaScript</span>
-                </div>
-                <div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border flex flex-col items-center justify-center gap-3 transition-transform transform hover:-translate-y-2" style="transition-delay: 600ms;">
-                    <i class="w-12 h-12 text-sky-500" data-lucide="database"></i>
-                    <span class="font-semibold text-header">Data Analysis</span>
-                </div>
-            </div>
-            <h3 class="text-2xl font-bold text-header text-center mt-20 mb-8 scroll-animate" data-lang-key="skills_soft_title">Soft Skillek</h3>
-            <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
-                <div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border text-center">
-                    <i class="w-10 h-10 text-accent mx-auto" data-lucide="lightbulb"></i>
-                    <h4 class="mt-4 font-bold text-header" data-lang-key="skill_soft_1">Problémamegoldás</h4>
-                </div>
-                <div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border text-center" style="transition-delay: 100ms;">
-                    <i class="w-10 h-10 text-accent mx-auto" data-lucide="users"></i>
-                    <h4 class="mt-4 font-bold text-header" data-lang-key="skill_soft_2">Csapatmunka</h4>
-                </div>
-                <div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border text-center" style="transition-delay: 200ms;">
-                    <i class="w-10 h-10 text-accent mx-auto" data-lucide="trending-up"></i>
-                    <h4 class="mt-4 font-bold text-header" data-lang-key="skill_soft_3">Fejlődési vágy</h4>
-                </div>
-                <div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border text-center" style="transition-delay: 300ms;">
-                    <i class="w-10 h-10 text-accent mx-auto" data-lucide="message-square"></i>
-                    <h4 class="mt-4 font-bold text-header" data-lang-key="skill_soft_4">Kommunikáció</h4>
-                </div>
-            </div>
-        </section>
-
-        <section class="py-16 sm:py-24" id="projects">
-            <div class="text-center mb-16 scroll-animate">
-                <h2 class="text-4xl font-bold text-header" data-lang-key="projects_title">Kiemelt Projektjeim</h2>
-                <p class="mt-4 text-lg max-w-2xl mx-auto" data-lang-key="projects_subtitle">Néhány munka, amire büszke vagyok.</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="bg-card glass-effect rounded-2xl shadow-xl border overflow-hidden group flex flex-col scroll-animate relative">
-                    <img alt="Projekt kép" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500" src="https://pk2.m-h.org.uk/pk2.gif"/>
-                    <div class="absolute inset-0 bg-slate-900/70 project-overlay flex items-center justify-center p-4">
-                        <div class="text-center">
-                            <h3 class="text-xl font-bold text-white" data-lang-key="project_1_title">Pekka Kana 3D</h3>
-                            <div class="mt-5 flex items-center justify-center gap-4">
-                                <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" href="#" rel="noopener noreferrer" target="_blank" title="GitHub"><i class="text-white" data-lucide="github"></i></a>
-                                <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" data-lang-title-key="project_gallery_link" href="#" title="Galéria"><i class="text-white" data-lucide="image"></i></a>
-                                <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" data-lang-title-key="project_demo_link" href="#" title="Demó"><i class="text-white" data-lucide="gamepad-2"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-6 flex-grow flex flex-col">
-                        <h3 class="text-lg font-bold text-header" data-lang-key="project_1_title">Pekka Kana 3D</h3>
-                        <p class="mt-2 text-sm flex-grow" data-lang-key="project_1_desc">A klasszikus játék modern köntösben, Unity motorral és Blenderben készített modellekkel.</p>
-                        <div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between">
-                            <div class="flex items-center gap-4">
-                                <img class="w-7 h-7" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unity/unity-original.svg" title="Unity">
-                                <img class="w-7 h-7" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg" title="C#"/>
-                                <img class="w-7 h-7" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg" title="Blender"/>
-                            </div>
-                            <div class="flex gap-1">
-                                <div class="w-4 h-4 rounded-full" style="background-color: #38bdf8;"></div>
-                                <div class="w-4 h-4 rounded-full" style="background-color: #fbbf24;"></div>
-                                <div class="w-4 h-4 rounded-full" style="background-color: #34d399;"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="color-palette" style="background: linear-gradient(to right, #38bdf8, #fbbf24, #34d399);"></div>
-                </div>
-                <div class="bg-card glass-effect rounded-2xl shadow-xl border overflow-hidden group flex flex-col scroll-animate relative" style="transition-delay: 150ms;">
-                    <img alt="Projekt kép" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500" src="https://img.itch.zone/aW1nLzIxNjQ2ODg2LmpwZw==/original/yYwtqf.jpg"/>
-                    <div class="absolute inset-0 bg-slate-900/70 project-overlay flex items-center justify-center p-4">
-                        <div class="text-center">
-                            <h3 class="text-xl font-bold text-white" data-lang-key="project_2_title">Mindscape</h3>
-                            <div class="mt-5 flex items-center justify-center gap-4">
-                                <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" href="#" rel="noopener noreferrer" target="_blank" title="GitHub"><i class="text-white" data-lucide="github"></i></a>
-                                <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" data-lang-title-key="project_gallery_link" href="#" title="Galéria"><i class="text-white" data-lucide="image"></i></a>
-                                <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" data-lang-title-key="project_demo_link" href="#" rel="noopener noreferrer" target="_blank" title="Demó"><i class="text-white" data-lucide="gamepad-2"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-6 flex-grow flex flex-col">
-                        <h3 class="text-lg font-bold text-header" data-lang-key="project_2_title">Mindscape</h3>
-                        <p class="mt-2 text-sm flex-grow" data-lang-key="project_2_desc">Egy interaktív horror anomália kereső játék.</p>
-                        <div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between">
-                            <div class="flex items-center gap-4">
-                                <img class="w-7 h-7" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unity/unity-original.svg" title="Unity">
-                                <img class="w-7 h-7" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg" title="C#"/>
-                                <img class="w-7 h-7" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg" title="Blender"/>
-                            </div>
-                            <div class="flex gap-1">
-                                <div class="w-4 h-4 rounded-full" style="background-color: #020617;"></div>
-                                <div class="w-4 h-4 rounded-full" style="background-color: #38bdf8;"></div>
-                                <div class="w-4 h-4 rounded-full" style="background-color: #f8fafc;"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="color-palette" style="background: linear-gradient(to right, #020617, #38bdf8, #f8fafc);"></div>
-                </div>
-                <div class="bg-card glass-effect rounded-2xl shadow-xl border overflow-hidden group flex flex-col scroll-animate relative" style="transition-delay: 300ms;">
-                    <img alt="Projekt kép" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500" src="https://scontent.fbud7-3.fna.fbcdn.net/v/t39.30808-6/498693994_4339973242915441_3638509467370022001_n.jpg?_nc_cat=103&amp;ccb=1-7&amp;_nc_sid=cf85f3&amp;_nc_ohc=LI9HuE0IgrUQ7kNvwH1TIkL&amp;_nc_oc=Adk8YD4gJvmKdt1CTcjgC38Ov-jSsKVx9xQbCHrMbuixHKcp3hSDU6WWNkLnsqreqToKiWLySaqvbqFXM5-4uHaB&amp;_nc_zt=23&amp;_nc_ht=scontent.fbud7-3.fna&amp;_nc_gid=HEshfCmdlsi2VQNBs0rFQg&amp;oh=00_AfbDFgoK8asy2R_kkwRLrGnQGsOKciK4_zpdLrr2VhGQ2g&amp;oe=68DCD662"/>
-                    <div class="absolute inset-0 bg-slate-900/70 project-overlay flex items-center justify-center p-4">
-                        <div class="text-center">
-                            <h3 class="text-xl font-bold text-white" data-lang-key="project_3_title">3D Modell Galéria</h3>
-                            <div class="mt-5 flex items-center justify-center gap-4">
-                                <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" href="#" rel="noopener noreferrer" target="_blank" title="GitHub"><i class="text-white" data-lucide="github"></i></a>
-                                <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" data-lang-title-key="project_gallery_link" href="#" title="Galéria"><i class="text-white" data-lucide="image"></i></a>
-                                <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" href="#" title="Sketchfab"><i class="text-white" data-lucide="box"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-6 flex-grow flex flex-col">
-                        <h3 class="text-lg font-bold text-header" data-lang-key="project_3_title">3D Modell Galéria</h3>
-                        <p class="mt-2 text-sm flex-grow" data-lang-key="project_3_desc">Blenderben készült 3D modellek bemutatása, a koncepciótól a végső renderelésig.</p>
-                        <div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between">
-                            <div class="flex items-center gap-4">
-                                <img class="w-7 h-7" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg" title="Blender">
-                            </div>
-                            <div class="flex gap-1">
-                                <div class="w-4 h-4 rounded-full" style="background-color: #f59e0b;"></div>
-                                <div class="w-4 h-4 rounded-full" style="background-color: #4f46e5;"></div>
-                                <div class="w-4 h-4 rounded-full" style="background-color: #64748b;"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="color-palette" style="background: linear-gradient(to right, #f59e0b, #4f46e5, #64748b);"></div>
-                </div>
-                <div class="bg-card glass-effect rounded-2xl shadow-xl border overflow-hidden group flex flex-col scroll-animate relative" style="transition-delay: 150ms;">
-                    <img alt="Projekt kép" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500" src="https://wallpapers.com/images/high/dj-background-xuknuzdbw76k9r2n.webp"/>
-                    <div class="absolute inset-0 bg-slate-900/70 project-overlay flex items-center justify-center p-4">
-                        <div class="text-center">
-                            <h3 class="text-xl font-bold text-white" data-lang-key="project_4_title">Zenéim</h3>
-                            <div class="mt-5 flex items-center justify-center gap-4">
-                                <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" href="https://soundcloud.com/norbert-kiss-13" rel="noopener noreferrer" target="_blank" title="SoundCloud"><i class="text-white" data-lucide="soundcloud"></i></a>
-                                <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" href="https://www.youtube.com/@NorbertKiss-Music/videos" rel="noopener noreferrer" target="_blank" title="YouTube"><i class="text-white" data-lucide="youtube"></i></a>
-                                <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" href="#" title="Spotify"><i class="text-white" data-lucide="spotify"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-6 flex-grow flex flex-col">
-                        <h3 class="text-lg font-bold text-header" data-lang-key="project_4_title">Zenéim</h3>
-                        <p class="mt-2 text-sm flex-grow" data-lang-key="project_4_desc">Audacityben készült zenéim bemutatása.</p>
-                        <div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between">
-                            <div class="flex items-center gap-4">
-                                <img class="w-7 h-7" src="https://upload.wikimedia.org/wikipedia/commons/f/f6/Audacity_Logo.svg" title="Audacity">
-                            </div>
-                            <div class="flex gap-1">
-                                <div class="w-4 h-4 rounded-full" style="background-color: #170a02;"></div>
-                                <div class="w-4 h-4 rounded-full" style="background-color: #f8df38;"></div>
-                                <div class="w-4 h-4 rounded-full" style="background-color: #b43884;"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="color-palette" style="background: linear-gradient(to right, #830981, #3bf838, #0d4c8b);"></div>
-                </div>
-            </div>
-        </section>
-
-        <section class="py-16 sm:py-24" id="contact">
-            <div class="text-center mb-16 scroll-animate">
-                <h2 class="text-4xl font-bold text-header" data-lang-key="contact_title">Lépjünk kapcsolatba!</h2>
-                <p class="mt-4 text-lg max-w-2xl mx-auto" data-lang-key="contact_subtitle">Nyitott vagyok új lehetőségekre és együttműködésekre. Keress bizalommal!</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
-                <div class="scroll-animate">
-                    <form class="space-y-6" id="contact-form">
-                        <div>
-                            <label class="font-medium text-header" data-lang-key="form_name" for="name">Név</label>
-                            <input class="w-full mt-2 p-3 rounded-lg bg-card glass-effect border focus:outline-none focus:ring-2 ring-sky-500" data-lang-placeholder-key="form_name_placeholder" id="name" name="name" required="" type="text"/>
-                        </div>
-                        <div>
-                            <label class="font-medium text-header" data-lang-key="form_email" for="email">Email</label>
-                            <input class="w-full mt-2 p-3 rounded-lg bg-card glass-effect border focus:outline-none focus:ring-2 ring-sky-500" data-lang-placeholder-key="form_email_placeholder" id="email" name="email" required="" type="email"/>
-                        </div>
-                        <div>
-                            <label class="font-medium text-header" data-lang-key="form_message" for="message">Üzenet</label>
-                            <textarea class="w-full mt-2 p-3 rounded-lg bg-card glass-effect border focus:outline-none focus:ring-2 ring-sky-500" data-lang-placeholder-key="form_message_placeholder" id="message" name="message" required="" rows="5"></textarea>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <input class="h-4 w-4 mt-1 rounded border-slate-300 dark:border-slate-600 bg-transparent text-sky-600 focus:ring-sky-500 dark:focus:ring-offset-slate-900" id="privacy-checkbox" required="" type="checkbox"/>
-                            <label class="text-sm" data-lang-key="form_privacy" for="privacy-checkbox">Elolvastam és elfogadom az <a class="underline hover:text-accent" data-lang-key="form_privacy_link" href="#">Adatvédelmi Tájékoztatót</a>.</label>
-                        </div>
-                        <button class="breathing-button w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-card glass-effect border dark:border-slate-700 text-header font-semibold rounded-lg shadow-lg hover:border-sky-500 dark:hover:border-sky-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:border-slate-200 dark:disabled:hover:border-slate-700 disabled:transform-none disabled:shadow-none" disabled="" id="submit-button" type="submit">
-                            <span data-lang-key="form_submit_btn">Üzenet Küldése</span>
-                        </button>
-                    </form>
-                    <p class="text-center mt-4" id="form-status"></p>
-                </div>
-                <div class="scroll-animate" style="transition-delay: 150ms;">
-                    <div class="bg-card glass-effect p-8 rounded-2xl shadow-xl border">
-                        <h3 class="text-xl font-bold text-header" data-lang-key="contact_info_title">Elérhetőségek</h3>
-                        <div class="mt-4 space-y-4">
-                            <div class="flex items-center gap-4">
-                                <i class="w-6 h-6 text-accent" data-lucide="mail"></i>
-                                <a class="hover:text-accent" href="mailto:kiss.norbert.reall@gmail.com">kiss.norbert.reall@gmail.com</a>
-                            </div>
-                            <div class="flex items-center gap-4">
-                                <i class="w-6 h-6 text-accent" data-lucide="phone"></i>
-                                <a class="hover:text-accent" href="tel:+36702992948">06 (70) 299-2948</a>
-                            </div>
-                            <div class="flex items-center gap-4">
-                                <i class="w-6 h-6 text-accent" data-lucide="map-pin"></i>
-                                <span data-lang-key="contact_location">Nyíregyháza, Magyarország</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-8 text-center">
-                        <p class="font-semibold text-header mb-4" data-lang-key="contact_social_prompt">Vagy keress meg itt:</p>
-                        <div class="flex justify-center gap-6">
-                            <a class="text-header hover:text-accent transition-colors" href="https://github.com/Norbert-Kiss-Hub" rel="noopener noreferrer" target="_blank"><i class="w-8 h-8" data-lucide="github"></i></a>
-                            <a class="text-header hover:text-accent transition-colors" href="https://www.linkedin.com/in/norbert-kiss-722509263/" rel="noopener noreferrer" target="_blank"><i class="w-8 h-8" data-lucide="linkedin"></i></a>
-                            <a class="text-header hover:text-accent transition-colors" href="https://www.facebook.com/profile.php?id=100086384070034" rel="noopener noreferrer" target="_blank"><i class="w-8 h-8" data-lucide="facebook"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="bg-card glass-effect text-center py-6 sm:py-8 border-t relative z-10 mt-16 sm:mt-24">
-        <p class="text-sm" data-lang-key="footer_copyright">© 2025 Kiss Norbert. Minden jog fenntartva.</p>
-    </footer>
-
-    <a class="w-20 h-20 flex items-center justify-center bg-card glass-effect rounded-full shadow-lg border hover:border-sky-500 transition-all" href="#home" id="back-to-top">
-        <i class="w-10 h-10 text-header" data-lucide="arrow-up"></i>
-    </a>
-
-    <div id="youtube-player"></div>
-
-    <!-- <script src="https://www.youtube.com/iframe_api"></script> -->
-    <script type="module" src="scripts/main.js"></script>
-
+<script src="https://www.youtube.com/iframe_api"></script>
+<script src="script.js"></script>
 </body>
 </html>
