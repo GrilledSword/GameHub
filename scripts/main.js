@@ -25,7 +25,7 @@ window.addEventListener('pageshow', (event) => {
     if (event.persisted) hideLoader();
 });
 
-//async function setupBackground() {
+async function setupBackground() {
     initParallaxEffect();
     initShootingStars();
     initBirds();
@@ -34,8 +34,9 @@ window.addEventListener('pageshow', (event) => {
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();
     }
+}
 
-//function initializeApp() {
+function initializeApp() {
     // Initialize components that do not depend on the fetched SVG content.
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();
