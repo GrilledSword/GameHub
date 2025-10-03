@@ -5,10 +5,10 @@ import { initParallaxEffect, initShootingStars, initBirds, initFireflies } from 
 import { initContactForm } from './modules/contact_form.js';
 import { initHeadlineAnimation, initProjectVideos } from './modules/animations.js';
 import { generateForeground } from './modules/foreground.js';
-import { onYouTubeIframeAPIReady } from './modules/music_player.js';
+// import { onYouTubeIframeAPIReady } from './modules/music_player.js';
 
 // A YouTube IFrame API visszahívásának globálissá tétele
-window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+// window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
 
 document.addEventListener('DOMContentLoaded', () => {
     initializeApp();
