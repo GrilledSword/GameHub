@@ -65,14 +65,25 @@ body.loaded #loader-wrapper {
 }
 @keyframes fade-in-text { to { opacity: 1; } }
 
+/* TAG: ADDED - Új stílusok az interaktív canvas háttérhez */
+#interactive-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1; /* A tartalom mögé helyezi */
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+body.loaded #interactive-background {
+    opacity: 1;
+}
+
 /* TAG: DELETED - A teljes régi parallax háttér CSS szekció törölve lett. */
 
 /* === UI ELEMEK (GLASS EFFECT, GOMBOK, STB.) === */
-/* Ezek a stílusok nagyrészt változatlanok maradtak. */
-
 .glass-effect {
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(8px) url(#glass-distortion);
+    backdrop-filter: blur(8px) url(#glass-distortion);
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 8px 32px 0 rgba(31, 38, 135, 0.1);
     perspective: 2000px;
 }

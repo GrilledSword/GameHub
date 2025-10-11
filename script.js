@@ -17,6 +17,8 @@ window.addEventListener('pageshow', (event) => {
 function initializeApp() {
     lucide.createIcons();
     
+    // TAG: MODIFIED - Az új háttér inicializálása a többi modul előtt történik.
+    initInteractiveBackground();
     initThemeSwitcher();
     initLanguageSwitcher();
     initMobileMenu();
@@ -29,18 +31,255 @@ function initializeApp() {
 
 // === MODULOK ==
 
+// TAG: MODIFIED - A teljes interaktív háttér modul frissítve lett a 3D parallax effekt és a jobb Godray sugárzás érdekében.
+function initInteractiveBackground() {
+    const canvas = document.getElementById('interactive-background');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    let particlesArray;
+    let celestialBody;
+    let godRayAngle = 0;
+
+    const mouse = {
+        x: null,
+        y: null,
+        radius: 120
+    };
+
+    const themeConfig = {
+        light: {
+            bgGradient: ['#ffffff', '#e0f7fa'],
+            particleColor: 'rgba(0, 119, 190, ALPHA)', // Alpha értéket dinamikusan cseréljük
+            lineColor: 'rgba(0, 119, 190, 0.2)',
+            celestial: {
+                color: '#FFD700',
+                glow1: 'rgba(255, 220, 100, 0.4)',
+                glow2: 'rgba(255, 220, 100, 0.1)',
+                rayColor: 'rgba(255, 215, 0, 0.15)'
+            }
+        },
+        dark: {
+            bgGradient: ['#020617', '#0f172a'],
+            particleColor: 'rgba(56, 189, 248, ALPHA)', // Alpha értéket dinamikusan cseréljük
+            lineColor: 'rgba(56, 189, 248, 0.15)',
+            celestial: {
+                color: '#f8fafc',
+                glow1: 'rgba(160, 210, 255, 0.2)',
+                glow2: 'rgba(160, 210, 255, 0.05)',
+                rayColor: 'rgba(173, 216, 230, 0.1)'
+            }
+        }
+    };
+    let currentTheme = themeConfig.dark;
+
+    const setCanvasSize = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    };
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            // Z-tengely szimuláció: 1 (közeli) és 4 (távoli) között.
+            this.z = Math.random() * 3 + 1; 
+            this.directionX = (Math.random() * .4) - .2;
+            this.directionY = (Math.random() * .4) - .2;
+            this.baseSize = 1.5;
+            this.size = this.baseSize / this.z;
+        }
+
+        draw() {
+            // A részecskék átlátszósága a mélységtől függ
+            const alpha = (1 - (this.z -1) / 3) * 0.9;
+            const color = currentTheme.particleColor.replace('ALPHA', alpha);
+            
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+            ctx.fillStyle = color;
+            ctx.fill();
+        }
+
+        update() {
+            // A sebesség a mélységtől függ (a távolabbiak lassabbak)
+            this.x += this.directionX / this.z;
+            this.y += this.directionY / this.z;
+            
+            if (this.x > canvas.width + this.size || this.x < -this.size) this.directionX = -this.directionX;
+            if (this.y > canvas.height + this.size || this.y < -this.size) this.directionY = -this.directionY;
+            
+            // Parallax egér interakció
+            let dx = mouse.x - this.x;
+            let dy = mouse.y - this.y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < mouse.radius) {
+                // A közelebbi részecskéket jobban taszítja az egér
+                const force = (mouse.radius - distance) / mouse.radius;
+                const moveX = (dx / distance) * force * 5 / this.z;
+                const moveY = (dy / distance) * force * 5 / this.z;
+                this.x -= moveX;
+                this.y -= moveY;
+            }
+
+            this.draw();
+        }
+    }
+
+    function initParticles() {
+        particlesArray = [];
+        let numberOfParticles = (canvas.height * canvas.width) / 9000;
+        for (let i = 0; i < numberOfParticles; i++) {
+            particlesArray.push(new Particle());
+        }
+        // Mélység szerint rendezzük, hogy a távolabbiak legyenek hátul
+        particlesArray.sort((a, b) => a.z - b.z); 
+    }
+    
+    function connectParticles() {
+        let maxDistance = (canvas.width / 8) > 120 ? 120 : (canvas.width/8);
+        for (let a = 0; a < particlesArray.length; a++) {
+            for (let b = a + 1; b < particlesArray.length; b++) {
+                 // Csak a hasonló mélységűeket kötjük össze
+                if (Math.abs(particlesArray[a].z - particlesArray[b].z) > 0.8) continue;
+
+                let distance = Math.sqrt(
+                    Math.pow(particlesArray[a].x - particlesArray[b].x, 2) + 
+                    Math.pow(particlesArray[a].y - particlesArray[b].y, 2)
+                );
+
+                if (distance < maxDistance) {
+                    const opacity = 1 - (distance / maxDistance);
+                    const avgZ = (particlesArray[a].z + particlesArray[b].z) / 2;
+                    const lineOpacity = (1 - (avgZ - 1) / 3) * 0.5; // Halványabb vonalak hátul
+                    ctx.strokeStyle = currentTheme.lineColor.replace(/,\s*\d*\.?\d*\)/, `, ${opacity * lineOpacity})`);
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                    ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                    ctx.stroke();
+                }
+            }
+        }
+    }
+
+    function drawCelestialBody() {
+        celestialBody = {
+            x: canvas.width - 120,
+            y: 120,
+            radius: 50
+        };
+        let glow = ctx.createRadialGradient(celestialBody.x, celestialBody.y, celestialBody.radius * 0.5, celestialBody.x, celestialBody.y, celestialBody.radius * 3);
+        glow.addColorStop(0, currentTheme.celestial.glow1);
+        glow.addColorStop(1, currentTheme.celestial.glow2);
+        ctx.fillStyle = glow;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.beginPath();
+        ctx.arc(celestialBody.x, celestialBody.y, celestialBody.radius, 0, Math.PI * 2);
+        ctx.fillStyle = currentTheme.celestial.color;
+        ctx.shadowColor = currentTheme.celestial.glow1;
+        ctx.shadowBlur = 30;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        
+        if (document.documentElement.classList.contains('dark')) {
+            ctx.fillStyle = 'rgba(0,0,0,0.1)';
+            ctx.beginPath(); ctx.arc(celestialBody.x + 20, celestialBody.y - 15, 10, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(celestialBody.x - 15, celestialBody.y + 10, 7, 0, Math.PI * 2); ctx.fill();
+        }
+    }
+
+    function drawGodRays() {
+        const rays = 20;
+        const rayLength = canvas.width * 1.5;
+        const rayWidth = 0.08; // Sugár szélessége radiánban
+        
+        ctx.save();
+        ctx.translate(celestialBody.x, celestialBody.y);
+        ctx.rotate(godRayAngle);
+
+        for (let i = 0; i < rays; i++) {
+            let rotation = (i / rays) * Math.PI * 2;
+            
+            ctx.save();
+            ctx.rotate(rotation);
+
+            const gradient = ctx.createLinearGradient(0, 0, rayLength, 0);
+            const rayColorFade = currentTheme.celestial.rayColor.replace(/,\s*\d*\.?\d*\)/, ', 0)');
+            gradient.addColorStop(0, currentTheme.celestial.rayColor);
+            gradient.addColorStop(0.3, rayColorFade);
+
+            ctx.fillStyle = gradient;
+            
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.arc(0, 0, rayLength, -rayWidth, rayWidth, false);
+            ctx.closePath();
+            ctx.fill();
+            
+            ctx.restore();
+        }
+        
+        ctx.restore();
+        godRayAngle += 0.0003;
+    }
+    
+    function animate() {
+        requestAnimationFrame(animate);
+        
+        let bgGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        bgGradient.addColorStop(0, currentTheme.bgGradient[0]);
+        bgGradient.addColorStop(1, currentTheme.bgGradient[1]);
+        ctx.fillStyle = bgGradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        drawCelestialBody();
+        drawGodRays();
+
+        connectParticles();
+        for (let i = 0; i < particlesArray.length; i++) {
+            particlesArray[i].update();
+        }
+    }
+
+    window.addEventListener('resize', () => {
+        setCanvasSize();
+        initParticles();
+    });
+
+    window.addEventListener('mousemove', (event) => {
+        mouse.x = event.x;
+        mouse.y = event.y;
+    });
+    
+    window.updateBackgroundTheme = (isDark) => {
+        currentTheme = isDark ? themeConfig.dark : themeConfig.light;
+        // Nem kell külön frissíteni a részecskék színét, mert az a draw() függvényben történik minden képkockán
+    };
+
+    setCanvasSize();
+    initParticles();
+    window.updateBackgroundTheme(document.documentElement.classList.contains('dark'));
+    animate();
+}
 
 function initThemeSwitcher() {
     const themeCheckboxes = [document.getElementById('theme-checkbox'), document.getElementById('theme-checkbox-mobile')];
     
     const applyTheme = (isDark, shouldUpdateCheckboxes = false) => {
-        isDarkMode = isDark; // Globális változó frissítése
+        isDarkMode = isDark;
         document.documentElement.classList.toggle('dark', isDarkMode);
         localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
         updateAllLabels();
 
         if(shouldUpdateCheckboxes) {
             themeCheckboxes.forEach(cb => { if(cb) cb.checked = isDarkMode; });
+        }
+        
+        // TAG: MODIFIED - Meghívja a háttér témafrissítő funkcióját.
+        if (window.updateBackgroundTheme) {
+            window.updateBackgroundTheme(isDarkMode);
         }
     };
     
@@ -57,6 +296,7 @@ function initThemeSwitcher() {
     const initialIsDark = savedTheme ? savedTheme === 'dark' : prefersDark;
     applyTheme(initialIsDark, true);
 }
+// ... a többi kód változatlan ...
 function initLanguageSwitcher() {
     const translations = {
         hu: {
@@ -107,7 +347,6 @@ function initLanguageSwitcher() {
             hero_name: "Norbert Kiss",
             hero_roles: "Game Developer • Technical Artist • Workflow Innovator",
             hero_intro: "My passion is problem-solving and creation, whether it's construction plans or custom software solutions. I am constantly seeking new challenges and opportunities for growth.",
-            hero_contact_btn: "Contact", hero_projects_btn: "My Projects",
             about_title: "About Me",
             about_p1: "As a civil and structural engineering technician, I have acquired a precise and structured way of thinking, which I also leverage in the world of programming. The combination of these two fields gives me a unique perspective: I see both the big picture and the smallest details. In my free time, I enjoy exploring new technologies (like C# and .NET), working with data analytics, and developing creative projects, such as the remake of the Pekka Kana 2 game in Unity.",
             about_p2: "I believe in lifelong learning and that the best results are achieved through teamwork. My goal is to create solutions that are not only functional but also provide a great user experience.",
@@ -441,3 +680,4 @@ function updateAllLabels() {
     if(document.getElementById('theme-label')) document.getElementById('theme-label').textContent = themeText;
     if(document.getElementById('theme-label-mobile')) document.getElementById('theme-label-mobile').textContent = themeText;
 }
+

@@ -20,14 +20,44 @@
 </head>
 <body class="antialiased">
 
-<!-- TAG: ADDED - Új canvas elem a háttérhez -->
+<!-- TAG: ADDED - Új canvas elem az interaktív háttérhez -->
+<canvas id="interactive-background"></canvas>
 
-<!-- A régi parallax container és a benne lévő SVG-k törölve lettek. -->
+<svg style="display: none">
+  <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%" filterUnits="objectBoundingBox">
+    <feTurbulence type="fractalNoise" baseFrequency="0.001 0.001" numOctaves="1" seed="0" result="turbulence" />
+    <feColorMatrix in="turbulence" type="matrix" result="colorMask"
+      values="1 0 0 0 0
+              0 1 0 0 0
+              0 0 1 0 0
+              0 0 0 1 0" />
+    <feFlood flood-color="black" result="base" />
+    <feFlood flood-color="white" result="highlight" />
+    <feComposite in="highlight" in2="base" operator="xor" result="maskShape" />
+    <feMerge result="maskedTurbulence">
+      <feMergeNode in="colorMask" />
+      <feMergeNode in="maskShape" />
+    </feMerge>
+    <feGaussianBlur in="maskedTurbulence" stdDeviation="30" result="softMap" />
+    <feSpecularLighting in="softMap" surfaceScale="50" specularConstant="6" specularExponent="100" lighting-color="white" result="specLight">
+      <fePointLight x="-200" y="-200" z="300" />
+    </feSpecularLighting>
+    <feDisplacementMap 
+    in="SourceGraphic" 
+    in2="softMap" 
+    scale="100" 
+    xChannelSelector="B" 
+    yChannelSelector="A"
+    -xChannelSelector="B"
+    -yChannelSelector="A"/>
+  </filter>
+</svg>
+
+<!-- TAG: DELETED - A régi parallax container és a benne lévő SVG-k törölve lettek. -->
 
 <div id="loader-wrapper">
 <div class="loader-content">
 <svg class="loader-svg" viewbox="0 0 100 100">
-<!-- A betöltő animációt leegyszerűsítettem, hogy jobban passzoljon az új stílushoz -->
 <path class="loader-mountain" d="M0 100 L20 70 L40 80 L60 60 L80 75 L100 50 L100 100 Z" fill="none" stroke="#38bdf8" stroke-width="2"></path>
 <circle class="loader-sun" cx="75" cy="40" r="10" fill="#facc15"></circle>
 </svg>
@@ -35,7 +65,6 @@
 </div>
 </div>
 
-<!-- A többi HTML tartalom változatlan maradt -->
 <div id="progress-bar"></div>
 <header class="fixed top-0 left-0 right-0 z-50 p-4 transition-all duration-300" id="main-header">
 <div class="container mx-auto px-6 flex items-center justify-between md:gap-6 h-20 relative bg-card glass-effect rounded-full border">
