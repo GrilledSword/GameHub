@@ -1,5 +1,37 @@
 let isDarkMode = false;
 
+// Projekt adatok (képek, technológiák)
+const projectsData = {
+    project_1: {
+        images: ['IMG/pekka.gif', 'https://placehold.co/600x400/38bdf8/ffffff?text=Pekka-2', 'https://placehold.co/600x400/fbbf24/ffffff?text=Pekka-3'],
+        tech: [
+            { src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unity/unity-original.svg', title: 'Unity' },
+            { src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg', title: 'C#' },
+            { src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg', title: 'Blender' }
+        ]
+    },
+    project_2: {
+        images: ['IMG/mindscape.jpg', 'https://placehold.co/600x400/020617/ffffff?text=Mindscape-2', 'https://placehold.co/600x400/38bdf8/ffffff?text=Mindscape-3'],
+        tech: [
+            { src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unity/unity-original.svg', title: 'Unity' },
+            { src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg', title: 'C#' },
+            { src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg', title: 'Blender' }
+        ]
+    },
+    project_3: {
+        images: ['IMG/3d.jpg', 'IMG/Gallery/3d/1.jpg', 'IMG/Gallery/3d/2.jpg', 'IMG/Gallery/3d/3.jpg', 'IMG/Gallery/3d/4.jpg', 'IMG/Gallery/3d/5.jpg', 'IMG/Gallery/3d/6.jpg', 'IMG/Gallery/3d/7.jpg'],
+        tech: [
+            { src: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg', title: 'Blender' }
+        ]
+    },
+    project_4: {
+        images: ['https://wallpapers.com/images/high/dj-background-xuknuzdbw76k9r2n.webp', 'https://placehold.co/600x400/f8df38/ffffff?text=Music-2'],
+        tech: [
+            { src: 'https://upload.wikimedia.org/wikipedia/commons/f/f6/Audacity_Logo.svg', title: 'Audacity' }
+        ]
+    }
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     initializeApp();
 });
@@ -17,7 +49,6 @@ window.addEventListener('pageshow', (event) => {
 function initializeApp() {
     lucide.createIcons();
     
-    // TAG: MODIFIED - Az új háttér inicializálása a többi modul előtt történik.
     initInteractiveBackground();
     initThemeSwitcher();
     initLanguageSwitcher();
@@ -27,11 +58,11 @@ function initializeApp() {
     initContactForm();
     initHeadlineAnimation();
     initProjectVideos();
+    initProjectModals(); // Új funkció hozzáadása
 }
 
 // === MODULOK ==
 
-// TAG: MODIFIED - A teljes interaktív háttér modul frissítve lett a 3D parallax effekt és a jobb Godray sugárzás érdekében.
 function initInteractiveBackground() {
     const canvas = document.getElementById('interactive-background');
     if (!canvas) return;
@@ -77,7 +108,6 @@ function initInteractiveBackground() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
     };
-
     class Particle {
         constructor() {
             this.x = Math.random() * canvas.width;
@@ -227,13 +257,16 @@ function initInteractiveBackground() {
     
     function animate() {
         requestAnimationFrame(animate);
-        
+
+        // Allow pausing when a modal animation is active to reduce jank
+        if (window.__backgroundPaused) return;
+
         let bgGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
         bgGradient.addColorStop(0, currentTheme.bgGradient[0]);
         bgGradient.addColorStop(1, currentTheme.bgGradient[1]);
         ctx.fillStyle = bgGradient;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
+
         drawCelestialBody();
         drawGodRays();
 
@@ -262,6 +295,14 @@ function initInteractiveBackground() {
     initParticles();
     window.updateBackgroundTheme(document.documentElement.classList.contains('dark'));
     animate();
+
+    // Expose helpers to pause/resume the background animation (used during modal animations)
+    window.pauseBackgroundAnimation = function() {
+        window.__backgroundPaused = true;
+    };
+    window.resumeBackgroundAnimation = function() {
+        window.__backgroundPaused = false;
+    };
 }
 
 function initThemeSwitcher() {
@@ -296,7 +337,7 @@ function initThemeSwitcher() {
     const initialIsDark = savedTheme ? savedTheme === 'dark' : prefersDark;
     applyTheme(initialIsDark, true);
 }
-// ... a többi kód változatlan ...
+
 function initLanguageSwitcher() {
     const translations = {
         hu: {
@@ -564,113 +605,356 @@ function initProjectVideos() {
         }
     });
 }
-function onYouTubeIframeAPIReady() {
-    initYouTubeMusicPlayer();
-}
-function initYouTubeMusicPlayer() {
-    const API_KEY = 'AIzaSyBlT9YiS55OWLZRqOthROVVNGPnahGpe0U';
-    const PLAYLIST_URL = 'https://www.youtube.com/watch?v=fSrwcaXLS5M&list=PLU3cs__9MK8Y4PHoHRH2eEdSKqSIpMsBn';
-    
-    const albumArt = document.getElementById('player-album-art');
-    const title = document.getElementById('player-title');
-    const progress = document.getElementById('player-progress');
-    const progressContainer = document.getElementById('player-progress-container');
-    const playBtn = document.getElementById('player-play');
-    const prevBtn = document.getElementById('player-prev');
-    const nextBtn = document.getElementById('player-next');
 
-    if (!playBtn) return;
-    
-    let ytPlayer, playlist = [], progressInterval = null;
+// Projekt Modal kezelése
+function initProjectModals() {
+    const modal = document.getElementById('project-modal');
+    const modalContent = document.getElementById('modal-content');
+    const modalTitle = document.getElementById('modal-title');
+    const modalDescription = document.getElementById('modal-description');
+    const modalMainImage = document.getElementById('modal-main-image');
+    const modalThumbnails = document.getElementById('modal-thumbnails');
+    const modalTechStack = document.getElementById('modal-tech-stack');
+    const closeButton = document.getElementById('modal-close');
+    const zoomBtn = document.getElementById('modal-zoom-btn');
 
-    ytPlayer = new YT.Player('youtube-player', {
-        height: '1', width: '1', playerVars: { 'playsinline': 1 },
-        events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange }
+    // Lightbox létrehozása, ha még nincs
+    let lightbox = document.getElementById('lightbox');
+    if (!lightbox) {
+        lightbox = document.createElement('div');
+        lightbox.id = 'lightbox';
+        lightbox.style.position = 'fixed';
+        lightbox.style.inset = '0';
+        lightbox.style.background = 'rgba(0,0,0,0.95)';
+        lightbox.style.zIndex = '99999';
+        lightbox.style.display = 'flex';
+        lightbox.style.alignItems = 'center';
+        lightbox.style.justifyContent = 'center';
+        lightbox.style.opacity = '0';
+        lightbox.style.pointerEvents = 'none';
+        lightbox.style.transition = 'opacity 0.3s';
+        lightbox.innerHTML = `<img id="lightbox-img" src="" style="max-width:90vw; max-height:85vh; border-radius:1rem; box-shadow:0 0 40px #000;" alt="Nagyított kép"><button id="lightbox-close" style="position:absolute;top:2rem;right:2rem;background:#fff;padding:0.5rem 1rem;border-radius:2rem;font-size:1.5rem;z-index:2;">&times;</button>`;
+        document.body.appendChild(lightbox);
+    }
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxClose = document.getElementById('lightbox-close');
+
+    function showLightbox(src) {
+        lightboxImg.src = src;
+        lightbox.style.opacity = '1';
+        lightbox.style.pointerEvents = 'auto';
+        lightbox.classList.add('visible');
+        document.body.classList.add('modal-open');
+    }
+    function hideLightbox() {
+        lightbox.style.opacity = '0';
+        lightbox.style.pointerEvents = 'none';
+        lightbox.classList.remove('visible');
+        document.body.classList.remove('modal-open');
+    }
+    // Lightbox / zoom handlers (single set)
+    zoomBtn.addEventListener('click', () => showLightbox(modalMainImage.src));
+    lightboxClose.addEventListener('click', hideLightbox);
+    lightbox.addEventListener('click', (e) => { if (e.target === lightbox) hideLightbox(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hideLightbox(); });
+
+    // Keep track of last launch info so we can animate back on close
+    let lastLaunchInfo = null;
+    // Lock to prevent overlapping animations
+    let animationLock = false;
+
+    // Galéria megnyitása gombra kattintás
+    document.querySelectorAll('[data-gallery-btn]').forEach((btn, idx) => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const projectCard = btn.closest('.group');
+            if (!projectCard) return;
+
+            const projectKey = `project_${idx + 1}`;
+            const projectData = projectsData[projectKey];
+            const title = projectCard.querySelector('h3').textContent;
+            const description = projectCard.querySelector('p').textContent;
+            const mainImage = projectData.images[0];
+            const techStack = projectData.tech;
+
+            // Capture button rect and keep reference to the button
+            const targetBtn = e.currentTarget || btn;
+            const btnRect = targetBtn.getBoundingClientRect();
+
+            lastLaunchInfo = { btnRect, btn: targetBtn };
+            // Accessibility: mark modal dialog attributes
+            modal.setAttribute('aria-hidden', 'false');
+            modalContent.setAttribute('role', 'dialog');
+            modalContent.setAttribute('aria-modal', 'true');
+            modalContent.setAttribute('aria-labelledby', 'modal-title');
+
+            // Prepare modal overlay and position modalContent over the button (fixed to viewport)
+            modal.classList.add('visible');
+            modal.style.pointerEvents = 'auto';
+            modal.style.opacity = '1';
+
+            modalContent.style.transition = 'none';
+            modalContent.style.position = 'fixed';
+            modalContent.style.transformOrigin = 'top left';
+            modalContent.style.left = `${btnRect.left}px`;
+            modalContent.style.top = `${btnRect.top}px`;
+            modalContent.style.width = `${btnRect.width}px`;
+            modalContent.style.height = `${btnRect.height}px`;
+            modalContent.style.opacity = '0.9';
+            modalContent.style.filter = 'blur(12px)';
+
+            // Populate and animate
+            openModal(title, description, mainImage, techStack, projectData.images, lastLaunchInfo);
+        });
     });
 
-    function onPlayerReady() {
-        if (API_KEY && API_KEY !== 'jjjj') {
-            loadYouTubePlaylist();
+    // --- Animációs beállítások (egységesített, nem pattogós easing) ---
+    // Use a smooth ease-out transform (GPU-accelerated) and matching timings for open/close.
+    modalContent.style.transition = 'transform 420ms cubic-bezier(0.22, 0.61, 0.36, 1), opacity 320ms ease-out, filter 320ms ease-out';
+    modalContent.style.transform = 'scale(0.85)';
+    modalContent.style.opacity = '0';
+    modalContent.style.filter = 'blur(16px)';
+    modal.style.transition = 'opacity 420ms ease-out';
+    modal.style.opacity = '0';
+
+    // Modal bezárása (transform-based reverse animation)
+    function closeModal() {
+        if (lastLaunchInfo && lastLaunchInfo.btn) {
+            const targetBtn = lastLaunchInfo.btn;
+            // Prefer the original captured rect (launch time) for symmetry; fallback to current rect
+            const btnRect = (lastLaunchInfo && lastLaunchInfo.btnRect) ? lastLaunchInfo.btnRect : targetBtn.getBoundingClientRect();
+
+            // Compute final modal rect (same logic as open)
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+            // Tuned final modal size (92% width, 86% height) with reasonable caps
+            const finalWidth = Math.min(vw * 0.92, 1100);
+            const finalHeight = Math.min(vh * 0.86, 820);
+            let finalLeft = Math.round((vw - finalWidth) / 2);
+            let finalTop = Math.round((vh - finalHeight) / 2);
+            if (finalLeft < 0) finalLeft = 0;
+            if (finalTop < 0) finalTop = 0;
+
+            // Ensure modalContent is fixed at final rect
+            modalContent.style.position = 'fixed';
+        modalContent.style.boxSizing = 'border-box';
+        modalContent.style.left = `${finalLeft}px`;
+        modalContent.style.top = `${finalTop}px`;
+        modalContent.style.width = `${finalWidth}px`;
+        modalContent.style.height = `${finalHeight}px`;
+        modalContent.style.maxHeight = '90vh';
+        modalContent.style.maxWidth = '95vw';
+        modalContent.style.transformOrigin = 'top left';
+
+        // Force layout to get the actual size after CSS constraints (max-height/max-width)
+        const actualRect = modalContent.getBoundingClientRect();
+        const actualWidth = Math.round(actualRect.width);
+        const actualHeight = Math.round(actualRect.height);
+        // Recenter according to the actual rendered size so the modal is truly centered
+        finalLeft = Math.round((vw - actualWidth) / 2);
+        finalTop = Math.round((vh - actualHeight) / 2);
+        modalContent.style.left = `${finalLeft}px`;
+        modalContent.style.top = `${finalTop}px`;
+            // Use top-left origin so translate deltas map directly to left/top math
+            modalContent.style.transformOrigin = 'top left';
+
+            // Compute delta from final to button (viewport coords)
+            const deltaX = Math.round(btnRect.left - finalLeft);
+            const deltaY = Math.round(btnRect.top - finalTop);
+            const startScale = btnRect.width / actualWidth;
+
+            // Animate using transform for smooth GPU-accelerated motion
+            // add animating class to reduce paint cost during transition and pause heavy background
+            document.body.classList.add('animating-modal');
+            if (window.pauseBackgroundAnimation) window.pauseBackgroundAnimation();
+            modalContent.style.willChange = 'transform, opacity';
+            modalContent.style.boxShadow = '0 20px 60px rgba(2,6,23,0.35)';
+            requestAnimationFrame(() => {
+                modalContent.style.transition = 'transform 420ms cubic-bezier(0.22, 0.61, 0.36, 1), opacity 320ms ease-out, filter 320ms ease-out';
+                requestAnimationFrame(() => {
+                    modalContent.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${startScale})`;
+                    modalContent.style.opacity = '0.85';
+                    modal.style.opacity = '0';
+                    modal.style.pointerEvents = 'none';
+
+                    setTimeout(() => {
+                        modal.classList.remove('visible');
+                        document.body.classList.remove('modal-open');
+                        // reset styles
+                        modalContent.style.position = '';
+                        modalContent.style.left = '';
+                        modalContent.style.top = '';
+                        modalContent.style.width = '';
+                        modalContent.style.height = '';
+                        modalContent.style.transform = '';
+                        modalContent.style.opacity = '';
+                        modalContent.style.transition = 'transform 420ms cubic-bezier(0.22, 0.61, 0.36, 1), opacity 320ms ease-out, filter 320ms ease-out';
+                        modalContent.style.willChange = '';
+                        modalContent.style.boxShadow = '';
+                        document.body.classList.remove('animating-modal');
+                        if (window.resumeBackgroundAnimation) window.resumeBackgroundAnimation();
+                        animationLock = false;
+                        // restore focus to the originating button
+                        try { if (lastLaunchInfo && lastLaunchInfo.btn) lastLaunchInfo.btn.focus(); } catch (e) {}
+                        // hide from assistive tech
+                        modal.setAttribute('aria-hidden', 'true');
+                    }, 460);
+                });
+            });
         } else {
-            title.textContent = "API kulcs hiányzik!";
+            // fallback
+            // fallback close: animate shrink, then cleanup and resume
+            if (animationLock) return; animationLock = true;
+            modalContent.style.transform = 'scale(0.85)';
+            modalContent.style.opacity = '0';
+            modalContent.style.filter = 'blur(16px)';
+            modal.style.opacity = '0';
+            modal.style.pointerEvents = 'none';
+            setTimeout(() => {
+                modal.classList.remove('visible');
+                document.body.classList.remove('modal-open');
+                if (window.resumeBackgroundAnimation) window.resumeBackgroundAnimation();
+                animationLock = false;
+                try { if (lastLaunchInfo && lastLaunchInfo.btn) lastLaunchInfo.btn.focus(); } catch (e) {}
+                modal.setAttribute('aria-hidden', 'true');
+            }, 500);
         }
-    }
-    function onPlayerStateChange(event) {
-        updatePlayPauseIcon(event.data);
-        if (event.data === YT.PlayerState.ENDED) {
-            let nextIndex = (ytPlayer.getPlaylistIndex() + 1) % playlist.length;
-            ytPlayer.playVideoAt(nextIndex);
-            updatePlayerUI(nextIndex);
-        }
-    }
-    async function loadYouTubePlaylist() {
-        const playlistId = extractPlaylistId(PLAYLIST_URL);
-        if (!playlistId) { title.textContent = "Érvénytelen lista URL"; return; }
-        const apiUrl = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${API_KEY}`;
-        try {
-            const response = await fetch(apiUrl);
-            const data = await response.json();
-            if (data.error) throw new Error(data.error.message);
-            playlist = data.items.map(item => ({
-                videoId: item.snippet.resourceId.videoId,
-                title: item.snippet.title,
-                thumbnail: item.snippet.thumbnails.default.url
-            }));
-            ytPlayer.cuePlaylist(playlist.map(t => t.videoId));
-            updatePlayerUI(0);
-        } catch (error) {
-            title.textContent = "Hiba a lista betöltésekor";
-        }
-    }
-    function playTrack() { if(playlist.length > 0) ytPlayer.playVideo(); }
-    function pauseTrack() { ytPlayer.pauseVideo(); }
-    function nextTrack() { if(playlist.length > 0) ytPlayer.nextVideo(); }
-    function prevTrack() { if(playlist.length > 0) ytPlayer.previousVideo(); }
-    function seek(event) {
-        const rect = progressContainer.getBoundingClientRect();
-        const clickX = event.clientX - rect.left;
-        const duration = ytPlayer.getDuration();
-        if (duration) ytPlayer.seekTo((clickX / rect.width) * duration, true);
-    }
-    function updatePlayerUI(trackIndex) {
-        if (!playlist[trackIndex]) return;
-        const track = playlist[trackIndex];
-        title.textContent = track.title;
-        albumArt.src = track.thumbnail;
-    }
-    function updatePlayPauseIcon(playerState) {
-        if (playerState === YT.PlayerState.PLAYING) {
-            playBtn.innerHTML = '<i data-lucide="pause" class="w-6 h-6"></i>';
-            startProgressUpdater();
-            albumArt.classList.add('is-playing');
-        } else {
-            playBtn.innerHTML = '<i data-lucide="play" class="w-6 h-6"></i>';
-            stopProgressUpdater();
-            albumArt.classList.remove('is-playing');
-        }
-        lucide.createIcons();
-    }
-    function startProgressUpdater() {
-        if (progressInterval) clearInterval(progressInterval);
-        progressInterval = setInterval(() => {
-            const currentTime = ytPlayer.getCurrentTime();
-            const duration = ytPlayer.getDuration();
-            progress.style.width = `${(duration > 0) ? (currentTime / duration) * 100 : 0}%`;
-        }, 500);
-    }
-    function stopProgressUpdater() { clearInterval(progressInterval); }
-    function extractPlaylistId(url) {
-        const match = url.match(/^.*(youtu.be\/|list=)([^#\&\?]*).*/);
-        return (match && match[2]) ? match[2] : null;
+        lastLaunchInfo = null;
     }
 
-    playBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        (ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) ? pauseTrack() : playTrack();
+    // Modal megnyitása
+    function openModal(title, description, mainImage, techStack, images, launchInfo) {
+        modalTitle.textContent = title;
+        modalDescription.textContent = description;
+        modalMainImage.src = mainImage;
+        
+        modalTechStack.innerHTML = techStack.map(tech => `
+            <div class="flex items-center gap-2 p-2 bg-slate-100 dark:bg-slate-800 rounded-lg">
+                <img src="${tech.src}" alt="${tech.title}" title="${tech.title}" class="w-6 h-6">
+                <span class="text-sm font-medium">${tech.title}</span>
+            </div>
+        `).join('');
+
+        // Galéria képek betöltése
+        modalThumbnails.innerHTML = '';
+        images.forEach((imgSrc, i) => {
+            const img = document.createElement('img');
+            img.src = imgSrc;
+            img.alt = `${title} - Kép ${i+1}`;
+            // Use the .thumb-img class so the thumbnail slider CSS rules apply
+            img.className = 'thumb-img object-cover rounded-lg transition-transform hover:scale-105';
+            if(i === 0) img.classList.add('selected');
+            img.addEventListener('click', () => {
+                modalMainImage.src = img.src;
+                document.querySelectorAll('#modal-thumbnails img').forEach(thumb => {
+                    thumb.classList.remove('selected');
+                });
+                img.classList.add('selected');
+            });
+            modalThumbnails.appendChild(img);
+        });
+
+        document.body.classList.add('modal-open');
+
+        // If we have launch info, animate from that rect to centered modal using transforms
+        if (launchInfo && launchInfo.btnRect && launchInfo.btn) {
+            const btnRect = launchInfo.btnRect;
+
+            // measure viewport and compute final size/position
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+            const finalWidth = Math.min(vw * 0.92, 1100);
+            const finalHeight = Math.min(vh * 0.86, 820);
+            let finalLeft = Math.round((vw - finalWidth) / 2);
+            let finalTop = Math.round((vh - finalHeight) / 2);
+            if (finalLeft < 0) finalLeft = 0;
+            if (finalTop < 0) finalTop = 0;
+
+            // Ensure modalContent is fixed at final rect (we animate transform from button to this final rect)
+            modalContent.style.position = 'fixed';
+            modalContent.style.left = `${finalLeft}px`;
+            modalContent.style.top = `${finalTop}px`;
+            modalContent.style.width = `${finalWidth}px`;
+            modalContent.style.height = `${finalHeight}px`;
+            modalContent.style.maxHeight = '90vh';
+            modalContent.style.maxWidth = '95vw';
+            modalContent.style.boxSizing = 'border-box';
+            modalContent.style.transformOrigin = 'top left';
+
+            // Force layout to compute actual rendered size (respecting max-width/max-height)
+            const actualRectOpen = modalContent.getBoundingClientRect();
+            const actualWidthOpen = Math.round(actualRectOpen.width);
+            const actualHeightOpen = Math.round(actualRectOpen.height);
+            // Recenter using the actual size so the modal is truly centered
+            finalLeft = Math.round((vw - actualWidthOpen) / 2);
+            finalTop = Math.round((vh - actualHeightOpen) / 2);
+            modalContent.style.left = `${finalLeft}px`;
+            modalContent.style.top = `${finalTop}px`;
+
+            // compute transform that moves/scales final rect to match button rect visually
+            const deltaX = Math.round(btnRect.left - finalLeft);
+            const deltaY = Math.round(btnRect.top - finalTop);
+            const startScale = btnRect.width / actualWidthOpen;
+
+            // Save final rect for close animation (use actual rendered size)
+            lastLaunchInfo.final = { finalLeft, finalTop, finalWidth: actualWidthOpen, finalHeight: actualHeightOpen };
+
+            // Start state: place modal at final rect but transformed so it looks like the button
+            modalContent.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${startScale})`;
+            modalContent.style.opacity = '0.9';
+            modalContent.style.filter = 'blur(12px)';
+
+            modal.classList.add('visible');
+            modal.style.pointerEvents = 'auto';
+
+            // animate to identity transform - add animating flag to reduce paint cost
+            if (animationLock) return;
+            animationLock = true;
+            document.body.classList.add('animating-modal');
+            if (window.pauseBackgroundAnimation) window.pauseBackgroundAnimation();
+            modalContent.style.willChange = 'transform, opacity';
+            // subtle box-shadow during animation for polish
+            modalContent.style.boxShadow = '0 20px 60px rgba(2,6,23,0.35)';
+            requestAnimationFrame(() => {
+                // ensure transition matches the unified timing used elsewhere
+                modalContent.style.transition = 'transform 420ms cubic-bezier(0.22, 0.61, 0.36, 1), opacity 320ms ease-out, filter 320ms ease-out';
+                requestAnimationFrame(() => {
+                    modalContent.style.transform = 'translate(0px, 0px) scale(1)';
+                    modalContent.style.opacity = '1';
+                    modalContent.style.filter = 'blur(0)';
+                    modal.style.opacity = '1';
+
+                    // After animation, clear will-change and animating flag
+                    setTimeout(() => {
+                        modalContent.style.willChange = '';
+                        modalContent.style.boxShadow = '';
+                        document.body.classList.remove('animating-modal');
+                        if (window.resumeBackgroundAnimation) window.resumeBackgroundAnimation();
+                        animationLock = false;
+                        try { closeButton.focus(); } catch (e) {}
+                    }, 460);
+                });
+            });
+        } else {
+            // simple fade/scale for cases without launch info
+            modal.classList.add('visible');
+            modal.style.pointerEvents = 'auto';
+            setTimeout(() => {
+                modalContent.style.transform = 'scale(1)';
+                modalContent.style.opacity = '1';
+                modalContent.style.filter = 'blur(0)';
+                modal.style.opacity = '1';
+            }, 10);
+        }
+    }
+
+    closeButton.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
     });
-    nextBtn.addEventListener('click', (e) => { e.stopPropagation(); nextTrack(); });
-    prevBtn.addEventListener('click', (e) => { e.stopPropagation(); prevTrack(); });
-    progressContainer.addEventListener('click', seek);
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+    });
 }
 function updateAllLabels() {
     const isEn = document.documentElement.lang === 'en';

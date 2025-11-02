@@ -33,28 +33,30 @@
     <!-- Háttér -->
     <canvas id="interactive-background"></canvas>
 
-    <!-- SVG szűrő -->
+    <!-- SVG szűrő: displacement map betöltése feImage segítségével -->
+    <!--
+      Megjegyzés: a displacement map fájlt helyezd el a következő elérési úton: IMG/displacementMap.png
+      Ha másutt van, módosítsd az href attribútumot az aktuális elérési útra.
+    -->
     <svg style="display: none">
         <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%" filterUnits="objectBoundingBox">
             <feTurbulence type="fractalNoise" baseFrequency="0.001 0.001" numOctaves="1" seed="0" result="turbulence" />
+            <feImage href="IMG/map/displacementMap.png" result="displacementImage" preserveAspectRatio="none" />
             <feColorMatrix in="turbulence" type="matrix" result="colorMask" values="1 0 0 0 0
-              0 1 0 0 0
+              1 0 0 0 0
+              0 0 0 0 0
               0 0 1 0 0
-              0 0 0 1 0" />
+              0 0 0 1 0
+              0 0 0 0 1"   />
             <feFlood flood-color="black" result="base" />
             <feFlood flood-color="white" result="highlight" />
             <feComposite in="highlight" in2="base" operator="xor" result="maskShape" />
             <feMerge result="maskedTurbulence">
-                <feMergeNode in="colorMask" />
-                <feMergeNode in="maskShape" />
+                <feMergeNode in="displacementResult" />
+                                <feMergeNode in="colorMask" />
             </feMerge>
-            <feGaussianBlur in="maskedTurbulence" stdDeviation="30" result="softMap" />
-            <feSpecularLighting in="softMap" surfaceScale="50" specularConstant="6" specularExponent="100"
-                lighting-color="white" result="specLight">
-                <fePointLight x="-200" y="-200" z="300" />
-            </feSpecularLighting>
-            <feDisplacementMap in="SourceGraphic" in2="softMap" scale="100" xChannelSelector="B" yChannelSelector="A"
-                -xChannelSelector="B" -yChannelSelector="A" />
+            <feGaussianBlur in="maskedTurbulence" stdDeviation="1" result="softMap" />
+            <feDisplacementMap in="SourceGraphic" in3="softMap" scale="100" xChannelSelector="B" yChannelSelector="A" />
         </filter>
     </svg>
 
@@ -239,7 +241,9 @@
                 <div class="order-1 lg:order-2 flex justify-center scroll-animate" style="transition-delay: 150ms;">
                     <div
                         class="w-64 h-64 sm:w-80 sm:h-80 rounded-full overflow-hidden shadow-2xl ring-4 ring-offset-4 ring-offset-slate-50 dark:ring-offset-slate-900 ring-accent">
-                        <img alt="Kiss Norbert portréja" class="w-full h-full object-cover" src="IMG/profile.jpg" />
+                    <!-- A következő kép példaként használja a displacement map szűrőt. Ha nincs displacementMap.png,
+                        a kép változatlan marad (böngésző nem találja a hivatkozott forrást). -->
+                    <img alt="Kiss Norbert portréja" class="w-full h-full object-cover" src="IMG/profile.jpg" style="filter: url(#glass-distortion);" />
                     </div>
                 </div>
             </div>
@@ -640,9 +644,9 @@
                                 <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" href="#"
                                     rel="noopener noreferrer" target="_blank" title="GitHub"><i class="text-white"
                                         data-lucide="github"></i></a>
-                                <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors"
-                                    data-lang-title-key="project_gallery_link" href="#" title="Galéria"><i
-                                        class="text-white" data-lucide="image"></i></a>
+                                <button class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors"
+                                    data-lang-title-key="project_gallery_link" data-gallery-btn title="Galéria"><i
+                                    class="text-white" data-lucide="image"></i></button>
                                 <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors"
                                     data-lang-title-key="project_demo_link" href="#" title="Demó"><i class="text-white"
                                         data-lucide="gamepad-2"></i></a>
@@ -690,12 +694,11 @@
                                 <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" href="#"
                                     rel="noopener noreferrer" target="_blank" title="GitHub"><i class="text-white"
                                         data-lucide="github"></i></a>
-                                <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors"
-                                    data-lang-title-key="project_gallery_link" href="#" title="Galéria"><i
-                                        class="text-white" data-lucide="image"></i></a>
-                                <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors"
-                                    data-lang-title-key="project_demo_link" href="#" rel="noopener noreferrer"
-                                    target="_blank" title="Demó"><i class="text-white" data-lucide="gamepad-2"></i></a>
+                                <button class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors"
+                                    data-lang-title-key="project_gallery_link" data-gallery-btn title="Galéria"><i
+                                    class="text-white" data-lucide="image"></i></button>
+                                <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" href="#"
+                                    title="Sketchfab"><i class="text-white" data-lucide="box"></i></a>
                             </div>
                         </div>
                     </div>
@@ -741,9 +744,9 @@
                                 <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" href="#"
                                     rel="noopener noreferrer" target="_blank" title="GitHub"><i class="text-white"
                                         data-lucide="github"></i></a>
-                                <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors"
-                                    data-lang-title-key="project_gallery_link" href="#" title="Galéria"><i
-                                        class="text-white" data-lucide="image"></i></a>
+                                <button class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors"
+                                    data-lang-title-key="project_gallery_link" data-gallery-btn title="Galéria"><i
+                                    class="text-white" data-lucide="image"></i></button>
                                 <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" href="#"
                                     title="Sketchfab"><i class="text-white" data-lucide="box"></i></a>
                             </div>
@@ -916,6 +919,42 @@
     </a>
     <!-- YouTube lejátszó container -->
     <div id="youtube-player"></div>
+
+    <!-- Projekt Galéria Modal -->
+    <div id="project-modal" class="fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div id="modal-content" class="bg-card glass-effect border rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col relative transform scale-95 transition-transform duration-300">
+            <button id="modal-close" class="absolute -top-4 -right-4 w-10 h-10 bg-card glass-effect border rounded-full flex items-center justify-center text-header hover:text-accent transition-colors z-10">
+                <i data-lucide="x"></i>
+            </button>
+            <div class="p-6 border-b border-slate-200 dark:border-slate-700">
+                <h2 id="modal-title" class="text-2xl font-bold text-header">Projekt Címe</h2>
+            </div>
+            <div class="p-6 overflow-y-auto">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div id="modal-image-container" class="w-full h-80 rounded-lg overflow-hidden bg-slate-200 dark:bg-slate-700 relative">
+                        <img id="modal-main-image" src="" alt="Projekt fő képe" class="w-full h-full object-cover">
+                        <button id="modal-zoom-btn" class="absolute bottom-4 right-4 bg-card glass-effect border rounded-full p-3 flex items-center justify-center text-header hover:text-accent transition-colors z-10" title="Nagyítás">
+                            <i data-lucide="zoom-in"></i>
+                        </button>
+                    </div>
+                    <div class="modal-right-scroll">
+                        <h3 class="text-xl font-semibold text-header" data-lang-key="modal_description_title">Leírás</h3>
+                        <p id="modal-description" class="mt-2"></p>
+                        <h3 class="text-xl font-semibold text-header mt-4" data-lang-key="modal_technologies_title">Technológiák</h3>
+                        <div id="modal-tech-stack" class="flex flex-wrap gap-3 mt-2">
+                            <!-- Tech ikonok dinamikusan lesznek betöltve -->
+                        </div>
+                    </div>
+                </div>
+                <div id="modal-gallery" class="mt-6">
+                    <h3 class="text-xl font-semibold text-header mb-3" data-lang-key="modal_gallery_title">Galéria</h3>
+                    <div id="modal-thumbnails" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
+                        <!-- Galéria képek dinamikusan lesznek betöltve -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Szkriptek -->
     <script src="https://www.youtube.com/iframe_api"></script>
