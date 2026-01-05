@@ -4,961 +4,450 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>GrilledSword</title>
-    <meta
-        content="Kiss Norbert portfóliója: Game Developer, Technical Artist és Workflow Innovator. Fedezd fel a projektjeimet, tapasztalataimat és képességeimet."
-        name="description" />
-    <meta
-        content="Kiss Norbert, portfolio, game developer, technical artist, unity, blender, c#, szoftverfejlesztő, játékfejlesztő"
-        name="keywords" />
-    <meta content="Kiss Norbert - Professzionális Portfólió" property="og:title" />
-    <meta
-        content="Szenvedélyem a problémamegoldás és az alkotás, legyen szó játékfelesztésről vagy egyedi szoftveres megoldásokról."
-        property="og:description" />
-    <meta content="profile.jpg" property="og:image" />
-    <meta content="#" property="og:url" />
-    <meta content="website" property="og:type" />
+    <title>GS | GRILLEDSWORD</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
-        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://placehold.co/32x32/0ea5e9/ffffff?text=GS" rel="icon" />
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="antialiased">
+<!-- TAG: MODIFIED - Kivettem a 'cursor-none' class-t, hogy ne legyen vakrepülés, ha a JS késik -->
+<body class="antialiased overflow-x-hidden">
 
-    <!-- Háttér -->
+    <div id="cursor"></div>
+    <div id="cursor-follower"></div>
+    <div class="crt-overlay"></div>
+    <div class="vignette"></div>
+    <div class="cyber-grid-bg"></div>
     <canvas id="interactive-background"></canvas>
 
-    <!-- SVG szűrő: displacement map betöltése feImage segítségével -->
-    <!--
-      Megjegyzés: a displacement map fájlt helyezd el a következő elérési úton: IMG/displacementMap.png
-      Ha másutt van, módosítsd az href attribútumot az aktuális elérési útra.
-    -->
-    <svg style="display: none">
-        <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%" filterUnits="objectBoundingBox">
-            <feTurbulence type="fractalNoise" baseFrequency="0.001 0.001" numOctaves="1" seed="0" result="turbulence" />
-            <feImage href="IMG/map/displacementMap.png" result="displacementImage" preserveAspectRatio="none" />
-            <feColorMatrix in="turbulence" type="matrix" result="colorMask" values="1 0 0 0 0
-              1 0 0 0 0
-              0 0 0 0 0
-              0 0 1 0 0
-              0 0 0 1 0
-              0 0 0 0 1"   />
-            <feFlood flood-color="black" result="base" />
-            <feFlood flood-color="white" result="highlight" />
-            <feComposite in="highlight" in2="base" operator="xor" result="maskShape" />
-            <feMerge result="maskedTurbulence">
-                <feMergeNode in="displacementResult" />
-                                <feMergeNode in="colorMask" />
-            </feMerge>
-            <feGaussianBlur in="maskedTurbulence" stdDeviation="1" result="softMap" />
-            <feDisplacementMap in="SourceGraphic" in3="softMap" scale="100" xChannelSelector="B" yChannelSelector="A" />
-        </filter>
-    </svg>
-
-    <!-- Betöltő képernyő -->
-    <div id="loader-wrapper">
-        <div class="loader-content">
-            <svg class="loader-svg" viewbox="0 0 100 100">
-                <path class="loader-mountain" d="M0 100 L20 70 L40 80 L60 60 L80 75 L100 50 L100 100 Z" fill="none"
-                    stroke="#38bdf8" stroke-width="2"></path>
-                <circle class="loader-sun" cx="75" cy="40" r="10" fill="#facc15"></circle>
-            </svg>
-            <p class="loader-text" data-lang-key="loader_text">Töltés...</p>
+<div id="boot-sequence" class="fixed inset-0 bg-black z-[9999] flex flex-col items-center justify-center overflow-hidden cursor-none">
+    <div class="crt-overlay pointer-events-none absolute inset-0 z-50"></div>
+    <div class="scanline pointer-events-none absolute inset-0 z-40"></div>
+    
+    <div class="w-full max-w-4xl p-8 relative z-30 font-share text-cyan-500 text-sm md:text-base leading-tight">
+        <div id="boot-log" class="mb-4 h-64 overflow-hidden flex flex-col justify-end border-l-2 border-cyan-500/30 pl-4 opacity-80">
+            </div>
+        
+        <div class="border-t border-cyan-500/50 pt-4 flex items-center justify-between">
+            <div class="flex flex-col w-3/4">
+                <span class="text-xs text-slate-500 mb-1">SYSTEM_INTEGRITY_CHECK</span>
+                <div class="h-2 bg-slate-900 w-full relative overflow-hidden">
+                    <div id="boot-progress" class="absolute top-0 left-0 h-full bg-cyan-500 shadow-[0_0_10px_cyan] transition-all duration-100" style="width: 0%"></div>
+                </div>
+            </div>
+            <div class="font-orbitron font-bold text-xl animate-pulse text-red-500" id="boot-status">INITIALIZING</div>
         </div>
     </div>
 
-    <!-- Folyamatjelző csúszka -->
-    <div id="progress-bar"></div>
+    <div class="absolute bottom-4 right-4 text-xs text-slate-600 font-mono">
+        BIOS_VER: 2077.5.1 // GRILLED_KERNEL
+    </div>
+</div>
 
-    <!-- Fejléc -->
-    <header class="fixed top-0 left-0 right-0 z-50 p-4 transition-all duration-300" id="main-header">
-        <div
-            class="container mx-auto px-6 flex items-center justify-between md:gap-6 h-20 relative bg-card glass-effect rounded-full border">
-            <div class="flex-1 flex justify-start header-logo">
-                <a class="font-bold text-xl text-header" href="#home">GRILLEDSWORD</a>
+<header class="fixed top-0 left-0 right-0 z-50 p-2 md:p-4 transition-all duration-300 opacity-0" id="main-header">
+    <div class="cyber-border container mx-auto max-w-[1600px] bg-slate-900/95 backdrop-blur-sm relative rounded-lg clip-header mt-2">
+            
+        <div class="corner-bracket top-left"></div>
+        <div class="corner-bracket top-right"></div>
+        <div class="corner-bracket bottom-left"></div>
+        <div class="corner-bracket bottom-right"></div>
+
+        <div class="px-6 py-3 flex items-center justify-between h-full header-content">
+            
+            <div class="flex items-center gap-4">
+                <div class="logo-box glitch-hover">
+                    <span class="font-orbitron font-black text-2xl text-cyan-400 drop-shadow-[0_0_10px_rgba(6,182,212,0.8)]">GS</span>
+                </div>
+                <div class="hidden md:block">
+                    <h1 class="font-rajdhani font-bold text-xl text-white leading-none tracking-widest">GRILLEDSWORD</h1>
+                    <span class="text-xs text-pink-500 tracking-[0.3em] font-share">OFFICIAL</span>
+                </div>
             </div>
 
-            <nav class="absolute top-20 left-0 right-0 p-6 shadow-lg rounded-3xl z-40 md:shadow-none md:bg-transparent md:p-0 md:static md:flex md:items-center md:justify-center"
-                id="main-nav">
-                <ul class="flex flex-col md:flex-row items-center gap-6 md:gap-8">
-                    <li><a class="nav-link font-medium hover:text-accent transition-colors" data-lang-key="nav_home"
-                            href="#home">Kezdőlap</a></li>
-                    <li><a class="nav-link font-medium hover:text-accent transition-colors" data-lang-key="nav_about"
-                            href="#about">Rólam</a></li>
-                    <li><a class="nav-link font-medium hover:text-accent transition-colors"
-                            data-lang-key="nav_experience" href="#experience">Tapasztalat</a></li>
-                    <li><a class="nav-link font-medium hover:text-accent transition-colors" data-lang-key="nav_skills"
-                            href="#skills">Képességek</a></li>
-                    <li><a class="nav-link font-medium hover:text-accent transition-colors" data-lang-key="nav_projects"
-                            href="#projects">Projektek</a></li>
-                    <li><a class="nav-link font-medium hover:text-accent transition-colors" data-lang-key="nav_contact"
-                            href="#contact">Kapcsolat</a></li>
-                </ul>
-                <div class="mt-8 pt-6 flex md:hidden items-center justify-center gap-6">
-                    <div class="flex items-center gap-2">
-                        <span class="font-medium text-header w-16 text-right" id="lang-label-mobile">Nyelv</span>
-                        <label class="lang-switch toggle-switch" for="lang-checkbox-mobile">
-                            <input id="lang-checkbox-mobile" type="checkbox" />
-                            <div class="lang-slider toggle-slider">
-                                <div class="lang-bg lang-bg-hu"></div>
-                                <div class="lang-bg lang-bg-en"></div>
-                                <div class="lang-thumb toggle-thumb"></div>
-                            </div>
-                        </label>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="font-medium text-header w-16 text-right" id="theme-label-mobile">Világos</span>
-                        <label class="theme-switch toggle-switch" for="theme-checkbox-mobile">
-                            <input id="theme-checkbox-mobile" type="checkbox" />
-                            <div class="toggle-slider">
-                                <div class="toggle-thumb theme-thumb"></div>
-                                <div class="cloud c1"></div>
-                                <div class="cloud c2"></div>
-                                <div class="star s1"></div>
-                                <div class="star s2"></div>
-                                <div class="star s3"></div>
-                                <div class="star s4"></div>
-                            </div>
-                        </label>
-                    </div>
+            <div class="hidden lg:flex items-center gap-6 absolute left-1/2 transform -translate-x-1/2">
+                <div class="status-badge flex items-center gap-2 border border-slate-700 bg-black/60 px-4 py-1 clip-badge">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> 
+                    <span class="text-xs font-bold text-green-500 font-orbitron tracking-widest">SYSTEM_ONLINE</span>
                 </div>
-            </nav>
+            </div>
 
-            <div class="flex-1 flex justify-end items-center">
-                <div class="hidden md:flex items-center gap-3 header-controls">
-                    <div
-                        class="lang-toggle-container border-r border-slate-200 dark:border-slate-700 pr-3 mr-1 flex items-center gap-2">
-                        <span class="font-medium text-header hidden sm:inline w-16 text-right"
-                            id="lang-label">Nyelv</span>
-                        <label class="lang-switch toggle-switch" for="lang-checkbox">
-                            <input id="lang-checkbox" type="checkbox" />
-                            <div class="lang-slider toggle-slider">
-                                <div class="lang-bg lang-bg-hu"></div>
-                                <div class="lang-bg lang-bg-en"></div>
-                                <div class="lang-thumb toggle-thumb"></div>
-                            </div>
-                        </label>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="font-medium text-header hidden sm:inline w-16 text-right"
-                            id="theme-label">Világos</span>
-                        <label class="theme-switch toggle-switch" for="theme-checkbox">
-                            <input id="theme-checkbox" type="checkbox" />
-                            <div class="toggle-slider">
-                                <div class="toggle-thumb theme-thumb"></div>
-                                <div class="cloud c1"></div>
-                                <div class="cloud c2"></div>
-                                <div class="star s1"></div>
-                                <div class="star s2"></div>
-                                <div class="star s3"></div>
-                                <div class="star s4"></div>
-                            </div>
-                        </label>
-                    </div>
-                    <div id="music-player-container" class="ml-3">
-                        <div id="music-player"
-                            class="flex items-center justify-center rounded-full glass-effect shadow-lg cursor-pointer"
-                            style="contain: content;">
-                            <div id="mini-player-icon">
-                                <i data-lucide="music-2" class="text-header animate-pulse"></i>
-                            </div>
-                            <div id="full-player">
-                                <img id="player-album-art" src="https://placehold.co/64x64/020617/38bdf8?text=KN"
-                                    alt="Album Art" class="w-12 h-12 rounded-full shadow-md flex-shrink-0">
-                                <div class="flex-grow min-w-0">
-                                    <p id="player-title"
-                                        class="font-bold text-header whitespace-nowrap text-ellipsis overflow-hidden">
-                                        Válassz egy dalt</p>
-                                    <div id="player-progress-container"
-                                        class="h-1 bg-white/20 rounded-full mt-1 overflow-hidden cursor-pointer">
-                                        <div id="player-progress" class="h-full bg-accent rounded-full"
-                                            style="width: 0%;"></div>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-1 text-header">
-                                    <button id="player-prev"
-                                        class="p-2 rounded-full hover:bg-white/20 transition-colors flex-shrink-0"><i
-                                            data-lucide="skip-back" class="w-5 h-5"></i></button>
-                                    <button id="player-play"
-                                        class="p-2 rounded-full hover:bg-white/20 transition-colors flex-shrink-0"><i
-                                            data-lucide="play" class="w-6 h-6"></i></button>
-                                    <button id="player-next"
-                                        class="p-2 rounded-full hover:bg-white/20 transition-colors flex-shrink-0"><i
-                                            data-lucide="skip-forward" class="w-5 h-5"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="md:hidden p-2 rounded-md text-header transition-colors relative w-10 h-10 ml-2"
-                    id="menu-toggle">
-                    <span class="hamburger-line top"></span>
-                    <span class="hamburger-line middle"></span>
-                    <span class="hamburger-line bottom"></span>
+            <div class="flex items-center gap-4">
+                <nav class="hidden md:flex gap-6 font-share font-bold text-lg tracking-wide">
+                    <a href="#profile" class="nav-item hover:text-cyan-400 transition-colors" data-hover-text="PROFILE">PROFILE</a>
+                    <a href="#gear" class="nav-item hover:text-purple-400 transition-colors" data-hover-text="GEAR">GEAR</a>
+                    <a href="#projects" class="nav-item hover:text-pink-500 transition-colors" data-hover-text="PROJECTS">PROJECTS</a>
+                    <a href="#social-hub" class="nav-item hover:text-red-500 transition-colors" data-hover-text="SOCIAL">SOCIAL</a>
+                    <a href="#contact" class="nav-item hover:text-yellow-400 transition-colors" data-hover-text="CONTACT">CONTACT</a>
+                </nav>
+                
+                <button id="music-toggle" class="cyber-btn-icon text-cyan-400 hover:text-white transition-colors" aria-label="Toggle Music">
+                    <i data-lucide="music"></i>
+                </button>
+                
+                <button class="md:hidden cyber-btn-icon text-cyan-400" id="menu-toggle">
+                    <i data-lucide="menu"></i>
                 </button>
             </div>
         </div>
-    </header>
+    </div>
+    
+    <div id="mobile-menu" class="absolute top-full left-0 w-full bg-slate-900/95 backdrop-blur-xl border-b-2 border-cyan-500 transform scale-y-0 origin-top transition-transform duration-300 md:hidden z-40">
+            <nav class="flex flex-col p-6 gap-4 font-orbitron text-center">
+            <a href="#profile" class="text-white hover:text-cyan-400 py-2 border-b border-slate-800">PROFILE</a>
+            <a href="#gear" class="text-white hover:text-purple-400 py-2 border-b border-slate-800">GEAR</a>
+            <a href="#projects" class="text-white hover:text-pink-500 py-2 border-b border-slate-800">PROJECTS</a>
+            <a href="#social-hub" class="text-white hover:text-red-500 py-2 border-b border-slate-800">SOCIAL</a>
+            <a href="#contact" class="text-white hover:text-yellow-400 py-2">CONTACT</a>
+            </nav>
+    </div>
+</header>
 
-    <!-- Fő tartalom -->
-    <main class="container mx-auto px-4 pt-20 relative z-10">
-        <section class="min-h-[calc(100dvh-5rem)] flex items-center" id="home">
-            <div class="w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div class="order-2 lg:order-1 text-center lg:text-left">
-                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-header scroll-animate"
-                        data-lang-key="hero_name" id="main-headline">
-                        Kiss Norbert
-                    </h1>
-                    <p class="mt-4 text-lg sm:text-xl font-medium text-header scroll-animate" data-lang-key="hero_roles"
-                        style="transition-delay: 150ms;">
-                        Game Developer • Technical Artist • Workflow Innovator
-                    </p>
-                    <p class="mt-6 max-w-xl mx-auto lg:mx-0 text-lg scroll-animate" data-lang-key="hero_intro"
-                        style="transition-delay: 300ms;">
-                        Szenvedélyem a problémamegoldás és az alkotás, legyen szó építőipari tervekről vagy egyedi
-                        szoftveres megoldásokról. Folyamatosan keresem az új kihívásokat és a fejlődési lehetőségeket.
-                    </p>
-                    <div class="mt-8 flex justify-center lg:justify-start gap-4 scroll-animate"
-                        style="transition-delay: 450ms;">
-                        <a class="inline-flex items-center gap-2 px-6 py-3 bg-card glass-effect border rounded-lg shadow-lg hover:border-sky-500 transition-all"
-                            href="mailto:kiss.norbert.reall@gmail.com">
-                            <i class="w-5 h-5 text-header" data-lucide="mail"></i> <span
-                                class="text-header font-semibold" data-lang-key="hero_contact_btn">Kapcsolat</span>
-                        </a>
-                        <a class="inline-flex items-center gap-2 px-6 py-3 bg-card glass-effect border rounded-lg shadow-lg hover:border-sky-500 transition-all"
-                            href="#projects">
-                            <i class="w-5 h-5 text-header" data-lucide="folder"></i> <span
-                                class="text-header font-semibold" data-lang-key="hero_projects_btn">Projektjeim</span>
-                        </a>
-                    </div>
+<main class="container mx-auto px-4 relative z-10 opacity-0" id="main-content">
+    <section class="min-h-[85vh] grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-32 lg:pt-40 mb-24 relative" id="home">
+            <div class="absolute -left-20 top-20 font-orbitron text-[8rem] lg:text-[12rem] text-white opacity-[0.02] -rotate-90 pointer-events-none select-none">GRILLEDSWORD</div>
+            
+            <div class="lg:col-span-7 flex flex-col justify-start order-2 lg:order-1 relative z-10">
+                <div class="inline-flex items-center gap-2 mb-6 text-cyan-400 font-share text-sm border-l-2 border-cyan-500 pl-3 bg-gradient-to-r from-cyan-500/10 to-transparent py-1 w-fit">
+                    <i data-lucide="terminal" class="w-4 h-4"></i>
+                    <span class="typing-effect">LOGIN: GRILLEDSWORDOFFICIAL</span>
                 </div>
-                <div class="order-1 lg:order-2 flex justify-center scroll-animate" style="transition-delay: 150ms;">
-                    <div
-                        class="w-64 h-64 sm:w-80 sm:h-80 rounded-full overflow-hidden shadow-2xl ring-4 ring-offset-4 ring-offset-slate-50 dark:ring-offset-slate-900 ring-accent">
-                    <!-- A következő kép példaként használja a displacement map szűrőt. Ha nincs displacementMap.png,
-                        a kép változatlan marad (böngésző nem találja a hivatkozott forrást). -->
-                    <img alt="Kiss Norbert portréja" class="w-full h-full object-cover" src="IMG/profile.jpg" style="filter: url(#glass-distortion);" />
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- Rólam -->
-        <section class="py-16 sm:py-24" id="about">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                <div class="scroll-animate">
-                    <div class="flex items-center gap-4">
-                        <svg class="text-accent" fill="none" height="50" viewbox="0 0 150 50" width="150">
-                            <path class="signature-line"
-                                d="M5,25 C15,10 30,10 40,25 C50,40 60,40 70,25 M60,15 C70,5 85,5 95,15 C105,25 115,25 125,15 C135,5 145,10 145,20"
-                                stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                            </path>
-                        </svg>
-                        <h2 class="text-4xl font-bold text-header" data-lang-key="about_title">Rólam</h2>
-                    </div>
-                    <p class="mt-6 text-lg" data-lang-key="about_p1">Mélyépítő és magasépítő technikusként precíz és
-                        strukturált gondolkodásmódot sajátítottam el, amit a programozás világában is kamatoztatok. A
-                        két terület ötvözése egyedi perspektívát ad: egyszerre látom a nagy képet és a legapróbb
-                        részleteket is. Szabadidőmben szeretek új technológiákat felfedezni (mint a C# és .NET),
-                        adat-analitikával foglalkozni, és kreatív projekteken dolgozni, mint például a Pekka Kana 2
-                        játék remake-je Unity-ben.</p>
-                    <p class="mt-4 text-lg" data-lang-key="about_p2">Hiszek az élethosszig tartó tanulásban és abban,
-                        hogy a legjobb eredményeket csapatmunkával lehet elérni. Célom, hogy olyan megoldásokat hozzak
-                        létre, amik nem csak funkcionálisak, de felhasználói élményt is nyújtanak.</p>
-                </div>
-                <div class="scroll-animate" style="transition-delay: 150ms;">
-                    <div class="bg-card glass-effect p-8 rounded-2xl shadow-xl border">
-                        <div class="flex items-center gap-4 mb-6">
-                            <i class="w-6 h-6 text-accent" data-lucide="zap"></i>
-                            <div>
-                                <h3 class="text-lg font-bold text-header" data-lang-key="about_philosophy_title">
-                                    Filozófiám</h3>
-                                <p data-lang-key="about_philosophy_text">Tiszta kód, átgondolt dizájn, hatékony
-                                    megoldások.</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <i class="w-6 h-6 text-accent" data-lucide="crosshair"></i>
-                            <div>
-                                <h3 class="text-lg font-bold text-header" data-lang-key="about_goal_title">Célom</h3>
-                                <p data-lang-key="about_goal_text">Folyamatos fejlődés és maradandó érték teremtése.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- Munkahelyek -->
-        <section class="py-16 sm:py-24" id="experience">
-            <div class="text-center mb-16 scroll-animate">
-                <h2 class="text-4xl font-bold text-header" data-lang-key="experience_title">Szakmai Tapasztalat</h2>
-                <p class="mt-4 text-lg max-w-2xl mx-auto" data-lang-key="experience_subtitle">Az építőipartól a
-                    szoftverfejlesztésig, szerteágazó területeken szereztem tapasztalatot.</p>
-            </div>
-            <!-- Munkahelyek Container -->
-            <div class="relative max-w-3xl mx-auto">
-                <div
-                    class="absolute left-4 -translate-x-1/2 top-0 h-full w-0.5 bg-slate-200 dark:bg-slate-700 lg:left-1/2">
-                </div>
-                <!-- 1 -->
-                <div class="relative scroll-animate mb-12">
-                    <div class="lg:flex items-center">
-                        <div class="ml-10 lg:ml-0 lg:w-1/2 lg:pr-8 lg:text-right">
-                            <div
-                                class="p-6 rounded-2xl shadow-xl bg-card glass-effect border inline-block timeline-card w-full text-left lg:text-right">
-                                <p class="text-sm text-accent font-semibold">2022 - 2025</p>
-                                <h3
-                                    class="text-xl font-bold text-header mt-2 flex items-center justify-start lg:justify-end gap-2">
-                                    <span>🏭</span> Wittur Hungária Kft.</h3>
-                                <p class="mt-1 font-medium" data-lang-key="exp_1_role">Összeszerelő operátor</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2">
-                    </div>
-                </div>
-                <!-- 2 -->
-                <div class="relative scroll-animate mb-12">
-                    <div class="lg:flex items-center flex-row-reverse">
-                        <div class="ml-10 lg:ml-0 lg:w-1/2 lg:pl-8">
-                            <div
-                                class="p-6 rounded-2xl shadow-xl bg-card glass-effect border timeline-card w-full text-left">
-                                <p class="text-sm text-accent font-semibold">2020 - 2022</p>
-                                <h3 class="text-xl font-bold text-header mt-2 flex items-center gap-2"><span>📐</span>
-                                    Wetterbest®</h3>
-                                <p class="mt-1 font-medium" data-lang-key="exp_2_role">Tetőtervező és rajzoló</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2">
-                    </div>
-                </div>
-                <!-- 3 -->
-                <div class="relative scroll-animate mb-12">
-                    <div class="lg:flex items-center">
-                        <div class="ml-10 lg:ml-0 lg:w-1/2 lg:pr-8 lg:text-right">
-                            <div
-                                class="p-6 rounded-2xl shadow-xl bg-card glass-effect border inline-block timeline-card w-full text-left lg:text-right">
-                                <p class="text-sm text-accent font-semibold">2019</p>
-                                <h3
-                                    class="text-xl font-bold text-header mt-2 flex items-center justify-start lg:justify-end gap-2">
-                                    <span>🎨</span> INCI Ajándékgyár</h3>
-                                <p class="mt-1 font-medium" data-lang-key="exp_3_role">Grafikus, Webshop kezelés</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2">
-                    </div>
-                </div>
-                <!-- 4 -->
-                <div class="relative scroll-animate mb-12">
-                    <div class="lg:flex items-center flex-row-reverse">
-                        <div class="ml-10 lg:ml-0 lg:w-1/2 lg:pl-8">
-                            <div
-                                class="p-6 rounded-2xl shadow-xl bg-card glass-effect border timeline-card w-full text-left">
-                                <p class="text-sm text-accent font-semibold">2017</p>
-                                <h3 class="text-xl font-bold text-header mt-2 flex items-center gap-2"><span>🏛️</span>
-                                    Sóstói Múzeumfalu</h3>
-                                <p class="mt-1 font-medium" data-lang-key="exp_4_role">Épület-karbantartó (Gyakorlat)
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2">
-                    </div>
-                </div>
-                <!-- 5 -->
-                <div class="relative scroll-animate mb-12">
-                    <div class="lg:flex items-center">
-                        <div class="ml-10 lg:ml-0 lg:w-1/2 lg:pr-8 lg:text-right">
-                            <div
-                                class="p-6 rounded-2xl shadow-xl bg-card glass-effect border inline-block timeline-card w-full text-left lg:text-right">
-                                <p class="text-sm text-accent font-semibold">2016</p>
-                                <h3
-                                    class="text-xl font-bold text-header mt-2 flex items-center justify-start lg:justify-end gap-2">
-                                    <span>🏗️</span> Ép-Okit Kft.</h3>
-                                <p class="mt-1 font-medium" data-lang-key="exp_5_role">Segédmunkás (Gyakorlat)</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2">
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- Iskolák -->
-        <section class="py-16 sm:py-24" id="education">
-            <div class="text-center mb-16 scroll-animate">
-                <h2 class="text-4xl font-bold text-header" data-lang-key="education_title">Tanulmányok</h2>
-                <p class="mt-4 text-lg max-w-2xl mx-auto" data-lang-key="education_subtitle">Ahol a tudásomat szereztem.
+                <h1 class="font-orbitron font-black text-5xl sm:text-7xl lg:text-8xl text-white mb-4 leading-none tracking-tighter layer-glitch" data-text="GRILLED SWORD">
+                    KISS <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 drop-shadow-[0_0_10px_rgba(168,85,247,0.5)]">NORBERT</span>
+                </h1>
+                <h2 class="font-rajdhani font-bold text-2xl sm:text-3xl text-slate-300 mb-8 flex flex-wrap items-center gap-2">
+                    <span class="text-purple-400 text-4xl">&lt;</span> 
+                    <span class="glitch-text hover:text-cyan-400 transition-colors" data-text="Game Dev">Game Dev</span> <span class="text-slate-600">/</span> 
+                    <span class="glitch-text hover:text-purple-400 transition-colors" data-text="Streamer">Streamer</span> <span class="text-slate-600">/</span> 
+                    <span class="glitch-text hover:text-pink-500 transition-colors" data-text="Tech Artist">Tech Artist</span> 
+                    <span class="text-purple-400 text-4xl">/&gt;</span>
+                </h2>
+                <p class="text-slate-400 text-lg max-w-2xl mb-10 leading-relaxed font-rajdhani border-l-4 border-purple-500 pl-6 bg-slate-900/50 py-4 cyber-clip-box">
+                    Üdv a bázison, Choom! Az építőiparból jöttem, de a kódolásban találtam meg a végzetem. Itt találod a játékokat, amiket építek, és a tartalmat, amit gyártok. <span class="text-yellow-400 font-bold font-share">Wake up, Samurai!</span>
                 </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#projects" class="cyber-btn primary group">
+                        <span class="btn-content group-hover:text-black">ACCESS PROJECTS</span>
+                        <div class="glitch-effect"></div>
+                    </a>
+                    <a href="https://twitch.tv/grilledswordofficial" target="_blank" class="cyber-btn secondary">
+                        <span class="btn-content flex items-center gap-2"><i data-lucide="twitch" class="w-4 h-4"></i> JACK IN (LIVE)</span>
+                    </a>
+                </div>
             </div>
-            <!-- Iskolák Container -->
-            <div class="relative max-w-3xl mx-auto">
-                <div
-                    class="absolute left-4 -translate-x-1/2 top-0 h-full w-0.5 bg-slate-200 dark:bg-slate-700 lg:left-1/2">
-                </div>
-                <!-- 1 -->
-                <div class="relative scroll-animate mb-12">
-                    <div class="lg:flex items-center">
-                        <div class="ml-10 lg:ml-0 lg:w-1/2 lg:pr-8 lg:text-right">
-                            <div
-                                class="p-6 rounded-2xl shadow-xl bg-card glass-effect border inline-block timeline-card w-full text-left lg:text-right">
-                                <p class="text-sm text-accent font-semibold" data-lang-key="edu_1_date">2024 - Jelenleg
-                                </p>
-                                <h3
-                                    class="text-xl font-bold text-header mt-2 flex items-center justify-start lg:justify-end gap-2">
-                                    <span>🎓</span> Nyíregyházi SZC Bencs László</h3>
-                                <p class="mt-1 font-medium" data-lang-key="edu_1_degree">Ács</p>
-                            </div>
+
+            <div class="lg:col-span-5 relative order-1 lg:order-2 flex justify-center mt-10 lg:mt-0">
+                <div class="avatar-container relative group w-full max-w-md">
+                    <div class="absolute inset-0 bg-gradient-to-t from-cyan-500/30 to-transparent opacity-60 hologram-scan"></div>
+                    <div class="cyber-frame p-1 bg-black clip-path-polygon relative z-10 border border-slate-700 group-hover:border-cyan-500 transition-colors duration-300">
+                        <img src="IMG/profile.jpg" alt="Profile" class="w-full h-auto object-cover grayscale contrast-125 brightness-90 group-hover:grayscale-0 transition-all duration-500 sepia-[.3]">
+                        <div class="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-cyan-500"></div>
+                        <div class="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-pink-500"></div>
+                        
+                        <div class="absolute top-4 right-4 bg-red-600 text-white text-xs font-bold px-3 py-1 font-share tracking-widest shadow-[0_0_15px_red] animate-pulse">
+                            REC ●
                         </div>
-                    </div>
-                    <div
-                        class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2">
-                    </div>
-                </div>
-                <!-- 2 -->
-                <div class="relative scroll-animate mb-12">
-                    <div class="lg:flex items-center flex-row-reverse">
-                        <div class="ml-10 lg:ml-0 lg:w-1/2 lg:pl-8">
-                            <div
-                                class="p-6 rounded-2xl shadow-xl bg-card glass-effect border timeline-card w-full text-left">
-                                <p class="text-sm text-accent font-semibold">2022 - 2024</p>
-                                <h3 class="text-xl font-bold text-header mt-2 flex items-center gap-2"><span>🎓</span>
-                                    Nyíregyházi SZC Bencs László</h3>
-                                <p class="mt-1 font-medium" data-lang-key="edu_2_degree">Tetőfedő</p>
-                            </div>
+                        <div class="absolute bottom-4 left-4 text-cyan-400 font-mono text-xs typing-loop">
+                            SCANNING_TARGET...
                         </div>
-                    </div>
-                    <div
-                        class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2">
-                    </div>
-                </div>
-                <!-- 3 -->
-                <div class="relative scroll-animate mb-12">
-                    <div class="lg:flex items-center">
-                        <div class="ml-10 lg:ml-0 lg:w-1/2 lg:pr-8 lg:text-right">
-                            <div
-                                class="p-6 rounded-2xl shadow-xl bg-card glass-effect border inline-block timeline-card w-full text-left lg:text-right">
-                                <p class="text-sm text-accent font-semibold">2023</p>
-                                <h3
-                                    class="text-xl font-bold text-header mt-2 flex items-center justify-start lg:justify-end gap-2">
-                                    <span>💻</span> PRO OKTATÁS</h3>
-                                <p class="mt-1 font-medium" data-lang-key="edu_3_degree">C# programozás és .NET</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2">
-                    </div>
-                </div>
-                <!-- 4 -->
-                <div class="relative scroll-animate mb-12">
-                    <div class="lg:flex items-center flex-row-reverse">
-                        <div class="ml-10 lg:ml-0 lg:w-1/2 lg:pl-8">
-                            <div
-                                class="p-6 rounded-2xl shadow-xl bg-card glass-effect border timeline-card w-full text-left">
-                                <p class="text-sm text-accent font-semibold">2023</p>
-                                <h3 class="text-xl font-bold text-header mt-2 flex items-center gap-2"><span>📊</span>
-                                    CODECOOL</h3>
-                                <p class="mt-1 font-medium" data-lang-key="edu_4_degree">Data Analyst képzés</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2">
-                    </div>
-                </div>
-                <!-- 5 -->
-                <div class="relative scroll-animate mb-12">
-                    <div class="lg:flex items-center">
-                        <div class="ml-10 lg:ml-0 lg:w-1/2 lg:pr-8 lg:text-right">
-                            <div
-                                class="p-6 rounded-2xl shadow-xl bg-card glass-effect border inline-block timeline-card w-full text-left lg:text-right">
-                                <p class="text-sm text-accent font-semibold">2019 - 2020</p>
-                                <h3
-                                    class="text-xl font-bold text-header mt-2 flex items-center justify-start lg:justify-end gap-2">
-                                    <span>🎓</span> Nyíregyházi SZC Vásárhelyi Pál</h3>
-                                <p class="mt-1 font-medium" data-lang-key="edu_5_degree">Magasépítő Technikus</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2">
-                    </div>
-                </div>
-                <!-- 6 -->
-                <div class="relative scroll-animate mb-12">
-                    <div class="lg:flex items-center flex-row-reverse">
-                        <div class="ml-10 lg:ml-0 lg:w-1/2 lg:pl-8">
-                            <div
-                                class="p-6 rounded-2xl shadow-xl bg-card glass-effect border timeline-card w-full text-left">
-                                <p class="text-sm text-accent font-semibold">2018 - 2019</p>
-                                <h3 class="text-xl font-bold text-header mt-2 flex items-center gap-2"><span>🎓</span>
-                                    Nyíregyházi SZC Vásárhelyi Pál</h3>
-                                <p class="mt-1 font-medium" data-lang-key="edu_6_degree">Mélyépítő Technikus</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="absolute left-4 -translate-x-1/2 top-1/2 -translate-y-1/2 w-5 h-5 bg-sky-500 rounded-full border-4 border-white dark:border-slate-900 lg:left-1/2">
                     </div>
                 </div>
             </div>
         </section>
-        <!-- Képességek -->
-        <section class="py-16 sm:py-24" id="skills">
-            <div class="text-center mb-16 scroll-animate">
-                <h2 class="text-4xl font-bold text-header" data-lang-key="skills_title">Képességek</h2>
-                <p class="mt-4 text-lg max-w-2xl mx-auto" data-lang-key="skills_subtitle">Folyamatosan fejlesztem magam
-                    a legújabb technológiák terén.</p>
+
+        <section id="profile" class="mb-32 relative pt-10">
+             <div class="absolute right-0 top-0 font-orbitron text-8xl text-white opacity-[0.03] pointer-events-none select-none">STATS</div>
+            <div class="section-header mb-12 flex items-end gap-4 border-b border-slate-800 pb-4 relative">
+                <div class="absolute bottom-0 left-0 w-1/3 h-[2px] bg-cyan-500 shadow-[0_0_15px_#06b6d4]"></div>
+                <h2 class="font-orbitron text-4xl text-white glitch-text-big" data-text="PLAYER_STATS">PLAYER_STATS</h2>
+                <span class="font-share text-black bg-cyan-500 text-sm mb-2 px-2 font-bold transform -skew-x-12">ID: GS-OFFICIAL</span>
             </div>
-            <div class="scroll-animate mb-16">
-                <h3 class="text-2xl font-bold text-header text-center mb-8" data-lang-key="skills_tech_stack_title">Tech
-                    Stack Highlights</h3>
-                <div
-                    class="max-w-4xl mx-auto bg-card glass-effect p-6 rounded-2xl shadow-lg border flex justify-center items-center gap-x-8 gap-y-4 flex-wrap">
-                    <p class="font-bold text-lg text-header" data-lang-key="skills_tech_stack_tools">Kiemelt Eszközeim:
-                    </p>
-                    <div class="flex items-center gap-2 font-semibold"><img class="w-7 h-7"
-                            src="https://cdn.brandfetch.io/idEc0EPR9J/theme/dark/symbol.svg?c=1bxid64Mup7aczewSAYMX&amp;t=1668070683125">
-                        Unity</img></div>
-                    <div class="flex items-center gap-2 font-semibold"><img class="w-7 h-7"
-                            src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg" />
-                        Blender</div>
-                    <div class="flex items-center gap-2 font-semibold"><img class="w-7 h-7"
-                            src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/visualstudio/visualstudio-plain.svg" />
-                        Visual Studio</div>
-                    <div class="flex items-center gap-2 font-semibold"><img class="w-7 h-7"
-                            src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg" />
-                        VS Code</div>
-                    <div class="flex items-center gap-2 font-semibold"><img class="w-7 h-7"
-                            src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/android/android-plain.svg" />
-                        Android SDK</div>
-                    <div class="flex items-center gap-2 font-semibold"><img class="w-7 h-7"
-                            src="https://upload.wikimedia.org/wikipedia/commons/a/af/Adobe_Photoshop_CC_icon.svg" />
-                        Photoshop</div>
-                    <div class="flex items-center gap-2 font-semibold"><img class="w-7 h-7"
-                            src="https://upload.wikimedia.org/wikipedia/commons/f/f6/Audacity_Logo.svg" /> Audacity
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="stat-card tilt-card group bg-black/40 p-6 border border-slate-700 hover:border-cyan-500 transition-colors clip-corner-sm relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-8 h-8 border-t border-r border-cyan-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="font-rajdhani font-bold text-xl text-white group-hover:text-cyan-400 transition-colors">CODING (C#)</h3>
+                        <span class="text-cyan-400 font-share">LVL 85</span>
                     </div>
+                    <div class="stat-bar-bg"><div class="stat-bar-fill cyan" style="width: 85%;"></div></div>
+                </div>
+                 <div class="stat-card tilt-card group bg-black/40 p-6 border border-slate-700 hover:border-purple-500 transition-colors clip-corner-sm relative">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="font-rajdhani font-bold text-xl text-white group-hover:text-purple-400 transition-colors">CREATIVITY</h3>
+                        <span class="text-purple-400 font-share">LVL 99</span>
+                    </div>
+                    <div class="stat-bar-bg"><div class="stat-bar-fill purple" style="width: 99%;"></div></div>
+                </div>
+                 <div class="stat-card tilt-card group bg-black/40 p-6 border border-slate-700 hover:border-pink-500 transition-colors clip-corner-sm relative">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="font-rajdhani font-bold text-xl text-white group-hover:text-pink-500 transition-colors">UNITY ENG</h3>
+                        <span class="text-pink-500 font-share">LVL 80</span>
+                    </div>
+                    <div class="stat-bar-bg"><div class="stat-bar-fill pink" style="width: 80%;"></div></div>
+                </div>
+                 <div class="stat-card tilt-card group bg-black/40 p-6 border border-slate-700 hover:border-yellow-400 transition-colors clip-corner-sm relative">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="font-rajdhani font-bold text-xl text-white group-hover:text-yellow-400 transition-colors">CAFFEINE</h3>
+                        <span class="text-yellow-400 font-share animate-pulse">OVERLOAD</span>
+                    </div>
+                    <div class="stat-bar-bg"><div class="stat-bar-fill yellow stripes" style="width: 100%;"></div></div>
                 </div>
             </div>
-            <h3 class="text-2xl font-bold text-header text-center mb-8 scroll-animate"
-                data-lang-key="skills_technical_title">Technikai Képességek</h3>
-            <div
-                class="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 text-center">
-                <div
-                    class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border flex flex-col items-center justify-center gap-3 transition-transform transform hover:-translate-y-2">
-                    <img class="w-12 h-12"
-                        src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg" />
-                    <span class="font-semibold text-header">C# &amp; .NET</span>
-                </div>
-                <div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border flex flex-col items-center justify-center gap-3 transition-transform transform hover:-translate-y-2"
-                    style="transition-delay: 100ms;">
-                    <img class="w-12 h-12"
-                        src="https://cdn.brandfetch.io/idEc0EPR9J/theme/dark/symbol.svg?c=1bxid64Mup7aczewSAYMX&amp;t=1668070683125" />
-                    <span class="font-semibold text-header">Unity</span>
-                </div>
-                <div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border flex flex-col items-center justify-center gap-3 transition-transform transform hover:-translate-y-2"
-                    style="transition-delay: 200ms;">
-                    <img class="w-12 h-12"
-                        src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg" />
-                    <span class="font-semibold text-header">Blender</span>
-                </div>
-                <div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border flex flex-col items-center justify-center gap-3 transition-transform transform hover:-translate-y-2"
-                    style="transition-delay: 300ms;">
-                    <img class="w-12 h-12"
-                        src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" />
-                    <span class="font-semibold text-header">HTML5</span>
-                </div>
-                <div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border flex flex-col items-center justify-center gap-3 transition-transform transform hover:-translate-y-2"
-                    style="transition-delay: 400ms;">
-                    <img class="w-12 h-12"
-                        src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" />
-                    <span class="font-semibold text-header">CSS3</span>
-                </div>
-                <div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border flex flex-col items-center justify-center gap-3 transition-transform transform hover:-translate-y-2"
-                    style="transition-delay: 500ms;">
-                    <img class="w-12 h-12"
-                        src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" />
-                    <span class="font-semibold text-header">JavaScript</span>
-                </div>
-                <div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border flex flex-col items-center justify-center gap-3 transition-transform transform hover:-translate-y-2"
-                    style="transition-delay: 600ms;">
-                    <i class="w-12 h-12 text-sky-500" data-lucide="database"></i>
-                    <span class="font-semibold text-header">Data Analysis</span>
-                </div>
-            </div>
-            <h3 class="text-2xl font-bold text-header text-center mt-20 mb-8 scroll-animate"
-                data-lang-key="skills_soft_title">Soft Skillek</h3>
-            <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
-                <div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border text-center">
-                    <i class="w-10 h-10 text-accent mx-auto" data-lucide="lightbulb"></i>
-                    <h4 class="mt-4 font-bold text-header" data-lang-key="skill_soft_1">Problémamegoldás</h4>
-                </div>
-                <div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border text-center"
-                    style="transition-delay: 100ms;">
-                    <i class="w-10 h-10 text-accent mx-auto" data-lucide="users"></i>
-                    <h4 class="mt-4 font-bold text-header" data-lang-key="skill_soft_2">Csapatmunka</h4>
-                </div>
-                <div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border text-center"
-                    style="transition-delay: 200ms;">
-                    <i class="w-10 h-10 text-accent mx-auto" data-lucide="trending-up"></i>
-                    <h4 class="mt-4 font-bold text-header" data-lang-key="skill_soft_3">Fejlődési vágy</h4>
-                </div>
-                <div class="scroll-animate p-6 bg-card glass-effect rounded-2xl shadow-lg border text-center"
-                    style="transition-delay: 300ms;">
-                    <i class="w-10 h-10 text-accent mx-auto" data-lucide="message-square"></i>
-                    <h4 class="mt-4 font-bold text-header" data-lang-key="skill_soft_4">Kommunikáció</h4>
+            
+            <div class="mt-8 p-6 bg-slate-900/40 border-l-4 border-cyan-500 relative overflow-hidden group cyber-box backdrop-blur-sm">
+                <h3 class="font-orbitron text-lg text-slate-400 mb-4 flex items-center gap-2"><i data-lucide="cpu" class="text-cyan-500"></i> EQUIPPED_SKILLS:</h3>
+                <div class="flex flex-wrap gap-8 justify-center md:justify-start">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unity/unity-original.svg" class="w-12 h-12 grayscale hover:grayscale-0 duration-300" title="Unity">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg" class="w-12 h-12 grayscale hover:grayscale-0 duration-300" title="C#">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg" class="w-12 h-12 grayscale hover:grayscale-0 duration-300" title="Blender">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/visualstudio/visualstudio-plain.svg" class="w-12 h-12 grayscale hover:grayscale-0 duration-300" title="VS">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/photoshop/photoshop-plain.svg" class="w-12 h-12 grayscale hover:grayscale-0 duration-300" title="Photoshop">
                 </div>
             </div>
         </section>
-        <!-- Projektek -->
-        <section class="py-16 sm:py-24" id="projects">
-            <div class="text-center mb-16 scroll-animate">
-                <h2 class="text-4xl font-bold text-header" data-lang-key="projects_title">Kiemelt Projektjeim</h2>
-                <p class="mt-4 text-lg max-w-2xl mx-auto" data-lang-key="projects_subtitle">Néhány munka, amire büszke
-                    vagyok.</p>
+
+        <section id="gear" class="mb-32">
+            <div class="section-header mb-12 text-right border-b border-slate-800 pb-4 relative">
+                 <div class="absolute bottom-0 right-0 w-1/3 h-[2px] bg-purple-500 shadow-[0_0_15px_#a855f7]"></div>
+                <h2 class="font-orbitron text-4xl text-white glitch-text-big" data-text="BATTLE_STATION">BATTLE_STATION</h2>
+                <span class="font-share text-purple-500 text-sm mb-2 tracking-widest">[ HARDWARE_CONFIG_V2.0 ]</span>
             </div>
-            <!-- Projektek Grid -->
+            
+            <div class="bg-black/60 border border-slate-800 p-8 relative overflow-hidden group clip-corner-lg">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-12 font-rajdhani text-lg relative z-10">
+                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="monitor" class="text-cyan-400"></i><div class="flex flex-col"><span class="text-slate-500 text-xs font-share">MAIN_DISPLAY</span><span class="text-white font-bold text-xl">Samsung M7 32"</span></div></div></div>
+                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="layers" class="text-cyan-400"></i><div class="flex flex-col"><span class="text-slate-500 text-xs font-share">SEC_DISPLAYS</span><span class="text-white font-bold text-xl">2x Eizo FlexScan EV2456</span></div></div></div>
+                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="cpu" class="text-purple-400"></i><div class="flex flex-col"><span class="text-slate-500 text-xs font-share">CPU_UNIT</span><span class="text-white font-bold text-xl">Ryzen 7 9800X3D</span></div></div></div>
+                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="zap" class="text-yellow-400"></i><div class="flex flex-col"><span class="text-slate-500 text-xs font-share">GPU_ENGINE</span><span class="text-white font-bold text-xl">RTX 5060 Ti</span></div></div></div>
+                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="hard-drive" class="text-pink-500"></i><div class="flex flex-col"><span class="text-slate-500 text-xs font-share">MEMORY_BANK</span><span class="text-white font-bold text-xl">64GB RAM</span></div></div></div>
+                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="keyboard" class="text-green-400"></i><div class="flex flex-col"><span class="text-slate-500 text-xs font-share">PERIPHERALS</span><span class="text-white font-bold text-xl">Asus TUF Gaming Combo</span></div></div></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="mb-32">
+            <div class="flex items-center justify-between mb-12 border-b border-slate-800 pb-4">
+                <h2 class="font-orbitron text-4xl text-white glitch-text-big" data-text="QUEST_LOG">QUEST_LOG</h2>
+                <div class="flex gap-2">
+                    <div class="w-3 h-3 bg-cyan-500 animate-pulse"></div><div class="w-3 h-3 bg-purple-500 animate-pulse delay-75"></div><div class="w-3 h-3 bg-pink-500 animate-pulse delay-150"></div>
+                </div>
+            </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Projekt 1 -->
-                <div class="bg-card glass-effect rounded-2xl shadow-xl border overflow-hidden group flex flex-col scroll-animate relative">
-                    <img alt="Projekt kép"
-                        class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500"
-                        src="IMG/pekka.gif" />
-                    <div class="absolute inset-0 bg-slate-900/70 project-overlay flex items-center justify-center p-4">
-                        <div class="text-center">
-                            <h3 class="text-xl font-bold text-white" data-lang-key="project_1_title">Pekka Kana 3D</h3>
-                            <div class="mt-5 flex items-center justify-center gap-4">
-                                <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" href="#"
-                                    rel="noopener noreferrer" target="_blank" title="GitHub"><i class="text-white"
-                                        data-lucide="github"></i></a>
-                                <button class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors"
-                                    data-lang-title-key="project_gallery_link" data-gallery-btn title="Galéria"><i
-                                    class="text-white" data-lucide="image"></i></button>
-                                <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors"
-                                    data-lang-title-key="project_demo_link" href="#" title="Demó"><i class="text-white"
-                                        data-lucide="gamepad-2"></i></a>
-                            </div>
-                        </div>
+                <div class="cyber-card group" data-gallery-btn>
+                    <div class="card-image-wrapper">
+                        <img src="IMG/pekka.gif" alt="Pekka Kana 3D" class="card-img">
+                        <div class="card-overlay"><i data-lucide="crosshair" class="text-cyan-400 w-12 h-12"></i></div>
                     </div>
-                    <div class="p-6 flex-grow flex flex-col">
-                        <h3 class="text-lg font-bold text-header" data-lang-key="project_1_title">Pekka Kana 3D</h3>
-                        <p class="mt-2 text-sm flex-grow" data-lang-key="project_1_desc">A klasszikus játék modern
-                            köntösben, Unity motorral és Blenderben készített modellekkel.</p>
-                        <div
-                            class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between">
-                            <div class="flex items-center gap-4">
-                                <img class="w-7 h-7"
-                                    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unity/unity-original.svg"
-                                    title="Unity">
-                                <img class="w-7 h-7"
-                                    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg"
-                                    title="C#" />
-                                <img class="w-7 h-7"
-                                    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg"
-                                    title="Blender" />
-                                </img>
-                            </div>
-                            <div class="flex gap-1">
-                                <div class="w-4 h-4 rounded-full" style="background-color: #38bdf8;"></div>
-                                <div class="w-4 h-4 rounded-full" style="background-color: #fbbf24;"></div>
-                                <div class="w-4 h-4 rounded-full" style="background-color: #34d399;"></div>
-                            </div>
-                        </div>
+                    <div class="card-content">
+                        <h3 class="font-orbitron text-xl text-white mb-2 group-hover:text-cyan-400 transition-colors">PEKKA KANA 3D</h3>
+                        <div class="flex gap-2 mb-4"><span class="badge unity">UNITY</span><span class="badge code">C#</span></div>
+                        <p class="font-rajdhani text-slate-400 text-sm leading-relaxed">A klasszikus újragondolása. Modern fizika, retro hangulat.</p>
                     </div>
-                    <div class="color-palette"
-                        style="background: linear-gradient(to right, #38bdf8, #fbbf24, #34d399);"></div>
+                    <div class="card-footer">
+                        <span class="text-xs text-cyan-500 font-share blink">STATUS: BETA</span>
+                        <button class="cyber-btn-mini text-cyan-400 border border-cyan-500/50 hover:bg-cyan-500 hover:text-black transition-all">OPEN</button>
+                    </div>
                 </div>
-                <!-- Projekt 2 -->
-                <div class="bg-card glass-effect rounded-2xl shadow-xl border overflow-hidden group flex flex-col scroll-animate relative"
-                    style="transition-delay: 150ms;">
-                    <img alt="Projekt kép"
-                        class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500"
-                        src="IMG/mindscape.jpg" />
-                    <div class="absolute inset-0 bg-slate-900/70 project-overlay flex items-center justify-center p-4">
-                        <div class="text-center">
-                            <h3 class="text-xl font-bold text-white" data-lang-key="project_2_title">Mindscape</h3>
-                            <div class="mt-5 flex items-center justify-center gap-4">
-                                <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" href="#"
-                                    rel="noopener noreferrer" target="_blank" title="GitHub"><i class="text-white"
-                                        data-lucide="github"></i></a>
-                                <button class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors"
-                                    data-lang-title-key="project_gallery_link" data-gallery-btn title="Galéria"><i
-                                    class="text-white" data-lucide="image"></i></button>
-                                <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" href="#"
-                                    title="Sketchfab"><i class="text-white" data-lucide="box"></i></a>
-                            </div>
-                        </div>
+                <div class="cyber-card group" data-gallery-btn>
+                    <div class="card-image-wrapper">
+                        <img src="IMG/mindscape.jpg" alt="Mindscape" class="card-img">
+                         <div class="card-overlay"><i data-lucide="skull" class="text-purple-400 w-12 h-12"></i></div>
                     </div>
-                    <div class="p-6 flex-grow flex flex-col">
-                        <h3 class="text-lg font-bold text-header" data-lang-key="project_2_title">Mindscape</h3>
-                        <p class="mt-2 text-sm flex-grow" data-lang-key="project_2_desc">Egy interaktív horror anomália
-                            kereső játék.</p>
-                        <div
-                            class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between">
-                            <div class="flex items-center gap-4">
-                                <img class="w-7 h-7"
-                                    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unity/unity-original.svg"
-                                    title="Unity">
-                                <img class="w-7 h-7"
-                                    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg"
-                                    title="C#" />
-                                <img class="w-7 h-7"
-                                    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg"
-                                    title="Blender" />
-                                </img>
-                            </div>
-                            <div class="flex gap-1">
-                                <div class="w-4 h-4 rounded-full" style="background-color: #020617;"></div>
-                                <div class="w-4 h-4 rounded-full" style="background-color: #38bdf8;"></div>
-                                <div class="w-4 h-4 rounded-full" style="background-color: #f8fafc;"></div>
-                            </div>
-                        </div>
+                    <div class="card-content">
+                        <h3 class="font-orbitron text-xl text-white mb-2 group-hover:text-purple-400 transition-colors">MINDSCAPE</h3>
+                        <div class="flex gap-2 mb-4"><span class="badge unity">UNITY</span><span class="badge horror">HORROR</span></div>
+                        <p class="font-rajdhani text-slate-400 text-sm leading-relaxed">Interaktív anomália vadászat.</p>
                     </div>
-                    <div class="color-palette"
-                        style="background: linear-gradient(to right, #020617, #38bdf8, #f8fafc);"></div>
+                    <div class="card-footer"><span class="text-xs text-purple-500 font-share">STATUS: RELEASED</span><button class="cyber-btn-mini text-purple-400 border border-purple-500/50 hover:bg-purple-500 hover:text-black transition-all">OPEN</button></div>
                 </div>
-                <!-- Projekt 3 -->
-                <div class="bg-card glass-effect rounded-2xl shadow-xl border overflow-hidden group flex flex-col scroll-animate relative"
-                    style="transition-delay: 300ms;">
-                    <img alt="Projekt kép"
-                        class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500"
-                        src="IMG/3d.jpg" />
-                    <div class="absolute inset-0 bg-slate-900/70 project-overlay flex items-center justify-center p-4">
-                        <div class="text-center">
-                            <h3 class="text-xl font-bold text-white" data-lang-key="project_3_title">3D Modell Galéria
-                            </h3>
-                            <div class="mt-5 flex items-center justify-center gap-4">
-                                <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" href="#"
-                                    rel="noopener noreferrer" target="_blank" title="GitHub"><i class="text-white"
-                                        data-lucide="github"></i></a>
-                                <button class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors"
-                                    data-lang-title-key="project_gallery_link" data-gallery-btn title="Galéria"><i
-                                    class="text-white" data-lucide="image"></i></button>
-                                <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" href="#"
-                                    title="Sketchfab"><i class="text-white" data-lucide="box"></i></a>
-                            </div>
-                        </div>
+                 <div class="cyber-card group" data-gallery-btn>
+                    <div class="card-image-wrapper">
+                        <img src="IMG/3d.jpg" alt="3D Gallery" class="card-img">
+                         <div class="card-overlay"><i data-lucide="box" class="text-pink-500 w-12 h-12"></i></div>
                     </div>
-                    <div class="p-6 flex-grow flex flex-col">
-                        <h3 class="text-lg font-bold text-header" data-lang-key="project_3_title">3D Modell Galéria</h3>
-                        <p class="mt-2 text-sm flex-grow" data-lang-key="project_3_desc">Blenderben készült 3D modellek
-                            bemutatása, a koncepciótól a végső renderelésig.</p>
-                        <div
-                            class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between">
-                            <div class="flex items-center gap-4">
-                                <img class="w-7 h-7"
-                                    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg"
-                                    title="Blender">
-                                </img>
-                            </div>
-                            <div class="flex gap-1">
-                                <div class="w-4 h-4 rounded-full" style="background-color: #f59e0b;"></div>
-                                <div class="w-4 h-4 rounded-full" style="background-color: #4f46e5;"></div>
-                                <div class="w-4 h-4 rounded-full" style="background-color: #64748b;"></div>
-                            </div>
-                        </div>
+                    <div class="card-content">
+                        <h3 class="font-orbitron text-xl text-white mb-2 group-hover:text-pink-500 transition-colors">3D ARTWORKS</h3>
+                        <div class="flex gap-2 mb-4"><span class="badge blender">BLENDER</span><span class="badge art">ART</span></div>
+                        <p class="font-rajdhani text-slate-400 text-sm leading-relaxed">High-poly modellek, környezetek.</p>
                     </div>
-                    <div class="color-palette"
-                        style="background: linear-gradient(to right, #f59e0b, #4f46e5, #64748b);"></div>
-                </div>
-                <!-- Projekt 4 -->
-                <div class="bg-card glass-effect rounded-2xl shadow-xl border overflow-hidden group flex flex-col scroll-animate relative"
-                    style="transition-delay: 150ms;">
-                    <img alt="Projekt kép"
-                        class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500"
-                        src="https://wallpapers.com/images/high/dj-background-xuknuzdbw76k9r2n.webp" />
-                    <div class="absolute inset-0 bg-slate-900/70 project-overlay flex items-center justify-center p-4">
-                        <div class="text-center">
-                            <h3 class="text-xl font-bold text-white" data-lang-key="project_4_title">Zenéim</h3>
-                            <div class="mt-5 flex items-center justify-center gap-4">
-                                <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors"
-                                    href="https://soundcloud.com/norbert-kiss-13" rel="noopener noreferrer"
-                                    target="_blank" title="SoundCloud"><i class="text-white"
-                                        data-lucide="soundcloud"></i></a>
-                                <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors"
-                                    href="https://www.youtube.com/@NorbertKiss-Music/videos" rel="noopener noreferrer"
-                                    target="_blank" title="YouTube"><i class="text-white" data-lucide="youtube"></i></a>
-                                <a class="p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors" href="#"
-                                    title="Spotify"><i class="text-white" data-lucide="spotify"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-6 flex-grow flex flex-col">
-                        <h3 class="text-lg font-bold text-header" data-lang-key="project_4_title">Zenéim</h3>
-                        <p class="mt-2 text-sm flex-grow" data-lang-key="project_4_desc">Audacityben készült zenéim
-                            bemutatása.</p>
-                        <div
-                            class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between">
-                            <div class="flex items-center gap-4">
-                                <img class="w-7 h-7"
-                                    src="https://upload.wikimedia.org/wikipedia/commons/f/f6/Audacity_Logo.svg"
-                                    title="Audacity">
-                                </img>
-                            </div>
-                            <div class="flex gap-1">
-                                <div class="w-4 h-4 rounded-full" style="background-color: #170a02;"></div>
-                                <div class="w-4 h-4 rounded-full" style="background-color: #f8df38;"></div>
-                                <div class="w-4 h-4 rounded-full" style="background-color: #b43884;"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="color-palette"
-                        style="background: linear-gradient(to right, #830981, #3bf838, #0d4c8b);"></div>
+                    <div class="card-footer"><span class="text-xs text-pink-500 font-share">STATUS: ONGOING</span><button class="cyber-btn-mini text-pink-500 border border-pink-500/50 hover:bg-pink-500 hover:text-black transition-all">OPEN</button></div>
                 </div>
             </div>
         </section>
-        <!-- Kapcsolat -->
-        <section class="py-16 sm:py-24" id="contact">
-            <div class="text-center mb-16 scroll-animate">
-                <h2 class="text-4xl font-bold text-header" data-lang-key="contact_title">Lépjünk kapcsolatba!</h2>
-                <p class="mt-4 text-lg max-w-2xl mx-auto" data-lang-key="contact_subtitle">Nyitott vagyok új
-                    lehetőségekre és együttműködésekre. Keress bizalommal!</p>
+
+<section id="social-hub" class="mb-32">
+            <div class="flex items-center justify-between mb-12 border-b border-slate-800 pb-4">
+                <h2 class="font-orbitron text-4xl text-white glitch-text-big" data-text="SOCIAL_HUB">SOCIAL_HUB</h2>
+                <span class="font-share text-cyan-500">LIVE_FEED_AGGREGATE</span>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
-                <div class="scroll-animate">
-                    <form class="space-y-6" id="contact-form">
-                        <div>
-                            <label class="font-medium text-header" data-lang-key="form_name" for="name">Név</label>
-                            <input
-                                class="w-full mt-2 p-3 rounded-lg bg-card glass-effect border focus:outline-none focus:ring-2 ring-sky-500"
-                                data-lang-placeholder-key="form_name_placeholder" id="name" name="name" required=""
-                                type="text" />
-                        </div>
-                        <div>
-                            <label class="font-medium text-header" data-lang-key="form_email" for="email">Email</label>
-                            <input
-                                class="w-full mt-2 p-3 rounded-lg bg-card glass-effect border focus:outline-none focus:ring-2 ring-sky-500"
-                                data-lang-placeholder-key="form_email_placeholder" id="email" name="email" required=""
-                                type="email" />
-                        </div>
-                        <div>
-                            <label class="font-medium text-header" data-lang-key="form_message"
-                                for="message">Üzenet</label>
-                            <textarea
-                                class="w-full mt-2 p-3 rounded-lg bg-card glass-effect border focus:outline-none focus:ring-2 ring-sky-500"
-                                data-lang-placeholder-key="form_message_placeholder" id="message" name="message"
-                                required="" rows="5"></textarea>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <input
-                                class="h-4 w-4 mt-1 rounded border-slate-300 dark:border-slate-600 bg-transparent text-sky-600 focus:ring-sky-500 dark:focus:ring-offset-slate-900"
-                                id="privacy-checkbox" required="" type="checkbox" />
-                            <label class="text-sm" data-lang-key="form_privacy" for="privacy-checkbox">Elolvastam és
-                                elfogadom az <a class="underline hover:text-accent" data-lang-key="form_privacy_link"
-                                    href="#">Adatvédelmi Tájékoztatót</a>.</label>
-                        </div>
-                        <button
-                            class="breathing-button w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-card glass-effect border dark:border-slate-700 text-header font-semibold rounded-lg shadow-lg hover:border-sky-500 dark:hover:border-sky-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:border-slate-200 dark:disabled:hover:border-slate-700 disabled:transform-none disabled:shadow-none"
-                            disabled="" id="submit-button" type="submit">
-                            <span data-lang-key="form_submit_btn">Üzenet Küldése</span>
-                        </button>
-                    </form>
-                    <p class="text-center mt-4" id="form-status"></p>
-                </div>
-                <div class="scroll-animate" style="transition-delay: 150ms;">
-                    <div class="bg-card glass-effect p-8 rounded-2xl shadow-xl border">
-                        <h3 class="text-xl font-bold text-header" data-lang-key="contact_info_title">Elérhetőségek</h3>
-                        <div class="mt-4 space-y-4">
-                            <div class="flex items-center gap-4">
-                                <i class="w-6 h-6 text-accent" data-lucide="mail"></i>
-                                <a class="hover:text-accent"
-                                    href="mailto:kiss.norbert.reall@gmail.com">kiss.norbert.reall@gmail.com</a>
-                            </div>
-                            <div class="flex items-center gap-4">
-                                <i class="w-6 h-6 text-accent" data-lucide="phone"></i>
-                                <a class="hover:text-accent" href="tel:+36702992948">06 (70) 299-2948</a>
-                            </div>
-                            <div class="flex items-center gap-4">
-                                <i class="w-6 h-6 text-accent" data-lucide="map-pin"></i>
-                                <span data-lang-key="contact_location">Nyíregyháza, Magyarország</span>
-                            </div>
-                        </div>
+
+            <div class="cyber-border-box mb-12 p-1 border border-cyan-500/30 bg-black/60 clip-corner-lg relative group">
+                <div class="absolute top-0 left-0 bg-red-600 text-white px-4 py-1 font-bold text-xs z-10 font-share animate-pulse">LIVE SIGNAL CHECK</div>
+                
+                <div class="aspect-video w-full relative">
+                    
+                    <div id="stream-offline" class="offline-placeholder">
+                        <div class="offline-icon"><i data-lucide="wifi-off"></i></div>
+                        <h3 class="offline-text glitch-text" data-text="STREAM_OFFLINE">STREAM_OFFLINE</h3>
+                        <p class="offline-sub">AWAITING_SIGNAL...</p>
+                        <div class="absolute inset-0 pointer-events-none bg-[url('https://media.giphy.com/media/3o7qE1YN7aQfVUTTLy/giphy.gif')] opacity-5 mix-blend-screen"></div>
                     </div>
-                    <div class="mt-8 text-center">
-                        <p class="font-semibold text-header mb-4" data-lang-key="contact_social_prompt">Vagy keress meg
-                            itt:</p>
-                        <div class="flex justify-center gap-6">
-                            <a class="text-header hover:text-accent transition-colors"
-                                href="https://github.com/Norbert-Kiss-Hub" rel="noopener noreferrer" target="_blank"><i
-                                    class="w-8 h-8" data-lucide="github"></i></a>
-                            <a class="text-header hover:text-accent transition-colors"
-                                href="https://www.linkedin.com/in/norbert-kiss-722509263/" rel="noopener noreferrer"
-                                target="_blank"><i class="w-8 h-8" data-lucide="linkedin"></i></a>
-                            <a class="text-header hover:text-accent transition-colors"
-                                href="https://www.facebook.com/profile.php?id=100086384070034" rel="noopener noreferrer"
-                                target="_blank"><i class="w-8 h-8" data-lucide="facebook"></i></a>
-                        </div>
+
+                    <div id="stream-online" class="hidden absolute inset-0 w-full h-full">
+                        <iframe id="stream-iframe" class="w-full h-full" 
+                            src="" 
+                            title="GrilledSword Live Stream" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <a href="https://www.tiktok.com/@grilledswordofficial" target="_blank" class="social-card group border border-slate-800 hover:border-pink-500 bg-black/50 p-4 transition-all hover:-translate-y-2 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-pink-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-2 bg-black rounded border border-slate-700"><svg class="w-6 h-6 text-pink-500" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></div>
+                        <div><h4 class="font-bold text-white">TIKTOK</h4><p class="text-xs text-pink-400 font-mono">STREAMER</p></div>
+                    </div>
+                    <div class="h-40 bg-slate-900/50 rounded overflow-hidden border border-slate-700 group-hover:border-pink-500 relative">
+                        <img src="IMG/tiktok_post.jpg" alt="Latest TikTok" class="w-full h-full object-cover"> 
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-white font-bold">WATCH NOW</span></div>
+                    </div>
+                </a>
+
+                <a href="https://www.twitch.tv/grilledswordofficial" target="_blank" class="social-card group border border-slate-800 hover:border-purple-500 bg-black/50 p-4 transition-all hover:-translate-y-2 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-2 bg-black rounded border border-slate-700"><i data-lucide="twitch" class="w-6 h-6 text-purple-500"></i></div>
+                        <div><h4 class="font-bold text-white">TWITCH</h4><p class="text-xs text-purple-400 font-mono">STREAMER</p></div>
+                    </div>
+                    <div class="h-40 bg-slate-900/50 rounded overflow-hidden border border-slate-700 group-hover:border-purple-500 relative">
+                        <img src="IMG/twitch_post.png" alt="Twitch Live" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-white font-bold">WATCH NOW</span></div>
+                    </div>
+                </a>
+
+                <a href="https://www.instagram.com/grilledswordofficial" target="_blank" class="social-card group border border-slate-800 hover:border-yellow-500 bg-black/50 p-4 transition-all hover:-translate-y-2 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-yellow-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-2 bg-black rounded border border-slate-700"><i data-lucide="instagram" class="w-6 h-6 text-yellow-500"></i></div>
+                        <div><h4 class="font-bold text-white">INSTAGRAM</h4><p class="text-xs text-yellow-400 font-mono">GALLERY</p></div>
+                    </div>
+                    <div class="h-40 bg-slate-900/50 rounded overflow-hidden border border-slate-700 group-hover:border-yellow-500 relative">
+                        <img src="IMG/insta_post.jpg" alt="Latest Instagram" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-white font-bold">WATCH NOW</span></div>
+                    </div>
+                </a>
+
+                <a href="https://www.facebook.com/grilledswordofficial" target="_blank" class="social-card group border border-slate-800 hover:border-blue-500 bg-black/50 p-4 transition-all hover:-translate-y-2 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-2 bg-black rounded border border-slate-700"><i data-lucide="facebook" class="w-6 h-6 text-blue-500"></i></div>
+                        <div><h4 class="font-bold text-white">FACEBOOK</h4><p class="text-xs text-blue-400 font-mono">GALLERY</p></div>
+                    </div>
+                    <div class="h-40 bg-slate-900/50 rounded overflow-hidden border border-slate-700 group-hover:border-blue-500 relative">
+                        <img src="IMG/facebook_post.jpg" alt="Latest Facebook" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-white font-bold">WATCH NOW</span></div>
+                    </div>
+                </a>
+
+            </div>
+        </section>
+
+        <section id="contact" class="mb-20">
+            <div class="cyber-border-box p-8 bg-black/80 backdrop-blur-sm relative overflow-hidden clip-corner-lg border border-slate-700">
+                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 relative z-10">
+                    <div>
+                        <h2 class="font-orbitron text-3xl text-white mb-6 glitch-text" data-text="ESTABLISH_UPLINK">ESTABLISH_UPLINK</h2>
+                        <form id="contact-form" class="space-y-6">
+                            <div class="input-group"><label class="input-label">CODENAME</label><input type="text" name="name" required class="cyber-input"><div class="input-line"></div></div>
+                            <div class="input-group"><label class="input-label">FREQUENCY (EMAIL)</label><input type="email" name="email" required class="cyber-input"><div class="input-line"></div></div>
+                            <div class="input-group"><label class="input-label">TRANSMISSION DATA</label><textarea name="message" rows="4" required class="cyber-input"></textarea><div class="input-line"></div></div>
+                            <button type="submit" class="cyber-btn primary w-full group"><span class="group-hover:text-black transition-colors">SEND TRANSMISSION</span></button>
+                            <p id="form-status" class="mt-2 text-center text-sm font-mono"></p>
+                        </form>
+                    </div>
+                    
+                    <div class="flex flex-col justify-center gap-4">
+                        <a href="https://www.tiktok.com/@grilledswordofficial" target="_blank" class="contact-btn tiktok group">
+                            <div class="icon-box"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></div>
+                            <span class="text-lg font-bold">TIKTOK</span><i data-lucide="external-link" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                        </a>
+                        <a href="https://youtube.com/@grilledswordofficial" target="_blank" class="contact-btn youtube group">
+                            <div class="icon-box"><i data-lucide="youtube" class="w-6 h-6"></i></div>
+                            <span class="text-lg font-bold">YOUTUBE</span><i data-lucide="external-link" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                        </a>
+                        <a href="https://twitch.tv/grilledswordofficial" target="_blank" class="contact-btn twitch group">
+                            <div class="icon-box"><i data-lucide="twitch" class="w-6 h-6"></i></div>
+                            <span class="text-lg font-bold">TWITCH</span><i data-lucide="external-link" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                        </a>
+                        <a href="https://www.instagram.com/grilledswordofficial" target="_blank" class="contact-btn instagram group">
+                            <div class="icon-box"><i data-lucide="instagram" class="w-6 h-6"></i></div>
+                            <span class="text-lg font-bold">INSTAGRAM</span><i data-lucide="external-link" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                        </a>
+                        <a href="https://www.facebook.com/grilledswordofficial" target="_blank" class="contact-btn facebook group">
+                            <div class="icon-box"><i data-lucide="facebook" class="w-6 h-6"></i></div>
+                            <span class="text-lg font-bold">FACEBOOK</span><i data-lucide="external-link" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                        </a>
+                        <a href="mailto:kiss.norbert.reall@gmail.com" class="contact-btn email group">
+                            <div class="icon-box"><i data-lucide="mail" class="w-6 h-6"></i></div>
+                            <span class="text-lg font-bold">EMAIL</span><i data-lucide="arrow-right" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                        </a>
                     </div>
                 </div>
             </div>
         </section>
-    </main>
 
-    <!-- Lábléc -->
-    <footer class="bg-card glass-effect text-center py-6 sm:py-8 border-t relative z-10 mt-16 sm:mt-24">
-        <p class="text-sm" data-lang-key="footer_copyright">© 2025 Kiss Norbert. Minden jog fenntartva.</p>
-    </footer>
+</main>
 
-    <!-- Vissza a tetejére gomb -->
-    <a class="w-20 h-20 flex items-center justify-center bg-card glass-effect rounded-full shadow-lg border hover:border-sky-500 transition-all"
-        href="#home" id="back-to-top">
-        <i class="w-10 h-10 text-header" data-lucide="arrow-up"></i>
-    </a>
-    <!-- YouTube lejátszó container -->
-    <div id="youtube-player"></div>
+    <div id="chat-overlay" class="fixed bottom-4 right-4 w-80 h-64 bg-black/80 backdrop-blur-md border border-cyan-500/30 overflow-hidden hidden md:flex flex-col z-40 pointer-events-none shadow-[0_0_20px_rgba(6,182,212,0.1)] clip-corner-top-right">
+        <div class="bg-cyan-900/20 p-2 text-xs font-bold text-cyan-400 flex justify-between px-3 border-b border-cyan-500/30">
+            <span class="flex items-center gap-2"><i data-lucide="message-square" class="w-3 h-3"></i> SYSTEM_CHAT_LOG</span>
+            <span class="text-red-500 animate-pulse">● LIVE_FEED</span>
+        </div>
+        <div id="chat-messages" class="flex-1 overflow-hidden flex flex-col justify-end p-3 space-y-2 font-share text-sm text-shadow-sm"></div>
+    </div>
 
-    <!-- Projekt Galéria Modal -->
-    <div id="project-modal" class="fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
-        <div id="modal-content" class="bg-card glass-effect border rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col relative transform scale-95 transition-transform duration-300">
-            <button id="modal-close" class="absolute -top-4 -right-4 w-10 h-10 bg-card glass-effect border rounded-full flex items-center justify-center text-header hover:text-accent transition-colors z-10">
-                <i data-lucide="x"></i>
-            </button>
-            <div class="p-6 border-b border-slate-200 dark:border-slate-700">
-                <h2 id="modal-title" class="text-2xl font-bold text-header">Projekt Címe</h2>
+    <div id="youtube-player" class="hidden"></div>
+    
+    <div id="project-modal" class="fixed inset-0 bg-black/95 z-[100] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 backdrop-blur-md">
+        <div id="modal-content" class="w-full max-w-5xl max-h-[90vh] flex flex-col relative shadow-[0_0_50px_rgba(6,182,212,0.3)] transform scale-95 transition-transform border border-cyan-500 clip-corner-lg bg-black/95">
+            <div class="flex justify-between items-center p-4 border-b border-cyan-500/50 bg-cyan-900/20">
+                <h2 id="modal-title" class="font-orbitron text-2xl text-cyan-400 glitch-text" data-text="TITLE">TITLE</h2>
+                <button id="modal-close" class="text-red-500 hover:text-white hover:bg-red-600 rounded p-1 transition-colors border border-red-500"><i data-lucide="x"></i></button>
             </div>
-            <div class="p-6 overflow-y-auto">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div id="modal-image-container" class="w-full h-80 rounded-lg overflow-hidden bg-slate-200 dark:bg-slate-700 relative">
-                        <img id="modal-main-image" src="" alt="Projekt fő képe" class="w-full h-full object-cover">
-                        <button id="modal-zoom-btn" class="absolute bottom-4 right-4 bg-card glass-effect border rounded-full p-3 flex items-center justify-center text-header hover:text-accent transition-colors z-10" title="Nagyítás">
-                            <i data-lucide="zoom-in"></i>
-                        </button>
-                    </div>
-                    <div class="modal-right-scroll">
-                        <h3 class="text-xl font-semibold text-header" data-lang-key="modal_description_title">Leírás</h3>
-                        <p id="modal-description" class="mt-2"></p>
-                        <h3 class="text-xl font-semibold text-header mt-4" data-lang-key="modal_technologies_title">Technológiák</h3>
-                        <div id="modal-tech-stack" class="flex flex-wrap gap-3 mt-2">
-                            <!-- Tech ikonok dinamikusan lesznek betöltve -->
-                        </div>
-                    </div>
+            <div class="p-6 overflow-y-auto relative grid grid-cols-1 lg:grid-cols-2 gap-8 custom-scrollbar">
+                 <div class="space-y-4">
+                     <div class="relative border border-slate-700 p-1 bg-black">
+                        <img id="modal-main-image" src="" class="w-full h-64 object-cover">
+                        <div class="absolute bottom-2 right-2"><button id="modal-zoom-btn" class="text-cyan-400 bg-black/80 p-2 border border-cyan-500 hover:bg-cyan-500 hover:text-black"><i data-lucide="maximize"></i></button></div>
+                     </div>
+                     <div id="modal-thumbnails" class="flex gap-2 overflow-x-auto pb-2"></div>
                 </div>
-                <div id="modal-gallery" class="mt-6">
-                    <h3 class="text-xl font-semibold text-header mb-3" data-lang-key="modal_gallery_title">Galéria</h3>
-                    <div id="modal-thumbnails" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
-                        <!-- Galéria képek dinamikusan lesznek betöltve -->
-                    </div>
+                <div class="font-rajdhani text-slate-300">
+                    <h3 class="text-white font-bold text-xl mb-2 border-b border-slate-800 pb-1"><i data-lucide="file-code" class="inline w-5 h-5 text-purple-400"></i> MISSION_BRIEF</h3>
+                    <p id="modal-description" class="mb-6 leading-relaxed"></p>
+                    <h3 class="text-white font-bold text-xl mb-2 border-b border-slate-800 pb-1"><i data-lucide="cpu" class="inline w-5 h-5 text-pink-500"></i> TECH_ARSENAL</h3>
+                    <div id="modal-tech-stack" class="flex flex-wrap gap-2 mt-3"></div>
                 </div>
             </div>
         </div>
     </div>
+    
+    <div id="lightbox" class="fixed inset-0 bg-black/98 z-[110] hidden items-center justify-center p-4">
+        <img id="lightbox-img" class="max-w-full max-h-full border-2 border-cyan-500 shadow-[0_0_100px_cyan]">
+        <button id="lightbox-close" class="absolute top-8 right-8 text-white p-2 border border-red-500 hover:bg-red-500"><i data-lucide="x"></i></button>
+    </div>
 
-    <!-- Szkriptek -->
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="script.js"></script>
 </body>
-
 </html>
