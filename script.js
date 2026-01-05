@@ -262,10 +262,85 @@ function initFakeChat() {
 
     // TAG: MODIFIED - Config adatokat itt pótoltam, ha hiányoznának
     const FAKE_CHAT_CONFIG = {
-        users: ['NeonSlayer', 'GlitchGamer', 'CyberWolf', 'NetRunner99', 'PixelPirate'],
-        msgs: ['Ez a design brutál!', 'Mikor lesz a köv stream?', 'GG WP!', 'Hogy csináltad ezt a hátteret?', 'Hello from Hungary!'],
-        colors: ['#06b6d4', '#a855f7', '#ec4899', '#facc15', '#4ade80']
-    };
+    // [NEW] - Bővített, sztereotipikus felhasználónevek
+    users: [
+        'NoobMaster69', 'AnyadHata', 'RageQuit_Roli', 'KrumpliPC_Warrior', 
+        'xX_Destroyer_Xx', 'LagKing', 'SörhasPista', 'E-Girl_Hunter', 
+        'PixelPunci', 'Csőgörény', 'ToxikAvenger', 'SilentBob', 
+        'StreamSniper01', 'VakondTuro', 'JediVagyokGeci', 'Bela_a_Hentes',
+        'ZokniBáb', 'Hardstuck_Silver', 'ClickBaiter', 'ModokReme'
+    ],
+
+    // [NEW] - 50+ valósághű chat üzenet (Hype, Hate, Troll, Random)
+    msgs: [
+        // --- Hype & Positive ---
+        'EZ CLAP', 
+        'PogChamp', 
+        'Ez beteg volt báttya!', 
+        'OMEGALUL', 
+        'GG WP', 
+        'Mekkora aim te jó ég!', 
+        'Ezt klippeljétek le azonnal!', 
+        'ISTEN VAGY!', 
+        'Na végre valami skill...', 
+        'Hype Hype Hype 🔥', 
+        'Ez a skin honnan van?', 
+        'Taníts mester!',
+        'MonkaS',
+        'KekW',
+
+        // --- Toxikus & Troll (A sava-borsa) ---
+        'Töröld le a játékot, könyörgöm.', 
+        'Anyád is ezt nézi?', 
+        'Mekkora bot vagy te atyaég...', 
+        'Ez a gameplay rákot okoz.', 
+        'Menjél vissza legózni!', 
+        'Uninstall pls.', 
+        'Milyen kenyérpirítón játszol?', 
+        'Lag vagy csak béna vagy?', 
+        'Kikérem magamnak ezt a teljesítményt.', 
+        'Haver, a monitor be van kapcsolva?', 
+        'Lépj ki, kevesebb a pingünk.',
+        'Szerintem add el a gépet.',
+        'Ezért kár volt elindítani a streamet.',
+        'Boostolt fiók...',
+
+        // --- Kérdések & Tech ---
+        'Milyen egered van?', 
+        'Mikor lesz facecam?', 
+        'Hány FPS-ed van?', 
+        'Ez most ranked?', 
+        'Milyen felbontás ez? 800x600?', 
+        'Zene címe???', 
+        'Szia, bejöhetek játszani?', 
+        'Moderátort keresel?', 
+        'Specifikációt írd már ki lécci.',
+        
+        // --- Random & Spam ---
+        'F', 
+        'F', 
+        'F', 
+        'KEKW KEKW KEKW',
+        'LAGG', 
+        'Drop?', 
+        'Hol a macska?', 
+        'Igyál vizet!', 
+        'Pisilni kell...', 
+        'Ez a játék halott.', 
+        'Mikor jön a kövi rész?',
+        'Szia Uram! Bojler eladó?',
+        'Józsi üzeni, hogy vidd le a szemetet.',
+        'Kappa',
+        'ResidentSleeper',
+        'Valaki adjon neki egy banánt.'
+    ],
+
+    // [UPDATED] - Kibővített színpaletta a neveknek
+    colors: [
+        '#06b6d4', '#a855f7', '#ec4899', '#facc15', '#4ade80', 
+        '#ff0000', '#00ff00', '#0000ff', '#ff5733', '#c70039'
+    ]
+};
 
     function addMessage() {
         const user = FAKE_CHAT_CONFIG.users[Math.floor(Math.random() * FAKE_CHAT_CONFIG.users.length)];

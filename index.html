@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<!-- TAG: MODIFIED - Kivettem a 'cursor-none' class-t, hogy ne legyen vakrepülés, ha a JS késik -->
 <body class="antialiased overflow-x-hidden">
 
     <div id="cursor"></div>
@@ -55,11 +54,11 @@
         <div class="corner-bracket bottom-left"></div>
         <div class="corner-bracket bottom-right"></div>
 
-        <div class="px-6 py-3 flex items-center justify-between h-full header-content">
+        <div class="px-4 md:px-6 py-3 flex items-center justify-between h-full header-content">
             
             <div class="flex items-center gap-4">
                 <div class="logo-box glitch-hover">
-                    <span class="font-orbitron font-black text-2xl text-cyan-400 drop-shadow-[0_0_10px_rgba(6,182,212,0.8)]">GS</span>
+                    <span class="font-orbitron font-black text-3xl md:text-2xl text-cyan-400 drop-shadow-[0_0_10px_rgba(6,182,212,0.8)]">GS</span>
                 </div>
                 <div class="hidden md:block">
                     <h1 class="font-rajdhani font-bold text-xl text-white leading-none tracking-widest">GRILLEDSWORD</h1>
@@ -84,23 +83,23 @@
                 </nav>
                 
                 <button id="music-toggle" class="cyber-btn-icon text-cyan-400 hover:text-white transition-colors" aria-label="Toggle Music">
-                    <i data-lucide="music"></i>
+                    <i data-lucide="music" class="w-6 h-6"></i>
                 </button>
                 
                 <button class="md:hidden cyber-btn-icon text-cyan-400" id="menu-toggle">
-                    <i data-lucide="menu"></i>
+                    <i data-lucide="menu" class="w-8 h-8"></i>
                 </button>
             </div>
         </div>
     </div>
     
     <div id="mobile-menu" class="absolute top-full left-0 w-full bg-slate-900/95 backdrop-blur-xl border-b-2 border-cyan-500 transform scale-y-0 origin-top transition-transform duration-300 md:hidden z-40">
-            <nav class="flex flex-col p-6 gap-4 font-orbitron text-center">
-            <a href="#profile" class="text-white hover:text-cyan-400 py-2 border-b border-slate-800">PROFILE</a>
-            <a href="#gear" class="text-white hover:text-purple-400 py-2 border-b border-slate-800">GEAR</a>
-            <a href="#projects" class="text-white hover:text-pink-500 py-2 border-b border-slate-800">PROJECTS</a>
-            <a href="#social-hub" class="text-white hover:text-red-500 py-2 border-b border-slate-800">SOCIAL</a>
-            <a href="#contact" class="text-white hover:text-yellow-400 py-2">CONTACT</a>
+            <nav class="flex flex-col p-8 gap-6 font-orbitron text-center text-xl">
+            <a href="#profile" class="text-white hover:text-cyan-400 py-3 border-b border-slate-800">PROFILE</a>
+            <a href="#gear" class="text-white hover:text-purple-400 py-3 border-b border-slate-800">GEAR</a>
+            <a href="#projects" class="text-white hover:text-pink-500 py-3 border-b border-slate-800">PROJECTS</a>
+            <a href="#social-hub" class="text-white hover:text-red-500 py-3 border-b border-slate-800">SOCIAL</a>
+            <a href="#contact" class="text-white hover:text-yellow-400 py-3">CONTACT</a>
             </nav>
     </div>
 </header>
@@ -110,11 +109,11 @@
             <div class="absolute -left-20 top-20 font-orbitron text-[8rem] lg:text-[12rem] text-white opacity-[0.02] -rotate-90 pointer-events-none select-none">GRILLEDSWORD</div>
             
             <div class="lg:col-span-7 flex flex-col justify-start order-2 lg:order-1 relative z-10">
-                <div class="inline-flex items-center gap-2 mb-6 text-cyan-400 font-share text-sm border-l-2 border-cyan-500 pl-3 bg-gradient-to-r from-cyan-500/10 to-transparent py-1 w-fit">
-                    <i data-lucide="terminal" class="w-4 h-4"></i>
-                    <span class="typing-effect">LOGIN: GRILLEDSWORDOFFICIAL</span>
+                <div class="inline-flex items-center gap-2 mb-6 text-cyan-400 font-share text-base sm:text-sm border-l-2 border-cyan-500 pl-3 bg-gradient-to-r from-cyan-500/10 to-transparent py-2 w-fit">
+                    <i data-lucide="terminal" class="w-5 h-5"></i>
+                    <span class="typing-effect font-bold">LOGIN: GRILLEDSWORDOFFICIAL</span>
                 </div>
-                <h1 class="font-orbitron font-black text-5xl sm:text-7xl lg:text-8xl text-white mb-4 leading-none tracking-tighter layer-glitch" data-text="GRILLED SWORD">
+                <h1 class="font-orbitron font-black text-6xl sm:text-7xl lg:text-8xl text-white mb-4 leading-none tracking-tighter layer-glitch" data-text="GRILLED SWORD">
                     KISS <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 drop-shadow-[0_0_10px_rgba(168,85,247,0.5)]">NORBERT</span>
                 </h1>
                 <h2 class="font-rajdhani font-bold text-2xl sm:text-3xl text-slate-300 mb-8 flex flex-wrap items-center gap-2">
@@ -124,16 +123,20 @@
                     <span class="glitch-text hover:text-pink-500 transition-colors" data-text="Tech Artist">Tech Artist</span> 
                     <span class="text-purple-400 text-4xl">/&gt;</span>
                 </h2>
-                <p class="text-slate-400 text-lg max-w-2xl mb-10 leading-relaxed font-rajdhani border-l-4 border-purple-500 pl-6 bg-slate-900/50 py-4 cyber-clip-box">
-                    Üdv a bázison, Choom! Az építőiparból jöttem, de a kódolásban találtam meg a végzetem. Itt találod a játékokat, amiket építek, és a tartalmat, amit gyártok. <span class="text-yellow-400 font-bold font-share">Wake up, Samurai!</span>
-                </p>
-                <div class="flex flex-wrap gap-4">
-                    <a href="#projects" class="cyber-btn primary group">
+                <p class="text-slate-300 text-lg md:text-xl max-w-2xl mb-10 leading-relaxed font-rajdhani border-l-4 border-purple-500 pl-6 bg-slate-900/50 py-6 cyber-clip-box">
+    Üdv a bázison, Choom! Az építőiparból jöttem, de a kódolásban találtam meg a végzetem. Itt találod a játékokat, amiket építek, és a tartalmat, amit gyártok.
+    
+    <span class="text-yellow-400 font-bold font-share block mt-4 tracking-wider text-xl">
+        Wake up to reality!
+    </span>
+</p>
+                <div class="flex flex-col sm:flex-row gap-6">
+                    <a href="#projects" class="cyber-btn primary group text-center text-lg">
                         <span class="btn-content group-hover:text-black">ACCESS PROJECTS</span>
                         <div class="glitch-effect"></div>
                     </a>
-                    <a href="https://twitch.tv/grilledswordofficial" target="_blank" class="cyber-btn secondary">
-                        <span class="btn-content flex items-center gap-2"><i data-lucide="twitch" class="w-4 h-4"></i> JACK IN (LIVE)</span>
+                    <a href="https://twitch.tv/grilledswordofficial" target="_blank" class="cyber-btn secondary text-center text-lg">
+                        <span class="btn-content flex items-center justify-center gap-2"><i data-lucide="twitch" class="w-5 h-5"></i> JACK IN (LIVE)</span>
                     </a>
                 </div>
             </div>
@@ -142,12 +145,12 @@
                 <div class="avatar-container relative group w-full max-w-md">
                     <div class="absolute inset-0 bg-gradient-to-t from-cyan-500/30 to-transparent opacity-60 hologram-scan"></div>
                     <div class="cyber-frame p-1 bg-black clip-path-polygon relative z-10 border border-slate-700 group-hover:border-cyan-500 transition-colors duration-300">
-                        <img src="IMG/profile.jpg" alt="Profile" class="w-full h-auto object-cover grayscale contrast-125 brightness-90 group-hover:grayscale-0 transition-all duration-500 sepia-[.3]">
+                        <img src="IMG/profile.png" alt="Profile" class="w-full h-auto object-cover grayscale contrast-125 brightness-90 group-hover:grayscale-0 transition-all duration-500 sepia-[.3]">
                         <div class="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-cyan-500"></div>
                         <div class="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-pink-500"></div>
                         
                         <div class="absolute top-4 right-4 bg-red-600 text-white text-xs font-bold px-3 py-1 font-share tracking-widest shadow-[0_0_15px_red] animate-pulse">
-                            REC ●
+                            TARGET FOUND [●]
                         </div>
                         <div class="absolute bottom-4 left-4 text-cyan-400 font-mono text-xs typing-loop">
                             SCANNING_TARGET...
@@ -165,46 +168,46 @@
                 <span class="font-share text-black bg-cyan-500 text-sm mb-2 px-2 font-bold transform -skew-x-12">ID: GS-OFFICIAL</span>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="stat-card tilt-card group bg-black/40 p-6 border border-slate-700 hover:border-cyan-500 transition-colors clip-corner-sm relative overflow-hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="stat-card tilt-card group bg-black/40 p-8 border border-slate-700 hover:border-cyan-500 transition-colors clip-corner-sm relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-8 h-8 border-t border-r border-cyan-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 class="font-rajdhani font-bold text-xl text-white group-hover:text-cyan-400 transition-colors">CODING (C#)</h3>
-                        <span class="text-cyan-400 font-share">LVL 85</span>
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-rajdhani font-bold text-2xl text-white group-hover:text-cyan-400 transition-colors">CODING (C#)</h3>
+                        <span class="text-cyan-400 font-share text-lg">LVL 85</span>
                     </div>
-                    <div class="stat-bar-bg"><div class="stat-bar-fill cyan" style="width: 85%;"></div></div>
+                    <div class="stat-bar-bg h-4"><div class="stat-bar-fill cyan" style="width: 85%;"></div></div>
                 </div>
-                 <div class="stat-card tilt-card group bg-black/40 p-6 border border-slate-700 hover:border-purple-500 transition-colors clip-corner-sm relative">
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 class="font-rajdhani font-bold text-xl text-white group-hover:text-purple-400 transition-colors">CREATIVITY</h3>
-                        <span class="text-purple-400 font-share">LVL 99</span>
+                <div class="stat-card tilt-card group bg-black/40 p-8 border border-slate-700 hover:border-purple-500 transition-colors clip-corner-sm relative">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-rajdhani font-bold text-2xl text-white group-hover:text-purple-400 transition-colors">CREATIVITY</h3>
+                        <span class="text-purple-400 font-share text-lg">LVL 99</span>
                     </div>
-                    <div class="stat-bar-bg"><div class="stat-bar-fill purple" style="width: 99%;"></div></div>
+                <div class="stat-bar-bg h-4"><div class="stat-bar-fill purple" style="width: 99%;"></div></div>
                 </div>
-                 <div class="stat-card tilt-card group bg-black/40 p-6 border border-slate-700 hover:border-pink-500 transition-colors clip-corner-sm relative">
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 class="font-rajdhani font-bold text-xl text-white group-hover:text-pink-500 transition-colors">UNITY ENG</h3>
-                        <span class="text-pink-500 font-share">LVL 80</span>
+                 <div class="stat-card tilt-card group bg-black/40 p-8 border border-slate-700 hover:border-pink-500 transition-colors clip-corner-sm relative">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-rajdhani font-bold text-2xl text-white group-hover:text-pink-500 transition-colors">GAMING</h3>
+                        <span class="text-pink-500 font-share text-lg">LVL 80</span>
                     </div>
-                    <div class="stat-bar-bg"><div class="stat-bar-fill pink" style="width: 80%;"></div></div>
+                <div class="stat-bar-bg h-4"><div class="stat-bar-fill pink" style="width: 80%;"></div></div>
                 </div>
-                 <div class="stat-card tilt-card group bg-black/40 p-6 border border-slate-700 hover:border-yellow-400 transition-colors clip-corner-sm relative">
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 class="font-rajdhani font-bold text-xl text-white group-hover:text-yellow-400 transition-colors">CAFFEINE</h3>
-                        <span class="text-yellow-400 font-share animate-pulse">OVERLOAD</span>
+                 <div class="stat-card tilt-card group bg-black/40 p-8 border border-slate-700 hover:border-yellow-400 transition-colors clip-corner-sm relative">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-rajdhani font-bold text-2xl text-white group-hover:text-yellow-400 transition-colors">CAFFEINE</h3>
+                        <span class="text-yellow-400 font-share animate-pulse text-lg">OVERLOAD</span>
                     </div>
-                    <div class="stat-bar-bg"><div class="stat-bar-fill yellow stripes" style="width: 100%;"></div></div>
+                    <div class="stat-bar-bg h-4"><div class="stat-bar-fill yellow stripes" style="width: 100%;"></div></div>
                 </div>
             </div>
             
-            <div class="mt-8 p-6 bg-slate-900/40 border-l-4 border-cyan-500 relative overflow-hidden group cyber-box backdrop-blur-sm">
-                <h3 class="font-orbitron text-lg text-slate-400 mb-4 flex items-center gap-2"><i data-lucide="cpu" class="text-cyan-500"></i> EQUIPPED_SKILLS:</h3>
-                <div class="flex flex-wrap gap-8 justify-center md:justify-start">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unity/unity-original.svg" class="w-12 h-12 grayscale hover:grayscale-0 duration-300" title="Unity">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg" class="w-12 h-12 grayscale hover:grayscale-0 duration-300" title="C#">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg" class="w-12 h-12 grayscale hover:grayscale-0 duration-300" title="Blender">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/visualstudio/visualstudio-plain.svg" class="w-12 h-12 grayscale hover:grayscale-0 duration-300" title="VS">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/photoshop/photoshop-plain.svg" class="w-12 h-12 grayscale hover:grayscale-0 duration-300" title="Photoshop">
+            <div class="mt-8 p-8 bg-slate-900/40 border-l-4 border-cyan-500 relative overflow-hidden group cyber-box backdrop-blur-sm">
+                <h3 class="font-orbitron text-xl text-slate-400 mb-6 flex items-center gap-2"><i data-lucide="cpu" class="text-cyan-500 w-6 h-6"></i> EQUIPPED_SKILLS:</h3>
+                <div class="flex flex-wrap gap-10 justify-center md:justify-start">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unity/unity-original.svg" class="w-16 h-16 grayscale hover:grayscale-0 duration-300" title="Unity">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg" class="w-16 h-16 grayscale hover:grayscale-0 duration-300" title="C#">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg" class="w-16 h-16 grayscale hover:grayscale-0 duration-300" title="Blender">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/visualstudio/visualstudio-plain.svg" class="w-16 h-16 grayscale hover:grayscale-0 duration-300" title="VS">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/photoshop/photoshop-plain.svg" class="w-16 h-16 grayscale hover:grayscale-0 duration-300" title="Photoshop">
                 </div>
             </div>
         </section>
@@ -217,13 +220,13 @@
             </div>
             
             <div class="bg-black/60 border border-slate-800 p-8 relative overflow-hidden group clip-corner-lg">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-12 font-rajdhani text-lg relative z-10">
-                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="monitor" class="text-cyan-400"></i><div class="flex flex-col"><span class="text-slate-500 text-xs font-share">MAIN_DISPLAY</span><span class="text-white font-bold text-xl">Samsung M7 32"</span></div></div></div>
-                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="layers" class="text-cyan-400"></i><div class="flex flex-col"><span class="text-slate-500 text-xs font-share">SEC_DISPLAYS</span><span class="text-white font-bold text-xl">2x Eizo FlexScan EV2456</span></div></div></div>
-                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="cpu" class="text-purple-400"></i><div class="flex flex-col"><span class="text-slate-500 text-xs font-share">CPU_UNIT</span><span class="text-white font-bold text-xl">Ryzen 7 9800X3D</span></div></div></div>
-                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="zap" class="text-yellow-400"></i><div class="flex flex-col"><span class="text-slate-500 text-xs font-share">GPU_ENGINE</span><span class="text-white font-bold text-xl">RTX 5060 Ti</span></div></div></div>
-                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="hard-drive" class="text-pink-500"></i><div class="flex flex-col"><span class="text-slate-500 text-xs font-share">MEMORY_BANK</span><span class="text-white font-bold text-xl">64GB RAM</span></div></div></div>
-                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="keyboard" class="text-green-400"></i><div class="flex flex-col"><span class="text-slate-500 text-xs font-share">PERIPHERALS</span><span class="text-white font-bold text-xl">Asus TUF Gaming Combo</span></div></div></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-10 gap-x-12 font-rajdhani text-xl relative z-10">
+                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-3"><i data-lucide="monitor" class="text-cyan-400 w-8 h-8"></i><div class="flex flex-col"><span class="text-slate-500 text-sm font-share">MAIN_DISPLAY</span><span class="text-white font-bold text-2xl">Samsung M7 32"</span></div></div></div>
+                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-3"><i data-lucide="layers" class="text-cyan-400 w-8 h-8"></i><div class="flex flex-col"><span class="text-slate-500 text-sm font-share">SEC_DISPLAYS</span><span class="text-white font-bold text-2xl">2x Eizo FlexScan EV2456</span></div></div></div>
+                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-3"><i data-lucide="cpu" class="text-purple-400 w-8 h-8"></i><div class="flex flex-col"><span class="text-slate-500 text-sm font-share">CPU_UNIT</span><span class="text-white font-bold text-2xl">Ryzen 7 9800X3D</span></div></div></div>
+                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-3"><i data-lucide="zap" class="text-yellow-400 w-8 h-8"></i><div class="flex flex-col"><span class="text-slate-500 text-sm font-share">GPU_ENGINE</span><span class="text-white font-bold text-2xl">RTX 5060 Ti</span></div></div></div>
+                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-3"><i data-lucide="hard-drive" class="text-pink-500 w-8 h-8"></i><div class="flex flex-col"><span class="text-slate-500 text-sm font-share">MEMORY_BANK</span><span class="text-white font-bold text-2xl">64GB RAM</span></div></div></div>
+                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-3"><i data-lucide="keyboard" class="text-green-400 w-8 h-8"></i><div class="flex flex-col"><span class="text-slate-500 text-sm font-share">PERIPHERALS</span><span class="text-white font-bold text-2xl">Asus TUF Gaming Combo</span></div></div></div>
                 </div>
             </div>
         </section>
@@ -235,20 +238,20 @@
                     <div class="w-3 h-3 bg-cyan-500 animate-pulse"></div><div class="w-3 h-3 bg-purple-500 animate-pulse delay-75"></div><div class="w-3 h-3 bg-pink-500 animate-pulse delay-150"></div>
                 </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                 <div class="cyber-card group" data-gallery-btn>
                     <div class="card-image-wrapper">
                         <img src="IMG/pekka.gif" alt="Pekka Kana 3D" class="card-img">
                         <div class="card-overlay"><i data-lucide="crosshair" class="text-cyan-400 w-12 h-12"></i></div>
                     </div>
                     <div class="card-content">
-                        <h3 class="font-orbitron text-xl text-white mb-2 group-hover:text-cyan-400 transition-colors">PEKKA KANA 3D</h3>
+                        <h3 class="font-orbitron text-2xl text-white mb-2 group-hover:text-cyan-400 transition-colors">PEKKA KANA 3D</h3>
                         <div class="flex gap-2 mb-4"><span class="badge unity">UNITY</span><span class="badge code">C#</span></div>
-                        <p class="font-rajdhani text-slate-400 text-sm leading-relaxed">A klasszikus újragondolása. Modern fizika, retro hangulat.</p>
+                        <p class="font-rajdhani text-slate-400 text-base leading-relaxed">A klasszikus újragondolása. Modern fizika, retro hangulat.</p>
                     </div>
                     <div class="card-footer">
                         <span class="text-xs text-cyan-500 font-share blink">STATUS: BETA</span>
-                        <button class="cyber-btn-mini text-cyan-400 border border-cyan-500/50 hover:bg-cyan-500 hover:text-black transition-all">OPEN</button>
+                        <button class="cyber-btn-mini text-cyan-400 border border-cyan-500/50 hover:bg-cyan-500 hover:text-black transition-all text-base">OPEN</button>
                     </div>
                 </div>
                 <div class="cyber-card group" data-gallery-btn>
@@ -257,11 +260,11 @@
                          <div class="card-overlay"><i data-lucide="skull" class="text-purple-400 w-12 h-12"></i></div>
                     </div>
                     <div class="card-content">
-                        <h3 class="font-orbitron text-xl text-white mb-2 group-hover:text-purple-400 transition-colors">MINDSCAPE</h3>
+                        <h3 class="font-orbitron text-2xl text-white mb-2 group-hover:text-purple-400 transition-colors">MINDSCAPE</h3>
                         <div class="flex gap-2 mb-4"><span class="badge unity">UNITY</span><span class="badge horror">HORROR</span></div>
-                        <p class="font-rajdhani text-slate-400 text-sm leading-relaxed">Interaktív anomália vadászat.</p>
+                        <p class="font-rajdhani text-slate-400 text-base leading-relaxed">Interaktív anomália vadászat.</p>
                     </div>
-                    <div class="card-footer"><span class="text-xs text-purple-500 font-share">STATUS: RELEASED</span><button class="cyber-btn-mini text-purple-400 border border-purple-500/50 hover:bg-purple-500 hover:text-black transition-all">OPEN</button></div>
+                    <div class="card-footer"><span class="text-xs text-purple-500 font-share">STATUS: RELEASED</span><button class="cyber-btn-mini text-purple-400 border border-purple-500/50 hover:bg-purple-500 hover:text-black transition-all text-base">OPEN</button></div>
                 </div>
                  <div class="cyber-card group" data-gallery-btn>
                     <div class="card-image-wrapper">
@@ -269,11 +272,11 @@
                          <div class="card-overlay"><i data-lucide="box" class="text-pink-500 w-12 h-12"></i></div>
                     </div>
                     <div class="card-content">
-                        <h3 class="font-orbitron text-xl text-white mb-2 group-hover:text-pink-500 transition-colors">3D ARTWORKS</h3>
+                        <h3 class="font-orbitron text-2xl text-white mb-2 group-hover:text-pink-500 transition-colors">3D ARTWORKS</h3>
                         <div class="flex gap-2 mb-4"><span class="badge blender">BLENDER</span><span class="badge art">ART</span></div>
-                        <p class="font-rajdhani text-slate-400 text-sm leading-relaxed">High-poly modellek, környezetek.</p>
+                        <p class="font-rajdhani text-slate-400 text-base leading-relaxed">High-poly modellek, környezetek.</p>
                     </div>
-                    <div class="card-footer"><span class="text-xs text-pink-500 font-share">STATUS: ONGOING</span><button class="cyber-btn-mini text-pink-500 border border-pink-500/50 hover:bg-pink-500 hover:text-black transition-all">OPEN</button></div>
+                    <div class="card-footer"><span class="text-xs text-pink-500 font-share">STATUS: ONGOING</span><button class="cyber-btn-mini text-pink-500 border border-pink-500/50 hover:bg-pink-500 hover:text-black transition-all text-base">OPEN</button></div>
                 </div>
             </div>
         </section>
@@ -309,52 +312,52 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <a href="https://www.tiktok.com/@grilledswordofficial" target="_blank" class="social-card group border border-slate-800 hover:border-pink-500 bg-black/50 p-4 transition-all hover:-translate-y-2 relative overflow-hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <a href="https://www.tiktok.com/@grilledswordofficial" target="_blank" class="social-card group border border-slate-800 hover:border-pink-500 bg-black/50 p-6 transition-all hover:-translate-y-2 relative overflow-hidden">
                     <div class="absolute inset-0 bg-gradient-to-b from-transparent to-pink-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     <div class="flex items-center gap-3 mb-4">
                         <div class="p-2 bg-black rounded border border-slate-700"><svg class="w-6 h-6 text-pink-500" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></div>
-                        <div><h4 class="font-bold text-white">TIKTOK</h4><p class="text-xs text-pink-400 font-mono">STREAMER</p></div>
+                        <div><h4 class="font-bold text-white text-xl">TIKTOK</h4><p class="text-sm text-pink-400 font-mono">STREAMER</p></div>
                     </div>
-                    <div class="h-40 bg-slate-900/50 rounded overflow-hidden border border-slate-700 group-hover:border-pink-500 relative">
+                    <div class="h-48 bg-slate-900/50 rounded overflow-hidden border border-slate-700 group-hover:border-pink-500 relative">
                         <img src="IMG/tiktok_post.jpg" alt="Latest TikTok" class="w-full h-full object-cover"> 
-                        <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-white font-bold">WATCH NOW</span></div>
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-white font-bold text-lg">WATCH NOW</span></div>
                     </div>
                 </a>
 
-                <a href="https://www.twitch.tv/grilledswordofficial" target="_blank" class="social-card group border border-slate-800 hover:border-purple-500 bg-black/50 p-4 transition-all hover:-translate-y-2 relative overflow-hidden">
+                <a href="https://www.twitch.tv/grilledswordofficial" target="_blank" class="social-card group border border-slate-800 hover:border-purple-500 bg-black/50 p-6 transition-all hover:-translate-y-2 relative overflow-hidden">
                     <div class="absolute inset-0 bg-gradient-to-b from-transparent to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     <div class="flex items-center gap-3 mb-4">
                         <div class="p-2 bg-black rounded border border-slate-700"><i data-lucide="twitch" class="w-6 h-6 text-purple-500"></i></div>
-                        <div><h4 class="font-bold text-white">TWITCH</h4><p class="text-xs text-purple-400 font-mono">STREAMER</p></div>
+                        <div><h4 class="font-bold text-white text-xl">TWITCH</h4><p class="text-sm text-purple-400 font-mono">STREAMER</p></div>
                     </div>
-                    <div class="h-40 bg-slate-900/50 rounded overflow-hidden border border-slate-700 group-hover:border-purple-500 relative">
+                    <div class="h-48 bg-slate-900/50 rounded overflow-hidden border border-slate-700 group-hover:border-purple-500 relative">
                         <img src="IMG/twitch_post.png" alt="Twitch Live" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-white font-bold">WATCH NOW</span></div>
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-white font-bold text-lg">WATCH NOW</span></div>
                     </div>
                 </a>
 
-                <a href="https://www.instagram.com/grilledswordofficial" target="_blank" class="social-card group border border-slate-800 hover:border-yellow-500 bg-black/50 p-4 transition-all hover:-translate-y-2 relative overflow-hidden">
+                <a href="https://www.instagram.com/grilledswordofficial" target="_blank" class="social-card group border border-slate-800 hover:border-yellow-500 bg-black/50 p-6 transition-all hover:-translate-y-2 relative overflow-hidden">
                     <div class="absolute inset-0 bg-gradient-to-b from-transparent to-yellow-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     <div class="flex items-center gap-3 mb-4">
                         <div class="p-2 bg-black rounded border border-slate-700"><i data-lucide="instagram" class="w-6 h-6 text-yellow-500"></i></div>
-                        <div><h4 class="font-bold text-white">INSTAGRAM</h4><p class="text-xs text-yellow-400 font-mono">GALLERY</p></div>
+                        <div><h4 class="font-bold text-white text-xl">INSTAGRAM</h4><p class="text-sm text-yellow-400 font-mono">GALLERY</p></div>
                     </div>
-                    <div class="h-40 bg-slate-900/50 rounded overflow-hidden border border-slate-700 group-hover:border-yellow-500 relative">
+                    <div class="h-48 bg-slate-900/50 rounded overflow-hidden border border-slate-700 group-hover:border-yellow-500 relative">
                         <img src="IMG/insta_post.jpg" alt="Latest Instagram" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-white font-bold">WATCH NOW</span></div>
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-white font-bold text-lg">WATCH NOW</span></div>
                     </div>
                 </a>
 
-                <a href="https://www.facebook.com/grilledswordofficial" target="_blank" class="social-card group border border-slate-800 hover:border-blue-500 bg-black/50 p-4 transition-all hover:-translate-y-2 relative overflow-hidden">
+                <a href="https://www.facebook.com/grilledswordofficial" target="_blank" class="social-card group border border-slate-800 hover:border-blue-500 bg-black/50 p-6 transition-all hover:-translate-y-2 relative overflow-hidden">
                     <div class="absolute inset-0 bg-gradient-to-b from-transparent to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     <div class="flex items-center gap-3 mb-4">
                         <div class="p-2 bg-black rounded border border-slate-700"><i data-lucide="facebook" class="w-6 h-6 text-blue-500"></i></div>
-                        <div><h4 class="font-bold text-white">FACEBOOK</h4><p class="text-xs text-blue-400 font-mono">GALLERY</p></div>
+                        <div><h4 class="font-bold text-white text-xl">FACEBOOK</h4><p class="text-sm text-blue-400 font-mono">GALLERY</p></div>
                     </div>
-                    <div class="h-40 bg-slate-900/50 rounded overflow-hidden border border-slate-700 group-hover:border-blue-500 relative">
+                    <div class="h-48 bg-slate-900/50 rounded overflow-hidden border border-slate-700 group-hover:border-blue-500 relative">
                         <img src="IMG/facebook_post.jpg" alt="Latest Facebook" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-white font-bold">WATCH NOW</span></div>
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-white font-bold text-lg">WATCH NOW</span></div>
                     </div>
                 </a>
 
@@ -368,10 +371,10 @@
                     <div>
                         <h2 class="font-orbitron text-3xl text-white mb-6 glitch-text" data-text="ESTABLISH_UPLINK">ESTABLISH_UPLINK</h2>
                         <form id="contact-form" class="space-y-6">
-                            <div class="input-group"><label class="input-label">CODENAME</label><input type="text" name="name" required class="cyber-input"><div class="input-line"></div></div>
-                            <div class="input-group"><label class="input-label">FREQUENCY (EMAIL)</label><input type="email" name="email" required class="cyber-input"><div class="input-line"></div></div>
-                            <div class="input-group"><label class="input-label">TRANSMISSION DATA</label><textarea name="message" rows="4" required class="cyber-input"></textarea><div class="input-line"></div></div>
-                            <button type="submit" class="cyber-btn primary w-full group"><span class="group-hover:text-black transition-colors">SEND TRANSMISSION</span></button>
+                            <div class="input-group"><label class="input-label text-base">CODENAME</label><input type="text" name="name" required class="cyber-input text-lg"><div class="input-line"></div></div>
+                            <div class="input-group"><label class="input-label text-base">FREQUENCY (EMAIL)</label><input type="email" name="email" required class="cyber-input text-lg"><div class="input-line"></div></div>
+                            <div class="input-group"><label class="input-label text-base">TRANSMISSION DATA</label><textarea name="message" rows="4" required class="cyber-input text-lg"></textarea><div class="input-line"></div></div>
+                            <button type="submit" class="cyber-btn primary w-full group text-lg"><span class="group-hover:text-black transition-colors">SEND TRANSMISSION</span></button>
                             <p id="form-status" class="mt-2 text-center text-sm font-mono"></p>
                         </form>
                     </div>
@@ -379,27 +382,27 @@
                     <div class="flex flex-col justify-center gap-4">
                         <a href="https://www.tiktok.com/@grilledswordofficial" target="_blank" class="contact-btn tiktok group">
                             <div class="icon-box"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></div>
-                            <span class="text-lg font-bold">TIKTOK</span><i data-lucide="external-link" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                            <span class="text-xl font-bold">TIKTOK</span><i data-lucide="external-link" class="ml-auto w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity"></i>
                         </a>
                         <a href="https://youtube.com/@grilledswordofficial" target="_blank" class="contact-btn youtube group">
                             <div class="icon-box"><i data-lucide="youtube" class="w-6 h-6"></i></div>
-                            <span class="text-lg font-bold">YOUTUBE</span><i data-lucide="external-link" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                            <span class="text-xl font-bold">YOUTUBE</span><i data-lucide="external-link" class="ml-auto w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity"></i>
                         </a>
                         <a href="https://twitch.tv/grilledswordofficial" target="_blank" class="contact-btn twitch group">
                             <div class="icon-box"><i data-lucide="twitch" class="w-6 h-6"></i></div>
-                            <span class="text-lg font-bold">TWITCH</span><i data-lucide="external-link" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                            <span class="text-xl font-bold">TWITCH</span><i data-lucide="external-link" class="ml-auto w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity"></i>
                         </a>
                         <a href="https://www.instagram.com/grilledswordofficial" target="_blank" class="contact-btn instagram group">
                             <div class="icon-box"><i data-lucide="instagram" class="w-6 h-6"></i></div>
-                            <span class="text-lg font-bold">INSTAGRAM</span><i data-lucide="external-link" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                            <span class="text-xl font-bold">INSTAGRAM</span><i data-lucide="external-link" class="ml-auto w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity"></i>
                         </a>
                         <a href="https://www.facebook.com/grilledswordofficial" target="_blank" class="contact-btn facebook group">
                             <div class="icon-box"><i data-lucide="facebook" class="w-6 h-6"></i></div>
-                            <span class="text-lg font-bold">FACEBOOK</span><i data-lucide="external-link" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                            <span class="text-xl font-bold">FACEBOOK</span><i data-lucide="external-link" class="ml-auto w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity"></i>
                         </a>
                         <a href="mailto:kiss.norbert.reall@gmail.com" class="contact-btn email group">
                             <div class="icon-box"><i data-lucide="mail" class="w-6 h-6"></i></div>
-                            <span class="text-lg font-bold">EMAIL</span><i data-lucide="arrow-right" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                            <span class="text-xl font-bold">EMAIL</span><i data-lucide="arrow-right" class="ml-auto w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity"></i>
                         </a>
                     </div>
                 </div>
