@@ -486,7 +486,6 @@ body.clicking #cursor-follower {
     bottom: 0; left: 50%;
     width: 0; height: 2px;
     background: var(--color-cyan);
-    backdrop-filter: blur(10px);
     box-shadow: 0 0 20px var(--color-cyan), 0 0 40px white;
     transform: translateX(-50%);
     z-index: 100;
