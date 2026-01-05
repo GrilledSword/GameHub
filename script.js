@@ -388,8 +388,32 @@ function typeWriterEffect() {
 function initMobileMenu() {
     const btn = document.getElementById('menu-toggle');
     const menu = document.getElementById('mobile-menu');
+
+    // TAG: MODIFIED [2026-01-05] - Hibatűrőbb ellenőrzés és logolás
     if(btn && menu) {
-        btn.addEventListener('click', () => { menu.classList.toggle('scale-y-0'); });
+        console.log("MOBILE MENU: Initialized"); // Debug log
+
+        btn.addEventListener('click', (e) => {
+            // Megakadályozzuk, hogy máshova is menjen a kattintás
+            e.preventDefault();
+            e.stopPropagation(); 
+
+            // Toggle logika
+            menu.classList.toggle('scale-y-0');
+            
+            // Debug visszajelzés
+            const isOpen = !menu.classList.contains('scale-y-0');
+            console.log(`MOBILE MENU: Toggled. Open? ${isOpen}`);
+        });
+
+        // UX Bonus: Ha a menüre kattintasz (pl egy linkre), záródjon be
+        menu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.add('scale-y-0');
+            });
+        });
+    } else {
+        console.error("MOBILE MENU: Button or Menu element missing!");
     }
 }
 

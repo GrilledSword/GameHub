@@ -432,7 +432,12 @@ body.clicking #cursor-follower {
     /* ALAP (NYITOTT) ÁLLAPOT */
     transform: translateY(0);
     opacity: 1;
-    clip-path: inset(0 0 0 0);
+
+    /* TAG: FIXED [2026-01-05 V2] - A MEGOLDÁS: */
+    /* Nem 'none'-t használunk, hanem 'inset'-et, de a 3. érték (bottom) */
+    /* negatív, így lefelé "kilóg" a vágás, és látszik a menü! */
+    /* Így megmarad a matek az animációhoz (inset-ből inset-be). */
+    clip-path: inset(0 0 -100vh 0); 
     
     /* NYITÁS: Azonnal indul a keret nyitása */
     transition: 
@@ -481,6 +486,7 @@ body.clicking #cursor-follower {
     bottom: 0; left: 50%;
     width: 0; height: 2px;
     background: var(--color-cyan);
+    backdrop-filter: blur(10px);
     box-shadow: 0 0 20px var(--color-cyan), 0 0 40px white;
     transform: translateX(-50%);
     z-index: 100;
@@ -536,4 +542,24 @@ body.clicking #cursor-follower {
 .offline-sub {
     font-family: 'Share Tech Mono', monospace; color: #7f1d1d; margin-top: 0.5rem; font-size: 1rem;
     z-index: 5; animation: blink 1s infinite;
+}
+
+.cyber-btn-icon {
+    background: transparent;
+    border: 1px solid rgba(51, 65, 85, 0.5);
+    color: var(--color-cyan);
+    padding: 8px; /* Legyen kiterjedése a gombnak! */
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 60; /* Legyen mind felett */
+}
+
+.cyber-btn-icon:hover {
+    background: rgba(6, 182, 212, 0.1);
+    box-shadow: 0 0 10px rgba(6, 182, 212, 0.4);
+    border-color: var(--color-cyan);
 }
