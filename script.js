@@ -6,15 +6,15 @@ const STREAM_CONFIG = {
 
 const projectsData = {
     project_1: {
-        images: ['IMG/pekka.gif', 'https://placehold.co/600x400/38bdf8/ffffff?text=Pekka-Level-1'],
+        images: ['IMG/pekka.gif'],
         tech: [{ title: 'Unity' }, { title: 'C#' }, { title: 'Blender' }]
     },
     project_2: {
-        images: ['IMG/mindscape.jpg', 'https://placehold.co/600x400/000000/ffffff?text=Mindscape-Glitch'],
+        images: ['IMG/mindscape.jpg', 'IMG/Gallery/Mindscape/1.png', 'IMG/Gallery/Mindscape/2.png', 'IMG/Gallery/Mindscape/3.png', 'IMG/Gallery/Mindscape/4.png', 'IMG/Gallery/Mindscape/5.png',],
         tech: [{ title: 'Unity' }, { title: 'Horror AI' }, { title: 'Lighting' }]
     },
     project_3: {
-        images: ['IMG/3d.jpg', 'https://placehold.co/600x400/ff0055/ffffff?text=Render-Cyber'],
+        images: ['IMG/3d.jpg', 'IMG/Gallery/3d/1.jpg', 'IMG/Gallery/3d/2.jpg', 'IMG/Gallery/3d/3.jpg', 'IMG/Gallery/3d/4.jpg', 'IMG/Gallery/3d/5.jpg', 'IMG/Gallery/3d/6.jpg',],
         tech: [{ title: 'Blender' }, { title: 'Substance' }]
     }
 };
