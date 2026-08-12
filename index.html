@@ -10,10 +10,315 @@
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="style.css">
+    
+    <!-- TAG: MODIFIED - CSS inlined for single-file structure and mobile optimization -->
+    <style>
+        :root {
+            --color-bg: #050508;
+            --color-surface: #0a0a10;
+            --color-cyan: #06b6d4;
+            --color-purple: #a855f7;
+            --color-pink: #ec4899;
+            --color-yellow: #facc15;
+            --font-display: 'Orbitron', sans-serif;
+            --font-body: 'Rajdhani', sans-serif;
+            --font-mono: 'Share Tech Mono', monospace;
+        }
+
+        body {
+            background-color: var(--color-bg);
+            color: #cbd5e1;
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            cursor: auto; 
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        input, textarea {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+
+        /* === CRT SCREEN EFFECT === */
+        .crt-overlay {
+            position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 2px, 3px 100%;
+            opacity: 0.4;
+        }
+        .scanline {
+            width: 100%; height: 100px; z-index: 9999;
+            background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(6, 182, 212, 0.1) 50%, rgba(0,0,0,0) 100%);
+            opacity: 0.1; position: absolute; bottom: 100%;
+            animation: scanline 10s linear infinite; pointer-events: none;
+        }
+        @keyframes scanline {
+            0% { bottom: 100%; }
+            100% { bottom: -100px; }
+        }
+
+        #boot-log p { margin: 2px 0; font-family: 'Share Tech Mono', monospace; }
+
+        .system-online {
+            animation: system-boot-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes system-boot-up {
+            0% { opacity: 0; transform: scale(0.98) translateY(20px); filter: blur(5px) grayscale(100%); }
+            50% { opacity: 0.8; transform: scale(1.01); filter: blur(0px) grayscale(50%); }
+            100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0) grayscale(0%); }
+        }
+
+        .boot-hidden { opacity: 0; pointer-events: none; transition: opacity 0.5s ease-out; }
+
+        /* === HÁTTÉR === */
+        .cyber-grid-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(6, 182, 212, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(6, 182, 212, 0.05) 1px, transparent 1px);
+            background-size: 60px 60px; z-index: -2; opacity: 0.2;
+            mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+        }
+
+        #interactive-background { position: fixed; top: 0; left: 0; z-index: -1; }
+
+        .vignette {
+            position: fixed; inset: 0; z-index: 48; pointer-events: none;
+            background: radial-gradient(circle, transparent 50%, #000000 100%);
+        }
+
+        /* === CYBERPUNK KURZOR === */
+        #cursor {
+            position: fixed; top: 0; left: 0; width: 12px; height: 12px;
+            background-color: var(--color-cyan);
+            transform: translate(-50%, -50%) rotate(45deg);
+            pointer-events: none; z-index: 2147483647; mix-blend-mode: normal;
+            box-shadow: 0 0 10px var(--color-cyan), 0 0 20px var(--color-cyan);
+            transition: transform 0.1s, background-color 0.2s, width 0.2s, height 0.2s;
+            opacity: 0;
+        }
+        #cursor::after {
+            content: ''; position: absolute; top: 50%; left: 50%;
+            width: 4px; height: 4px; background: #000;
+            transform: translate(-50%, -50%); border-radius: 50%;
+        }
+
+        #cursor-follower {
+            position: fixed; top: 0; left: 0; width: 50px; height: 50px;
+            border: 1px dashed var(--color-cyan); border-radius: 50%;
+            transform: translate(-50%, -50%); pointer-events: none; z-index: 2147483646; 
+            opacity: 0; transition: transform 0.1s ease-out, border-color 0.2s, width 0.2s, height 0.2s, background-color 0.2s;
+            animation: rotate-hud 10s linear infinite; box-shadow: 0 0 5px rgba(6, 182, 212, 0.2);
+        }
+        #cursor-follower::before {
+            content: ''; position: absolute; top: -5px; left: -5px; right: -5px; bottom: -5px;
+            border: 1px solid transparent; border-top: 1px solid var(--color-purple); border-bottom: 1px solid var(--color-purple);
+            border-radius: 50%; animation: rotate-hud-reverse 5s linear infinite; opacity: 0.5;
+        }
+
+        @keyframes rotate-hud { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+        @keyframes rotate-hud-reverse { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+
+        body.custom-cursor-active { cursor: none; }
+        body.hovering #cursor { background-color: var(--color-pink); box-shadow: 0 0 15px var(--color-pink); transform: translate(-50%, -50%) rotate(45deg) scale(0.8); }
+        body.hovering #cursor-follower { width: 60px; height: 60px; border-color: var(--color-pink); border-style: solid; background-color: rgba(236, 72, 153, 0.05); animation: none; transform: translate(-50%, -50%) rotate(0deg); }
+        body.hovering #cursor-follower::before { border-color: var(--color-cyan); }
+        body.clicking #cursor { transform: translate(-50%, -50%) rotate(225deg) scale(1.5); transition: transform 0.1s; }
+        body.clicking #cursor-follower { width: 30px; height: 30px; border-color: var(--color-yellow); background-color: rgba(250, 204, 21, 0.2); transition: width 0.1s, height 0.1s; }
+
+        /* === TIPOGRÁFIA === */
+        .font-orbitron { font-family: var(--font-display); }
+        .font-rajdhani { font-family: var(--font-body); }
+        .font-share { font-family: var(--font-mono); }
+
+        .glitch-text, .glitch-text-big { position: relative; color: white; display: inline-block; }
+        /* TAG: MODIFIED - Fluid typography mobilos optimalizálás miatt */
+        .glitch-text-big { font-size: clamp(1.5rem, 6vw, 4rem); font-weight: 900; letter-spacing: -2px; }
+
+        .glitch-text::before, .glitch-text::after {
+            content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--color-bg); opacity: 0.8; display: none;
+        }
+        .glitch-text:hover::before, .glitch-text:hover::after { display: block; }
+
+        .glitch-text:hover::before { left: 2px; text-shadow: -2px 0 var(--color-pink); clip-path: inset(0 0 0 0); animation: glitch-anim-1 0.3s infinite linear alternate-reverse; }
+        .glitch-text:hover::after { left: -2px; text-shadow: -2px 0 var(--color-cyan); clip-path: inset(0 0 0 0); animation: glitch-anim-2 0.3s infinite linear alternate-reverse; }
+
+        .glitch-text-big::before, .glitch-text-big::after { display: block; }
+        .glitch-text-big::before { left: 2px; text-shadow: -2px 0 var(--color-pink); clip-path: inset(0 0 0 0); animation: glitch-anim-1 3s infinite linear alternate-reverse; }
+        .glitch-text-big::after { left: -2px; text-shadow: -2px 0 var(--color-cyan); clip-path: inset(0 0 0 0); animation: glitch-anim-2 4s infinite linear alternate-reverse; }
+
+        @keyframes glitch-anim-1 { 0% { clip-path: inset(20% 0 80% 0); } 100% { clip-path: inset(30% 0 30% 0); } }
+        @keyframes glitch-anim-2 { 0% { clip-path: inset(10% 0 60% 0); } 100% { clip-path: inset(5% 0 80% 0); } }
+
+        /* === UI ELEMEK === */
+        .clip-corner-sm { clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%); }
+        .clip-corner-lg { clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px); }
+        .clip-header { clip-path: polygon(0 0, 100% 0, 100% 85%, 98% 100%, 2% 100%, 0 85%); }
+        .clip-badge { clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); }
+
+        /* Buttons */
+        .cyber-btn {
+            position: relative; padding: 15px 40px; font-family: var(--font-display); font-weight: bold; letter-spacing: 2px; text-transform: uppercase;
+            transition: all 0.2s; clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+            overflow: hidden; cursor: pointer; text-align: center; display: inline-flex; justify-content: center; align-items: center;
+        }
+        .cyber-btn.primary { background: var(--color-cyan); color: black; border: none; box-shadow: 0 0 15px rgba(6,182,212,0.3); }
+        .cyber-btn.primary:hover { background: white; box-shadow: 0 0 25px var(--color-cyan); }
+        .cyber-btn.secondary { background: transparent; color: white; border: 1px solid rgba(255,255,255,0.2); }
+        .cyber-btn.secondary:hover { border-color: var(--color-purple); color: var(--color-purple); box-shadow: inset 0 0 10px rgba(168, 85, 247, 0.4); }
+        
+        .glitch-effect {
+            position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
+            transform: skewX(-25deg); transition: 0.5s;
+        }
+        .cyber-btn:hover .glitch-effect { left: 200%; }
+
+        .cyber-btn-mini {
+            padding: 5px 15px; font-family: var(--font-mono); font-size: 0.8rem; font-weight: bold;
+            clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%);
+        }
+
+        /* Contact Buttons */
+        .contact-btn {
+            display: flex; align-items: center; gap: 1rem; padding: 1rem; background: rgba(0,0,0,0.6); border: 1px solid #334155; transition: all 0.3s ease;
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+        }
+        .contact-btn:hover { transform: translateX(5px); }
+        .contact-btn .icon-box { padding: 0.5rem; background: #000; border-radius: 4px; border: 1px solid #334155; transition: border-color 0.3s; }
+        .contact-btn.tiktok:hover { border-color: #ff0050; background: rgba(255, 0, 80, 0.1); }
+        .contact-btn.tiktok:hover .icon-box { border-color: #ff0050; color: #ff0050; }
+        .contact-btn.youtube:hover { border-color: #ff0000; background: rgba(255, 0, 0, 0.1); }
+        .contact-btn.youtube:hover .icon-box { border-color: #ff0000; color: #ff0000; }
+        .contact-btn.twitch:hover { border-color: #9146ff; background: rgba(145, 70, 255, 0.1); }
+        .contact-btn.twitch:hover .icon-box { border-color: #9146ff; color: #9146ff; }
+        .contact-btn.instagram:hover { border-color: #facc15; background: rgba(250, 204, 21, 0.1); }
+        .contact-btn.instagram:hover .icon-box { border-color: #facc15; color: #facc15; }
+        .contact-btn.facebook:hover { border-color: #3b82f6; background: rgba(59, 130, 246, 0.1); }
+        .contact-btn.facebook:hover .icon-box { border-color: #3b82f6; color: #3b82f6; }
+        .contact-btn.email:hover { border-color: var(--color-cyan); background: rgba(6, 182, 212, 0.1); }
+        .contact-btn.email:hover .icon-box { border-color: var(--color-cyan); color: var(--color-cyan); }
+
+        /* === KÁRTYÁK === */
+        .cyber-card {
+            background: #0f1016; border: 1px solid #1e293b; position: relative; overflow: hidden; 
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%);
+            will-change: transform; 
+        }
+        .cyber-card:hover { border-color: var(--color-cyan); box-shadow: 0 10px 30px -10px rgba(6,182,212,0.3); transform: translateY(-5px); }
+        .card-image-wrapper { width: 100%; aspect-ratio: 16 / 9; overflow: hidden; position: relative; background: #000; }
+        .card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .cyber-card:hover .card-img { transform: scale(1.1); filter: contrast(1.1); }
+        .card-content { padding: 1.5rem; position: relative; z-index: 10; background: #0f1016; }
+
+        .corner-bracket { position: absolute; width: 10px; height: 10px; border: 2px solid var(--color-cyan); opacity: 0.7; }
+        .corner-bracket.top-left { top: 0; left: 0; border-right: none; border-bottom: none; }
+        .corner-bracket.top-right { top: 0; right: 0; border-left: none; border-bottom: none; }
+        .corner-bracket.bottom-left { bottom: 0; left: 0; border-right: none; border-top: none; }
+        .corner-bracket.bottom-right { bottom: 0; right: 0; border-left: none; border-top: none; }
+
+        .stat-bar-bg { width: 100%; height: 8px; background: #1e293b; position: relative; clip-path: skewX(-20deg); }
+        .stat-bar-fill { height: 100%; position: relative; }
+        .stat-bar-fill.cyan { background: var(--color-cyan); box-shadow: 0 0 5px var(--color-cyan); }
+        .stat-bar-fill.purple { background: var(--color-purple); box-shadow: 0 0 5px var(--color-purple); }
+        .stat-bar-fill.pink { background: var(--color-pink); box-shadow: 0 0 5px var(--color-pink); }
+        .stat-bar-fill.yellow { background: var(--color-yellow); box-shadow: 0 0 5px var(--color-yellow); }
+        .stripes { background-image: repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(0,0,0,0.8) 5px, rgba(0,0,0,0.8) 10px); }
+
+        .cyber-input { width: 100%; background: rgba(255,255,255,0.02); border: none; padding: 12px; color: var(--color-cyan); font-family: var(--font-mono); font-size: 1rem; border-left: 2px solid #334155; transition: 0.3s; }
+        .cyber-input:focus { outline: none; border-left-color: var(--color-cyan); background: rgba(6,182,212,0.05); }
+        .input-label { font-family: var(--font-mono); font-size: 0.75rem; color: #64748b; margin-bottom: 5px; display: block; }
+        .input-line { height: 1px; width: 0; background: var(--color-cyan); transition: 0.3s; }
+        .input-group:focus-within .input-line { width: 100%; box-shadow: 0 0 5px var(--color-cyan); }
+
+        @keyframes signal-loss {
+            0% { opacity: 1; transform: scale(1); clip-path: inset(0 0 0 0); filter: hue-rotate(0deg); }
+            15% { opacity: 1; transform: translate(-5px, 2px) skew(10deg); clip-path: inset(10% 0 40% 0); filter: hue-rotate(90deg) contrast(1.5); }
+            30% { opacity: 0.8; transform: translate(5px, -2px) skew(-20deg) scaleX(1.2); clip-path: inset(40% 0 10% 0); filter: hue-rotate(180deg) invert(1); }
+            50% { opacity: 0.5; transform: scaleY(0.1) scaleX(1.5); filter: blur(5px); }
+            100% { opacity: 0; transform: scale(0); filter: blur(10px); }
+        }
+
+        @keyframes signal-restore {
+            0% { opacity: 0; transform: scale(1.1) skew(20deg); filter: blur(10px) grayscale(100%); clip-path: inset(50% 0 50% 0); }
+            30% { opacity: 0.5; transform: skew(-10deg); clip-path: inset(10% 0 10% 0); }
+            60% { opacity: 0.8; transform: translateX(-5px); filter: hue-rotate(45deg); clip-path: inset(0 0 0 0); }
+            80% { transform: translateX(2px); filter: none; }
+            100% { opacity: 1; transform: none; filter: none; clip-path: inset(0 0 0 0); }
+        }
+
+        #main-header {
+            transform: translateY(0); opacity: 1;
+            clip-path: inset(0 0 -100vh 0); 
+            transition: clip-path 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0s, filter 0.3s ease 0s;
+            will-change: clip-path;
+        }
+
+        #main-header.scrolled-down {
+            clip-path: inset(0 50% 0 50%); pointer-events: none;
+            transition: clip-path 0.4s cubic-bezier(0.85, 0, 0.15, 1) 0.3s;
+        }
+
+        #main-header .header-content { will-change: opacity, transform; }
+        #main-header:not(.scrolled-down) .header-content { animation: signal-restore 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both; }
+        #main-header.scrolled-down .header-content { animation: signal-loss 0.3s steps(8) forwards; }
+
+        #main-header::after {
+            content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 2px;
+            background: var(--color-cyan); box-shadow: 0 0 20px var(--color-cyan), 0 0 40px white;
+            transform: translateX(-50%); z-index: 100; transition: width 0.2s ease 0s;
+        }
+
+        #main-header.scrolled-down::after {
+            width: 150px; transition: width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s;
+        }
+
+        .typing-loop { overflow: hidden; white-space: nowrap; border-right: 2px solid var(--color-cyan); animation: typing 3s steps(30, end) infinite; width: 0; }
+        @keyframes typing { 0% { width: 0 } 50% { width: 100% } 90% { width: 100% } 100% { width: 0 } }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050508; }
+        ::-webkit-scrollbar-thumb { background: #334155; border: 1px solid #000; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--color-cyan); }
+
+        @media (hover: none) and (pointer: coarse) {
+            #cursor, #cursor-follower { display: none; }
+            body { cursor: auto; }
+        }
+
+        .offline-placeholder {
+            width: 100%; height: 100%; background-color: #000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            position: relative; overflow: hidden;
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, #1a0505 2px, #1a0505 4px);
+            border: 1px solid #334155;
+        }
+        .offline-placeholder::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, transparent 50%, #000 100%); z-index: 2;
+        }
+        .offline-icon { font-size: 4rem; color: #ef4444; margin-bottom: 1rem; opacity: 0.8; animation: pulse-red 2s infinite; z-index: 5; }
+        @keyframes pulse-red { 0% { opacity: 0.5; text-shadow: 0 0 10px #ef4444; } 50% { opacity: 1; text-shadow: 0 0 20px #ef4444, 0 0 40px #ff0000; } 100% { opacity: 0.5; text-shadow: 0 0 10px #ef4444; } }
+        .offline-text { font-family: 'Orbitron', sans-serif; color: #ef4444; font-size: clamp(1rem, 4vw, 2rem); font-weight: 900; letter-spacing: 0.1em; position: relative; z-index: 5; text-shadow: 2px 2px 0px rgba(255,0,0,0.2); text-align: center; }
+        .offline-sub { font-family: 'Share Tech Mono', monospace; color: #7f1d1d; margin-top: 0.5rem; font-size: 1rem; z-index: 5; animation: blink 1s infinite; text-align: center;}
+
+        .cyber-btn-icon {
+            background: transparent; border: 1px solid rgba(51, 65, 85, 0.5); color: var(--color-cyan);
+            padding: 8px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s ease; z-index: 60;
+        }
+        .cyber-btn-icon:hover { background: rgba(6, 182, 212, 0.1); box-shadow: 0 0 10px rgba(6, 182, 212, 0.4); border-color: var(--color-cyan); }
+    </style>
 </head>
 
-<!-- TAG: MODIFIED - Kivettem a 'cursor-none' class-t, hogy ne legyen vakrepülés, ha a JS késik -->
 <body class="antialiased overflow-x-hidden">
 
     <div id="cursor"></div>
@@ -27,22 +332,22 @@
     <div class="crt-overlay pointer-events-none absolute inset-0 z-50"></div>
     <div class="scanline pointer-events-none absolute inset-0 z-40"></div>
     
-    <div class="w-full max-w-4xl p-8 relative z-30 font-share text-cyan-500 text-sm md:text-base leading-tight">
+    <div class="w-full max-w-4xl p-4 md:p-8 relative z-30 font-share text-cyan-500 text-xs md:text-sm leading-tight">
         <div id="boot-log" class="mb-4 h-64 overflow-hidden flex flex-col justify-end border-l-2 border-cyan-500/30 pl-4 opacity-80">
-            </div>
+        </div>
         
-        <div class="border-t border-cyan-500/50 pt-4 flex items-center justify-between">
-            <div class="flex flex-col w-3/4">
+        <div class="border-t border-cyan-500/50 pt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex flex-col w-full sm:w-3/4">
                 <span class="text-xs text-slate-500 mb-1">SYSTEM_INTEGRITY_CHECK</span>
                 <div class="h-2 bg-slate-900 w-full relative overflow-hidden">
                     <div id="boot-progress" class="absolute top-0 left-0 h-full bg-cyan-500 shadow-[0_0_10px_cyan] transition-all duration-100" style="width: 0%"></div>
                 </div>
             </div>
-            <div class="font-orbitron font-bold text-xl animate-pulse text-red-500" id="boot-status">INITIALIZING</div>
+            <div class="font-orbitron font-bold text-lg md:text-xl animate-pulse text-red-500" id="boot-status">INITIALIZING</div>
         </div>
     </div>
 
-    <div class="absolute bottom-4 right-4 text-xs text-slate-600 font-mono">
+    <div class="absolute bottom-4 right-4 text-[10px] md:text-xs text-slate-600 font-mono">
         BIOS_VER: 2077.5.1 // GRILLED_KERNEL
     </div>
 </div>
@@ -55,15 +360,16 @@
         <div class="corner-bracket bottom-left"></div>
         <div class="corner-bracket bottom-right"></div>
 
-        <div class="px-6 py-3 flex items-center justify-between h-full header-content">
+        <div class="px-4 py-3 flex items-center justify-between h-full header-content">
             
-            <div class="flex items-center gap-4">
+            <!-- TAG: MODIFIED - Logó méretei optimalizálva kisebb kijelzőkre -->
+            <div class="flex items-center gap-2 sm:gap-4">
                 <div class="logo-box glitch-hover">
-                    <span class="font-orbitron font-black text-2xl text-cyan-400 drop-shadow-[0_0_10px_rgba(6,182,212,0.8)]">GS</span>
+                    <span class="font-orbitron font-black text-xl sm:text-2xl text-cyan-400 drop-shadow-[0_0_10px_rgba(6,182,212,0.8)]">GS</span>
                 </div>
-                <div class="hidden md:block">
-                    <h1 class="font-rajdhani font-bold text-xl text-white leading-none tracking-widest">GRILLEDSWORD</h1>
-                    <span class="text-xs text-pink-500 tracking-[0.3em] font-share">OFFICIAL</span>
+                <div class="hidden sm:block">
+                    <h1 class="font-rajdhani font-bold text-base sm:text-xl text-white leading-none tracking-widest">GRILLEDSWORD</h1>
+                    <span class="text-[10px] sm:text-xs text-pink-500 tracking-[0.3em] font-share">OFFICIAL</span>
                 </div>
             </div>
 
@@ -74,8 +380,8 @@
                 </div>
             </div>
 
-            <div class="flex items-center gap-4">
-                <nav class="hidden md:flex gap-6 font-share font-bold text-lg tracking-wide">
+            <div class="flex items-center gap-2 sm:gap-4">
+                <nav class="hidden md:flex gap-4 lg:gap-6 font-share font-bold text-sm lg:text-lg tracking-wide">
                     <a href="#profile" class="nav-item hover:text-cyan-400 transition-colors" data-hover-text="PROFILE">PROFILE</a>
                     <a href="#gear" class="nav-item hover:text-purple-400 transition-colors" data-hover-text="GEAR">GEAR</a>
                     <a href="#projects" class="nav-item hover:text-pink-500 transition-colors" data-hover-text="PROJECTS">PROJECTS</a>
@@ -84,76 +390,79 @@
                 </nav>
                 
                 <button id="music-toggle" class="cyber-btn-icon text-cyan-400 hover:text-white transition-colors" aria-label="Toggle Music">
-                    <i data-lucide="music"></i>
+                    <i data-lucide="music" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                 </button>
                 
                 <button class="md:hidden cyber-btn-icon text-cyan-400" id="menu-toggle">
-                    <i data-lucide="menu"></i>
+                    <i data-lucide="menu" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                 </button>
             </div>
         </div>
     </div>
     
     <div id="mobile-menu" class="absolute top-full left-0 w-full bg-slate-900/95 backdrop-blur-xl border-b-2 border-cyan-500 transform scale-y-0 origin-top transition-transform duration-300 md:hidden z-40">
-            <nav class="flex flex-col p-6 gap-4 font-orbitron text-center">
+        <nav class="flex flex-col p-6 gap-4 font-orbitron text-center">
             <a href="#profile" class="text-white hover:text-cyan-400 py-2 border-b border-slate-800">PROFILE</a>
             <a href="#gear" class="text-white hover:text-purple-400 py-2 border-b border-slate-800">GEAR</a>
             <a href="#projects" class="text-white hover:text-pink-500 py-2 border-b border-slate-800">PROJECTS</a>
             <a href="#social-hub" class="text-white hover:text-red-500 py-2 border-b border-slate-800">SOCIAL</a>
             <a href="#contact" class="text-white hover:text-yellow-400 py-2">CONTACT</a>
-            </nav>
+        </nav>
     </div>
 </header>
 
 <main class="container mx-auto px-4 relative z-10 opacity-0" id="main-content">
-    <section class="min-h-[85vh] grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-32 lg:pt-40 mb-24 relative" id="home">
-            <div class="absolute -left-20 top-20 font-orbitron text-[8rem] lg:text-[12rem] text-white opacity-[0.02] -rotate-90 pointer-events-none select-none">GRILLEDSWORD</div>
+    <section class="min-h-[85vh] grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-24 sm:pt-32 lg:pt-40 mb-24 relative" id="home">
+            <!-- TAG: MODIFIED - A böszme nagy GRILLEDSWORD felirat rejtve mobilon, nehogy kigörgethető legyen -->
+            <div class="hidden md:block absolute -left-20 top-20 font-orbitron text-[8rem] lg:text-[12rem] text-white opacity-[0.02] -rotate-90 pointer-events-none select-none">GRILLEDSWORD</div>
             
             <div class="lg:col-span-7 flex flex-col justify-start order-2 lg:order-1 relative z-10">
-                <div class="inline-flex items-center gap-2 mb-6 text-cyan-400 font-share text-sm border-l-2 border-cyan-500 pl-3 bg-gradient-to-r from-cyan-500/10 to-transparent py-1 w-fit">
+                <div class="inline-flex items-center gap-2 mb-6 text-cyan-400 font-share text-xs sm:text-sm border-l-2 border-cyan-500 pl-3 bg-gradient-to-r from-cyan-500/10 to-transparent py-1 w-fit">
                     <i data-lucide="terminal" class="w-4 h-4"></i>
                     <span class="typing-effect">LOGIN: GRILLEDSWORDOFFICIAL</span>
                 </div>
-                <h1 class="font-orbitron font-black text-5xl sm:text-7xl lg:text-8xl text-white mb-4 leading-none tracking-tighter layer-glitch" data-text="GRILLED SWORD">
-                    KISS <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 drop-shadow-[0_0_10px_rgba(168,85,247,0.5)]">NORBERT</span>
+                <!-- TAG: MODIFIED - Címsor tipográfia kisebb kijelzőn jobban olvasható és törhető -->
+                <h1 class="font-orbitron font-black text-4xl sm:text-6xl lg:text-8xl text-white mb-4 leading-tight tracking-tighter layer-glitch" data-text="GRILLED SWORD">
+                    KISS <br class="block sm:hidden"><span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 drop-shadow-[0_0_10px_rgba(168,85,247,0.5)]">NORBERT</span>
                 </h1>
-                <h2 class="font-rajdhani font-bold text-2xl sm:text-3xl text-slate-300 mb-8 flex flex-wrap items-center gap-2">
-                    <span class="text-purple-400 text-4xl">&lt;</span> 
+                <h2 class="font-rajdhani font-bold text-xl sm:text-3xl text-slate-300 mb-8 flex flex-wrap items-center gap-2">
+                    <span class="text-purple-400 text-3xl sm:text-4xl">&lt;</span> 
                     <span class="glitch-text hover:text-cyan-400 transition-colors" data-text="Game Dev">Game Dev</span> <span class="text-slate-600">/</span> 
                     <span class="glitch-text hover:text-purple-400 transition-colors" data-text="Streamer">Streamer</span> <span class="text-slate-600">/</span> 
                     <span class="glitch-text hover:text-pink-500 transition-colors" data-text="Tech Artist">Tech Artist</span> 
-                    <span class="text-purple-400 text-4xl">/&gt;</span>
+                    <span class="text-purple-400 text-3xl sm:text-4xl">/&gt;</span>
                 </h2>
-                <p class="text-slate-400 text-lg max-w-2xl mb-10 leading-relaxed font-rajdhani border-l-4 border-purple-500 pl-6 bg-slate-900/50 py-4 cyber-clip-box">
-    Üdv a bázison, Choom! Az építőiparból jöttem, de a kódolásban találtam meg a végzetem. Itt találod a játékokat, amiket építek, és a tartalmat, amit gyártok.
-    
-    <span class="text-yellow-400 font-bold font-share block mt-2 tracking-wider">
-        Wake up to reality!
-    </span>
-</p>
-                <div class="flex flex-wrap gap-4">
-                    <a href="#projects" class="cyber-btn primary group">
+                <p class="text-slate-400 text-base sm:text-lg max-w-2xl mb-10 leading-relaxed font-rajdhani border-l-4 border-purple-500 pl-4 sm:pl-6 bg-slate-900/50 py-4 cyber-clip-box">
+                    Üdv a bázison, Choom! Az építőiparból jöttem, de a kódolásban találtam meg a végzetem. Itt találod a játékokat, amiket építek, és a tartalmat, amit gyártok.
+                    
+                    <span class="text-yellow-400 font-bold font-share block mt-2 tracking-wider">
+                        Wake up to reality!
+                    </span>
+                </p>
+                <!-- TAG: MODIFIED - A gombok mobilon szépen egymás alá esnek és 100% szélesek lesznek -->
+                <div class="flex flex-col sm:flex-row flex-wrap gap-4 w-full sm:w-auto">
+                    <a href="#projects" class="cyber-btn primary group w-full sm:w-auto">
                         <span class="btn-content group-hover:text-black">ACCESS PROJECTS</span>
                         <div class="glitch-effect"></div>
                     </a>
-                    <a href="https://twitch.tv/grilledswordofficial" target="_blank" class="cyber-btn secondary">
-                        <span class="btn-content flex items-center gap-2"><i data-lucide="twitch" class="w-4 h-4"></i> JACK IN (LIVE)</span>
+                    <a href="https://twitch.tv/grilledswordofficial" target="_blank" class="cyber-btn secondary w-full sm:w-auto">
+                        <span class="btn-content flex items-center justify-center gap-2"><i data-lucide="twitch" class="w-4 h-4"></i> JACK IN (LIVE)</span>
                     </a>
                 </div>
             </div>
 
-            <div class="lg:col-span-5 relative order-1 lg:order-2 flex justify-center mt-10 lg:mt-0">
-                <div class="avatar-container relative group w-full max-w-md">
+            <div class="lg:col-span-5 relative order-1 lg:order-2 flex justify-center mt-10 lg:mt-0 px-4 sm:px-0">
+                <div class="avatar-container relative group w-full max-w-sm sm:max-w-md">
                     <div class="absolute inset-0 bg-gradient-to-t from-cyan-500/30 to-transparent opacity-60 hologram-scan"></div>
                     <div class="cyber-frame p-1 bg-black clip-path-polygon relative z-10 border border-slate-700 group-hover:border-cyan-500 transition-colors duration-300">
-                        <img src="IMG/profile.png" alt="Profile" class="w-full h-auto object-cover grayscale contrast-125 brightness-90 group-hover:grayscale-0 transition-all duration-500 sepia-[.3]">
-                        <div class="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-cyan-500"></div>
-                        <div class="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-pink-500"></div>
+                        <img src="IMG/profile.png" alt="Profile" class="w-full h-auto object-cover grayscale contrast-125 brightness-90 group-hover:grayscale-0 transition-all duration-500 sepia-[.3]" onerror="this.onerror=null; this.src='https://placehold.co/400x500/111/333?text=GS+PROFILE';">
+                        <div class="absolute top-0 left-0 w-6 h-6 sm:w-8 sm:h-8 border-t-4 border-l-4 border-cyan-500"></div>
+                        <div class="absolute bottom-0 right-0 w-6 h-6 sm:w-8 sm:h-8 border-b-4 border-r-4 border-pink-500"></div>
                         
-                        <div class="absolute top-4 right-4 bg-red-600 text-white text-xs font-bold px-3 py-1 font-share tracking-widest shadow-[0_0_15px_red] animate-pulse">
+                        <div class="absolute top-4 right-4 bg-red-600 text-white text-[10px] sm:text-xs font-bold px-2 py-1 font-share tracking-widest shadow-[0_0_15px_red] animate-pulse">
                             TARGET FOUND [●]
                         </div>
-                        <div class="absolute bottom-4 left-4 text-cyan-400 font-mono text-xs typing-loop">
+                        <div class="absolute bottom-4 left-4 text-cyan-400 font-mono text-[10px] sm:text-xs typing-loop">
                             SCANNING_TARGET...
                         </div>
                     </div>
@@ -161,147 +470,149 @@
             </div>
         </section>
 
-        <section id="profile" class="mb-32 relative pt-10">
-             <div class="absolute right-0 top-0 font-orbitron text-8xl text-white opacity-[0.03] pointer-events-none select-none">STATS</div>
-            <div class="section-header mb-12 flex items-end gap-4 border-b border-slate-800 pb-4 relative">
-                <div class="absolute bottom-0 left-0 w-1/3 h-[2px] bg-cyan-500 shadow-[0_0_15px_#06b6d4]"></div>
-                <h2 class="font-orbitron text-4xl text-white glitch-text-big" data-text="PLAYER_STATS">PLAYER_STATS</h2>
-                <span class="font-share text-black bg-cyan-500 text-sm mb-2 px-2 font-bold transform -skew-x-12">ID: GS-OFFICIAL</span>
+        <section id="profile" class="mb-24 sm:mb-32 relative pt-10">
+             <div class="hidden md:block absolute right-0 top-0 font-orbitron text-8xl text-white opacity-[0.03] pointer-events-none select-none">STATS</div>
+            <div class="section-header mb-8 sm:mb-12 flex flex-col sm:flex-row sm:items-end gap-2 sm:gap-4 border-b border-slate-800 pb-4 relative">
+                <div class="absolute bottom-0 left-0 w-full sm:w-1/3 h-[2px] bg-cyan-500 shadow-[0_0_15px_#06b6d4]"></div>
+                <!-- TAG: MODIFIED - A glitch szöveg mérete CSS-ben optimalizálva (clamp) -->
+                <h2 class="font-orbitron text-3xl sm:text-4xl text-white glitch-text-big" data-text="PLAYER_STATS">PLAYER_STATS</h2>
+                <span class="font-share text-black bg-cyan-500 text-xs sm:text-sm mb-0 sm:mb-2 px-2 font-bold transform -skew-x-12 w-fit">ID: GS-OFFICIAL</span>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 <!-- CODING -->
-                <div class="stat-card tilt-card group bg-black/40 p-6 border border-slate-700 hover:border-cyan-500 transition-colors clip-corner-sm relative overflow-hidden">
+                <div class="stat-card tilt-card group bg-black/40 p-4 sm:p-6 border border-slate-700 hover:border-cyan-500 transition-colors clip-corner-sm relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-8 h-8 border-t border-r border-cyan-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     <div class="flex justify-between items-center mb-2">
-                        <h3 class="font-rajdhani font-bold text-xl text-white group-hover:text-cyan-400 transition-colors">CODING (C#)</h3>
-                        <span class="text-cyan-400 font-share">LVL 85</span>
+                        <h3 class="font-rajdhani font-bold text-lg sm:text-xl text-white group-hover:text-cyan-400 transition-colors">CODING (C#)</h3>
+                        <span class="text-cyan-400 font-share text-sm sm:text-base">LVL 85</span>
                     </div>
                     <div class="stat-bar-bg"><div class="stat-bar-fill cyan" style="width: 85%;"></div></div>
                 </div>
                 <!-- CREATIVITY -->
-                 <div class="stat-card tilt-card group bg-black/40 p-6 border border-slate-700 hover:border-purple-500 transition-colors clip-corner-sm relative">
+                 <div class="stat-card tilt-card group bg-black/40 p-4 sm:p-6 border border-slate-700 hover:border-purple-500 transition-colors clip-corner-sm relative">
                     <div class="flex justify-between items-center mb-2">
-                        <h3 class="font-rajdhani font-bold text-xl text-white group-hover:text-purple-400 transition-colors">CREATIVITY</h3>
-                        <span class="text-purple-400 font-share">LVL 99</span>
+                        <h3 class="font-rajdhani font-bold text-lg sm:text-xl text-white group-hover:text-purple-400 transition-colors">CREATIVITY</h3>
+                        <span class="text-purple-400 font-share text-sm sm:text-base">LVL 99</span>
                     </div>
-                <!-- UNITY ENGINE -->
                     <div class="stat-bar-bg"><div class="stat-bar-fill purple" style="width: 99%;"></div></div>
                 </div>
-                 <div class="stat-card tilt-card group bg-black/40 p-6 border border-slate-700 hover:border-pink-500 transition-colors clip-corner-sm relative">
+                <!-- GAMING -->
+                 <div class="stat-card tilt-card group bg-black/40 p-4 sm:p-6 border border-slate-700 hover:border-pink-500 transition-colors clip-corner-sm relative">
                     <div class="flex justify-between items-center mb-2">
-                        <h3 class="font-rajdhani font-bold text-xl text-white group-hover:text-pink-500 transition-colors">GAMING</h3>
-                        <span class="text-pink-500 font-share">LVL 80</span>
+                        <h3 class="font-rajdhani font-bold text-lg sm:text-xl text-white group-hover:text-pink-500 transition-colors">GAMING</h3>
+                        <span class="text-pink-500 font-share text-sm sm:text-base">LVL 80</span>
                     </div>
-                <!-- CAFFEINE -->
                     <div class="stat-bar-bg"><div class="stat-bar-fill pink" style="width: 80%;"></div></div>
                 </div>
-                 <div class="stat-card tilt-card group bg-black/40 p-6 border border-slate-700 hover:border-yellow-400 transition-colors clip-corner-sm relative">
+                <!-- CAFFEINE -->
+                 <div class="stat-card tilt-card group bg-black/40 p-4 sm:p-6 border border-slate-700 hover:border-yellow-400 transition-colors clip-corner-sm relative">
                     <div class="flex justify-between items-center mb-2">
-                        <h3 class="font-rajdhani font-bold text-xl text-white group-hover:text-yellow-400 transition-colors">CAFFEINE</h3>
-                        <span class="text-yellow-400 font-share animate-pulse">OVERLOAD</span>
+                        <h3 class="font-rajdhani font-bold text-lg sm:text-xl text-white group-hover:text-yellow-400 transition-colors">CAFFEINE</h3>
+                        <span class="text-yellow-400 font-share animate-pulse text-sm sm:text-base">OVERLOAD</span>
                     </div>
                     <div class="stat-bar-bg"><div class="stat-bar-fill yellow stripes" style="width: 100%;"></div></div>
                 </div>
             </div>
             
-            <div class="mt-8 p-6 bg-slate-900/40 border-l-4 border-cyan-500 relative overflow-hidden group cyber-box backdrop-blur-sm">
-                <h3 class="font-orbitron text-lg text-slate-400 mb-4 flex items-center gap-2"><i data-lucide="cpu" class="text-cyan-500"></i> EQUIPPED_SKILLS:</h3>
-                <div class="flex flex-wrap gap-8 justify-center md:justify-start">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unity/unity-original.svg" class="w-12 h-12 grayscale hover:grayscale-0 duration-300" title="Unity">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg" class="w-12 h-12 grayscale hover:grayscale-0 duration-300" title="C#">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg" class="w-12 h-12 grayscale hover:grayscale-0 duration-300" title="Blender">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/visualstudio/visualstudio-plain.svg" class="w-12 h-12 grayscale hover:grayscale-0 duration-300" title="VS">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/photoshop/photoshop-plain.svg" class="w-12 h-12 grayscale hover:grayscale-0 duration-300" title="Photoshop">
+            <div class="mt-8 p-4 sm:p-6 bg-slate-900/40 border-l-4 border-cyan-500 relative overflow-hidden group cyber-box backdrop-blur-sm">
+                <h3 class="font-orbitron text-base sm:text-lg text-slate-400 mb-4 flex items-center gap-2"><i data-lucide="cpu" class="text-cyan-500"></i> EQUIPPED_SKILLS:</h3>
+                <div class="flex flex-wrap gap-4 sm:gap-8 justify-center md:justify-start">
+                    <!-- TAG: MODIFIED - Ikonok mérete mobilon picit kisebb hogy mind beférjen kényelmesen -->
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unity/unity-original.svg" class="w-10 h-10 sm:w-12 sm:h-12 grayscale hover:grayscale-0 duration-300" title="Unity" alt="Unity">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg" class="w-10 h-10 sm:w-12 sm:h-12 grayscale hover:grayscale-0 duration-300" title="C#" alt="C#">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg" class="w-10 h-10 sm:w-12 sm:h-12 grayscale hover:grayscale-0 duration-300" title="Blender" alt="Blender">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/visualstudio/visualstudio-plain.svg" class="w-10 h-10 sm:w-12 sm:h-12 grayscale hover:grayscale-0 duration-300" title="VS" alt="VS">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/photoshop/photoshop-plain.svg" class="w-10 h-10 sm:w-12 sm:h-12 grayscale hover:grayscale-0 duration-300" title="Photoshop" alt="Photoshop">
                 </div>
             </div>
         </section>
 
-        <section id="gear" class="mb-32">
-            <div class="section-header mb-12 text-right border-b border-slate-800 pb-4 relative">
-                 <div class="absolute bottom-0 right-0 w-1/3 h-[2px] bg-purple-500 shadow-[0_0_15px_#a855f7]"></div>
-                <h2 class="font-orbitron text-4xl text-white glitch-text-big" data-text="BATTLE_STATION">BATTLE_STATION</h2>
-                <span class="font-share text-purple-500 text-sm mb-2 tracking-widest">[ HARDWARE_CONFIG_V2.0 ]</span>
+        <section id="gear" class="mb-24 sm:mb-32">
+            <div class="section-header mb-8 sm:mb-12 text-left sm:text-right border-b border-slate-800 pb-4 relative">
+                 <div class="absolute bottom-0 right-0 w-full sm:w-1/3 h-[2px] bg-purple-500 shadow-[0_0_15px_#a855f7]"></div>
+                <h2 class="font-orbitron text-3xl sm:text-4xl text-white glitch-text-big" data-text="BATTLE_STATION">BATTLE_STATION</h2>
+                <span class="font-share text-purple-500 text-xs sm:text-sm mb-2 tracking-widest block sm:inline-block">[ HARDWARE_CONFIG_V2.0 ]</span>
             </div>
             
-            <div class="bg-black/60 border border-slate-800 p-8 relative overflow-hidden group clip-corner-lg">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-12 font-rajdhani text-lg relative z-10">
-                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="monitor" class="text-cyan-400"></i><div class="flex flex-col"><span class="text-slate-500 text-xs font-share">MAIN_DISPLAY</span><span class="text-white font-bold text-xl">Samsung M7 32"</span></div></div></div>
-                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="layers" class="text-cyan-400"></i><div class="flex flex-col"><span class="text-slate-500 text-xs font-share">SEC_DISPLAYS</span><span class="text-white font-bold text-xl">2x Eizo FlexScan EV2456</span></div></div></div>
-                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="cpu" class="text-purple-400"></i><div class="flex flex-col"><span class="text-slate-500 text-xs font-share">CPU_UNIT</span><span class="text-white font-bold text-xl">Ryzen 7 9800X3D</span></div></div></div>
-                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="zap" class="text-yellow-400"></i><div class="flex flex-col"><span class="text-slate-500 text-xs font-share">GPU_ENGINE</span><span class="text-white font-bold text-xl">RTX 5060 Ti</span></div></div></div>
-                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="hard-drive" class="text-pink-500"></i><div class="flex flex-col"><span class="text-slate-500 text-xs font-share">MEMORY_BANK</span><span class="text-white font-bold text-xl">64GB RAM</span></div></div></div>
-                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="keyboard" class="text-green-400"></i><div class="flex flex-col"><span class="text-slate-500 text-xs font-share">PERIPHERALS</span><span class="text-white font-bold text-xl">Asus TUF Gaming Combo</span></div></div></div>
+            <div class="bg-black/60 border border-slate-800 p-4 sm:p-8 relative overflow-hidden group clip-corner-lg">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 sm:gap-y-8 gap-x-12 font-rajdhani text-base sm:text-lg relative z-10">
+                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="monitor" class="text-cyan-400 w-6 h-6"></i><div class="flex flex-col"><span class="text-slate-500 text-[10px] sm:text-xs font-share">MAIN_DISPLAY</span><span class="text-white font-bold text-lg sm:text-xl">Samsung M7 32"</span></div></div></div>
+                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="layers" class="text-cyan-400 w-6 h-6"></i><div class="flex flex-col"><span class="text-slate-500 text-[10px] sm:text-xs font-share">SEC_DISPLAYS</span><span class="text-white font-bold text-lg sm:text-xl">2x Eizo FlexScan EV2456</span></div></div></div>
+                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="cpu" class="text-purple-400 w-6 h-6"></i><div class="flex flex-col"><span class="text-slate-500 text-[10px] sm:text-xs font-share">CPU_UNIT</span><span class="text-white font-bold text-lg sm:text-xl">Ryzen 7 9800X3D</span></div></div></div>
+                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="zap" class="text-yellow-400 w-6 h-6"></i><div class="flex flex-col"><span class="text-slate-500 text-[10px] sm:text-xs font-share">GPU_ENGINE</span><span class="text-white font-bold text-lg sm:text-xl">RTX 5060 Ti</span></div></div></div>
+                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="hard-drive" class="text-pink-500 w-6 h-6"></i><div class="flex flex-col"><span class="text-slate-500 text-[10px] sm:text-xs font-share">MEMORY_BANK</span><span class="text-white font-bold text-lg sm:text-xl">64GB RAM</span></div></div></div>
+                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="keyboard" class="text-green-400 w-6 h-6"></i><div class="flex flex-col"><span class="text-slate-500 text-[10px] sm:text-xs font-share">PERIPHERALS</span><span class="text-white font-bold text-lg sm:text-xl">Asus TUF Gaming Combo</span></div></div></div>
                 </div>
             </div>
         </section>
 
-        <section id="projects" class="mb-32">
-            <div class="flex items-center justify-between mb-12 border-b border-slate-800 pb-4">
-                <h2 class="font-orbitron text-4xl text-white glitch-text-big" data-text="QUEST_LOG">QUEST_LOG</h2>
+        <section id="projects" class="mb-24 sm:mb-32">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-8 sm:mb-12 border-b border-slate-800 pb-4 gap-4">
+                <h2 class="font-orbitron text-3xl sm:text-4xl text-white glitch-text-big" data-text="QUEST_LOG">QUEST_LOG</h2>
                 <div class="flex gap-2">
                     <div class="w-3 h-3 bg-cyan-500 animate-pulse"></div><div class="w-3 h-3 bg-purple-500 animate-pulse delay-75"></div><div class="w-3 h-3 bg-pink-500 animate-pulse delay-150"></div>
                 </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- TAG: MODIFIED - A kártyák telefonon szépen egy oszlopba rendeződnek, és csak fölötte jön be a grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
                 <div class="cyber-card group" data-gallery-btn>
                     <div class="card-image-wrapper">
-                        <img src="IMG/pekka.gif" alt="Pekka Kana 3D" class="card-img">
-                        <div class="card-overlay"><i data-lucide="crosshair" class="text-cyan-400 w-12 h-12"></i></div>
+                        <img src="IMG/pekka.gif" alt="Pekka Kana 3D" class="card-img" onerror="this.onerror=null; this.src='https://placehold.co/600x338/111/333?text=PROJECT_FILE';">
+                        <div class="card-overlay absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/50"><i data-lucide="crosshair" class="text-cyan-400 w-12 h-12"></i></div>
                     </div>
                     <div class="card-content">
                         <h3 class="font-orbitron text-xl text-white mb-2 group-hover:text-cyan-400 transition-colors">PEKKA KANA 3D</h3>
-                        <div class="flex gap-2 mb-4"><span class="badge unity">UNITY</span><span class="badge code">C#</span></div>
+                        <div class="flex gap-2 mb-4"><span class="px-2 py-1 text-xs border border-slate-600 bg-slate-800 text-white">UNITY</span><span class="px-2 py-1 text-xs border border-slate-600 bg-slate-800 text-white">C#</span></div>
                         <p class="font-rajdhani text-slate-400 text-sm leading-relaxed">A klasszikus újragondolása. Modern fizika, retro hangulat.</p>
                     </div>
-                    <div class="card-footer">
+                    <div class="card-footer p-4 border-t border-slate-800 flex justify-between items-center">
                         <span class="text-xs text-cyan-500 font-share blink">STATUS: BETA</span>
                         <button class="cyber-btn-mini text-cyan-400 border border-cyan-500/50 hover:bg-cyan-500 hover:text-black transition-all">OPEN</button>
                     </div>
                 </div>
                 <div class="cyber-card group" data-gallery-btn>
                     <div class="card-image-wrapper">
-                        <img src="IMG/mindscape.jpg" alt="Mindscape" class="card-img">
-                         <div class="card-overlay"><i data-lucide="skull" class="text-purple-400 w-12 h-12"></i></div>
+                        <img src="IMG/mindscape.jpg" alt="Mindscape" class="card-img" onerror="this.onerror=null; this.src='https://placehold.co/600x338/111/333?text=PROJECT_FILE';">
+                         <div class="card-overlay absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/50"><i data-lucide="skull" class="text-purple-400 w-12 h-12"></i></div>
                     </div>
                     <div class="card-content">
                         <h3 class="font-orbitron text-xl text-white mb-2 group-hover:text-purple-400 transition-colors">MINDSCAPE</h3>
-                        <div class="flex gap-2 mb-4"><span class="badge unity">UNITY</span><span class="badge horror">HORROR</span></div>
+                        <div class="flex gap-2 mb-4"><span class="px-2 py-1 text-xs border border-slate-600 bg-slate-800 text-white">UNITY</span><span class="px-2 py-1 text-xs border border-slate-600 bg-slate-800 text-white">HORROR</span></div>
                         <p class="font-rajdhani text-slate-400 text-sm leading-relaxed">Interaktív anomália vadászat.</p>
                     </div>
-                    <div class="card-footer"><span class="text-xs text-purple-500 font-share">STATUS: RELEASED</span><button class="cyber-btn-mini text-purple-400 border border-purple-500/50 hover:bg-purple-500 hover:text-black transition-all">OPEN</button></div>
+                    <div class="card-footer p-4 border-t border-slate-800 flex justify-between items-center"><span class="text-xs text-purple-500 font-share">STATUS: RELEASED</span><button class="cyber-btn-mini text-purple-400 border border-purple-500/50 hover:bg-purple-500 hover:text-black transition-all">OPEN</button></div>
                 </div>
                  <div class="cyber-card group" data-gallery-btn>
                     <div class="card-image-wrapper">
-                        <img src="IMG/3d.jpg" alt="3D Gallery" class="card-img">
-                         <div class="card-overlay"><i data-lucide="box" class="text-pink-500 w-12 h-12"></i></div>
+                        <img src="IMG/3d.jpg" alt="3D Gallery" class="card-img" onerror="this.onerror=null; this.src='https://placehold.co/600x338/111/333?text=PROJECT_FILE';">
+                         <div class="card-overlay absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/50"><i data-lucide="box" class="text-pink-500 w-12 h-12"></i></div>
                     </div>
                     <div class="card-content">
                         <h3 class="font-orbitron text-xl text-white mb-2 group-hover:text-pink-500 transition-colors">3D ARTWORKS</h3>
-                        <div class="flex gap-2 mb-4"><span class="badge blender">BLENDER</span><span class="badge art">ART</span></div>
+                        <div class="flex gap-2 mb-4"><span class="px-2 py-1 text-xs border border-slate-600 bg-slate-800 text-white">BLENDER</span><span class="px-2 py-1 text-xs border border-slate-600 bg-slate-800 text-white">ART</span></div>
                         <p class="font-rajdhani text-slate-400 text-sm leading-relaxed">High-poly modellek, környezetek.</p>
                     </div>
-                    <div class="card-footer"><span class="text-xs text-pink-500 font-share">STATUS: ONGOING</span><button class="cyber-btn-mini text-pink-500 border border-pink-500/50 hover:bg-pink-500 hover:text-black transition-all">OPEN</button></div>
+                    <div class="card-footer p-4 border-t border-slate-800 flex justify-between items-center"><span class="text-xs text-pink-500 font-share">STATUS: ONGOING</span><button class="cyber-btn-mini text-pink-500 border border-pink-500/50 hover:bg-pink-500 hover:text-black transition-all">OPEN</button></div>
                 </div>
             </div>
         </section>
 
-<section id="social-hub" class="mb-32">
-            <div class="flex items-center justify-between mb-12 border-b border-slate-800 pb-4">
-                <h2 class="font-orbitron text-4xl text-white glitch-text-big" data-text="SOCIAL_HUB">SOCIAL_HUB</h2>
-                <span class="font-share text-cyan-500">LIVE_FEED_AGGREGATE</span>
+<section id="social-hub" class="mb-24 sm:mb-32">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-8 sm:mb-12 border-b border-slate-800 pb-4 gap-2">
+                <h2 class="font-orbitron text-3xl sm:text-4xl text-white glitch-text-big" data-text="SOCIAL_HUB">SOCIAL_HUB</h2>
+                <span class="font-share text-cyan-500 text-sm sm:text-base">LIVE_FEED_AGGREGATE</span>
             </div>
 
-            <div class="cyber-border-box mb-12 p-1 border border-cyan-500/30 bg-black/60 clip-corner-lg relative group">
-                <div class="absolute top-0 left-0 bg-red-600 text-white px-4 py-1 font-bold text-xs z-10 font-share animate-pulse">LIVE SIGNAL CHECK</div>
+            <div class="cyber-border-box mb-8 sm:mb-12 p-1 border border-cyan-500/30 bg-black/60 clip-corner-lg relative group">
+                <div class="absolute top-0 left-0 bg-red-600 text-white px-2 py-1 sm:px-4 sm:py-1 font-bold text-[10px] sm:text-xs z-10 font-share animate-pulse">LIVE SIGNAL CHECK</div>
                 
                 <div class="aspect-video w-full relative">
-                    
                     <div id="stream-offline" class="offline-placeholder">
-                        <div class="offline-icon"><i data-lucide="wifi-off"></i></div>
+                        <div class="offline-icon"><i data-lucide="wifi-off" class="w-12 h-12 sm:w-16 sm:h-16"></i></div>
                         <h3 class="offline-text glitch-text" data-text="STREAM_OFFLINE">STREAM_OFFLINE</h3>
                         <p class="offline-sub">AWAITING_SIGNAL...</p>
-                        <div class="absolute inset-0 pointer-events-none bg-[url('https://media.giphy.com/media/3o7qE1YN7aQfVUTTLy/giphy.gif')] opacity-5 mix-blend-screen"></div>
+                        <div class="absolute inset-0 pointer-events-none bg-[url('https://media.giphy.com/media/3o7qE1YN7aQfVUTTLy/giphy.gif')] opacity-5 mix-blend-screen" style="background-size: cover;"></div>
                     </div>
 
                     <div id="stream-online" class="hidden absolute inset-0 w-full h-full">
@@ -317,97 +628,97 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 <a href="https://www.tiktok.com/@grilledswordofficial" target="_blank" class="social-card group border border-slate-800 hover:border-pink-500 bg-black/50 p-4 transition-all hover:-translate-y-2 relative overflow-hidden">
                     <div class="absolute inset-0 bg-gradient-to-b from-transparent to-pink-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     <div class="flex items-center gap-3 mb-4">
-                        <div class="p-2 bg-black rounded border border-slate-700"><svg class="w-6 h-6 text-pink-500" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></div>
-                        <div><h4 class="font-bold text-white">TIKTOK</h4><p class="text-xs text-pink-400 font-mono">STREAMER</p></div>
+                        <div class="p-2 bg-black rounded border border-slate-700"><svg class="w-5 h-5 sm:w-6 sm:h-6 text-pink-500" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></div>
+                        <div><h4 class="font-bold text-white text-sm sm:text-base">TIKTOK</h4><p class="text-[10px] sm:text-xs text-pink-400 font-mono">STREAMER</p></div>
                     </div>
-                    <div class="h-40 bg-slate-900/50 rounded overflow-hidden border border-slate-700 group-hover:border-pink-500 relative">
-                        <img src="IMG/tiktok_post.jpg" alt="Latest TikTok" class="w-full h-full object-cover"> 
-                        <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-white font-bold">WATCH NOW</span></div>
+                    <div class="h-32 sm:h-40 bg-slate-900/50 rounded overflow-hidden border border-slate-700 group-hover:border-pink-500 relative">
+                        <img src="IMG/tiktok_post.jpg" alt="Latest TikTok" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/300x200/111/333?text=TIKTOK';"> 
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-white font-bold text-sm">WATCH NOW</span></div>
                     </div>
                 </a>
 
                 <a href="https://www.twitch.tv/grilledswordofficial" target="_blank" class="social-card group border border-slate-800 hover:border-purple-500 bg-black/50 p-4 transition-all hover:-translate-y-2 relative overflow-hidden">
                     <div class="absolute inset-0 bg-gradient-to-b from-transparent to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     <div class="flex items-center gap-3 mb-4">
-                        <div class="p-2 bg-black rounded border border-slate-700"><i data-lucide="twitch" class="w-6 h-6 text-purple-500"></i></div>
-                        <div><h4 class="font-bold text-white">TWITCH</h4><p class="text-xs text-purple-400 font-mono">STREAMER</p></div>
+                        <div class="p-2 bg-black rounded border border-slate-700"><i data-lucide="twitch" class="w-5 h-5 sm:w-6 sm:h-6 text-purple-500"></i></div>
+                        <div><h4 class="font-bold text-white text-sm sm:text-base">TWITCH</h4><p class="text-[10px] sm:text-xs text-purple-400 font-mono">STREAMER</p></div>
                     </div>
-                    <div class="h-40 bg-slate-900/50 rounded overflow-hidden border border-slate-700 group-hover:border-purple-500 relative">
-                        <img src="IMG/twitch_post.png" alt="Twitch Live" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-white font-bold">WATCH NOW</span></div>
+                    <div class="h-32 sm:h-40 bg-slate-900/50 rounded overflow-hidden border border-slate-700 group-hover:border-purple-500 relative">
+                        <img src="IMG/twitch_post.png" alt="Twitch Live" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/300x200/111/333?text=TWITCH';">
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-white font-bold text-sm">WATCH NOW</span></div>
                     </div>
                 </a>
 
                 <a href="https://www.instagram.com/grilledswordofficial" target="_blank" class="social-card group border border-slate-800 hover:border-yellow-500 bg-black/50 p-4 transition-all hover:-translate-y-2 relative overflow-hidden">
                     <div class="absolute inset-0 bg-gradient-to-b from-transparent to-yellow-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     <div class="flex items-center gap-3 mb-4">
-                        <div class="p-2 bg-black rounded border border-slate-700"><i data-lucide="instagram" class="w-6 h-6 text-yellow-500"></i></div>
-                        <div><h4 class="font-bold text-white">INSTAGRAM</h4><p class="text-xs text-yellow-400 font-mono">GALLERY</p></div>
+                        <div class="p-2 bg-black rounded border border-slate-700"><i data-lucide="instagram" class="w-5 h-5 sm:w-6 sm:h-6 text-yellow-500"></i></div>
+                        <div><h4 class="font-bold text-white text-sm sm:text-base">INSTAGRAM</h4><p class="text-[10px] sm:text-xs text-yellow-400 font-mono">GALLERY</p></div>
                     </div>
-                    <div class="h-40 bg-slate-900/50 rounded overflow-hidden border border-slate-700 group-hover:border-yellow-500 relative">
-                        <img src="IMG/insta_post.jpg" alt="Latest Instagram" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-white font-bold">WATCH NOW</span></div>
+                    <div class="h-32 sm:h-40 bg-slate-900/50 rounded overflow-hidden border border-slate-700 group-hover:border-yellow-500 relative">
+                        <img src="IMG/insta_post.jpg" alt="Latest Instagram" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/300x200/111/333?text=INSTA';">
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-white font-bold text-sm">WATCH NOW</span></div>
                     </div>
                 </a>
 
                 <a href="https://www.facebook.com/grilledswordofficial" target="_blank" class="social-card group border border-slate-800 hover:border-blue-500 bg-black/50 p-4 transition-all hover:-translate-y-2 relative overflow-hidden">
                     <div class="absolute inset-0 bg-gradient-to-b from-transparent to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     <div class="flex items-center gap-3 mb-4">
-                        <div class="p-2 bg-black rounded border border-slate-700"><i data-lucide="facebook" class="w-6 h-6 text-blue-500"></i></div>
-                        <div><h4 class="font-bold text-white">FACEBOOK</h4><p class="text-xs text-blue-400 font-mono">GALLERY</p></div>
+                        <div class="p-2 bg-black rounded border border-slate-700"><i data-lucide="facebook" class="w-5 h-5 sm:w-6 sm:h-6 text-blue-500"></i></div>
+                        <div><h4 class="font-bold text-white text-sm sm:text-base">FACEBOOK</h4><p class="text-[10px] sm:text-xs text-blue-400 font-mono">GALLERY</p></div>
                     </div>
-                    <div class="h-40 bg-slate-900/50 rounded overflow-hidden border border-slate-700 group-hover:border-blue-500 relative">
-                        <img src="IMG/facebook_post.jpg" alt="Latest Facebook" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-white font-bold">WATCH NOW</span></div>
+                    <div class="h-32 sm:h-40 bg-slate-900/50 rounded overflow-hidden border border-slate-700 group-hover:border-blue-500 relative">
+                        <img src="IMG/facebook_post.jpg" alt="Latest Facebook" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/300x200/111/333?text=FACEBOOK';">
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-white font-bold text-sm">WATCH NOW</span></div>
                     </div>
                 </a>
-
             </div>
         </section>
 
-        <section id="contact" class="mb-20">
-            <div class="cyber-border-box p-8 bg-black/80 backdrop-blur-sm relative overflow-hidden clip-corner-lg border border-slate-700">
+        <section id="contact" class="mb-12 sm:mb-20">
+            <div class="cyber-border-box p-4 sm:p-8 bg-black/80 backdrop-blur-sm relative overflow-hidden clip-corner-lg border border-slate-700">
                 <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 relative z-10">
+                <!-- TAG: MODIFIED - Contact grid egy oszlopos lett telefonon -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 relative z-10">
                     <div>
-                        <h2 class="font-orbitron text-3xl text-white mb-6 glitch-text" data-text="ESTABLISH_UPLINK">ESTABLISH_UPLINK</h2>
-                        <form id="contact-form" class="space-y-6">
+                        <h2 class="font-orbitron text-2xl sm:text-3xl text-white mb-6 glitch-text" data-text="ESTABLISH_UPLINK">ESTABLISH_UPLINK</h2>
+                        <form id="contact-form" class="space-y-4 sm:space-y-6">
                             <div class="input-group"><label class="input-label">CODENAME</label><input type="text" name="name" required class="cyber-input"><div class="input-line"></div></div>
                             <div class="input-group"><label class="input-label">FREQUENCY (EMAIL)</label><input type="email" name="email" required class="cyber-input"><div class="input-line"></div></div>
                             <div class="input-group"><label class="input-label">TRANSMISSION DATA</label><textarea name="message" rows="4" required class="cyber-input"></textarea><div class="input-line"></div></div>
-                            <button type="submit" class="cyber-btn primary w-full group"><span class="group-hover:text-black transition-colors">SEND TRANSMISSION</span></button>
-                            <p id="form-status" class="mt-2 text-center text-sm font-mono"></p>
+                            <button type="submit" class="cyber-btn primary w-full group"><span class="group-hover:text-black transition-colors text-sm sm:text-base">SEND TRANSMISSION</span></button>
+                            <p id="form-status" class="mt-2 text-center text-xs sm:text-sm font-mono"></p>
                         </form>
                     </div>
                     
-                    <div class="flex flex-col justify-center gap-4">
+                    <div class="flex flex-col justify-center gap-3 sm:gap-4">
                         <a href="https://www.tiktok.com/@grilledswordofficial" target="_blank" class="contact-btn tiktok group">
-                            <div class="icon-box"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></div>
-                            <span class="text-lg font-bold">TIKTOK</span><i data-lucide="external-link" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                            <div class="icon-box"><svg class="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></div>
+                            <span class="text-base sm:text-lg font-bold">TIKTOK</span><i data-lucide="external-link" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
                         </a>
                         <a href="https://youtube.com/@grilledswordofficial" target="_blank" class="contact-btn youtube group">
-                            <div class="icon-box"><i data-lucide="youtube" class="w-6 h-6"></i></div>
-                            <span class="text-lg font-bold">YOUTUBE</span><i data-lucide="external-link" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                            <div class="icon-box"><i data-lucide="youtube" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
+                            <span class="text-base sm:text-lg font-bold">YOUTUBE</span><i data-lucide="external-link" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
                         </a>
                         <a href="https://twitch.tv/grilledswordofficial" target="_blank" class="contact-btn twitch group">
-                            <div class="icon-box"><i data-lucide="twitch" class="w-6 h-6"></i></div>
-                            <span class="text-lg font-bold">TWITCH</span><i data-lucide="external-link" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                            <div class="icon-box"><i data-lucide="twitch" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
+                            <span class="text-base sm:text-lg font-bold">TWITCH</span><i data-lucide="external-link" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
                         </a>
                         <a href="https://www.instagram.com/grilledswordofficial" target="_blank" class="contact-btn instagram group">
-                            <div class="icon-box"><i data-lucide="instagram" class="w-6 h-6"></i></div>
-                            <span class="text-lg font-bold">INSTAGRAM</span><i data-lucide="external-link" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                            <div class="icon-box"><i data-lucide="instagram" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
+                            <span class="text-base sm:text-lg font-bold">INSTAGRAM</span><i data-lucide="external-link" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
                         </a>
                         <a href="https://www.facebook.com/grilledswordofficial" target="_blank" class="contact-btn facebook group">
-                            <div class="icon-box"><i data-lucide="facebook" class="w-6 h-6"></i></div>
-                            <span class="text-lg font-bold">FACEBOOK</span><i data-lucide="external-link" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                            <div class="icon-box"><i data-lucide="facebook" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
+                            <span class="text-base sm:text-lg font-bold">FACEBOOK</span><i data-lucide="external-link" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
                         </a>
                         <a href="mailto:kiss.norbert.reall@gmail.com" class="contact-btn email group">
-                            <div class="icon-box"><i data-lucide="mail" class="w-6 h-6"></i></div>
-                            <span class="text-lg font-bold">EMAIL</span><i data-lucide="arrow-right" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                            <div class="icon-box"><i data-lucide="mail" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
+                            <span class="text-base sm:text-lg font-bold">EMAIL</span><i data-lucide="arrow-right" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
                         </a>
                     </div>
                 </div>
@@ -416,7 +727,7 @@
 
 </main>
 
-    <div id="chat-overlay" class="fixed bottom-4 right-4 w-80 h-64 bg-black/80 backdrop-blur-md border border-cyan-500/30 overflow-hidden hidden md:flex flex-col z-40 pointer-events-none shadow-[0_0_20px_rgba(6,182,212,0.1)] clip-corner-top-right">
+    <div id="chat-overlay" class="fixed bottom-4 right-4 w-80 h-64 bg-black/80 backdrop-blur-md border border-cyan-500/30 overflow-hidden hidden xl:flex flex-col z-40 pointer-events-none shadow-[0_0_20px_rgba(6,182,212,0.1)] clip-corner-top-right">
         <div class="bg-cyan-900/20 p-2 text-xs font-bold text-cyan-400 flex justify-between px-3 border-b border-cyan-500/30">
             <span class="flex items-center gap-2"><i data-lucide="message-square" class="w-3 h-3"></i> SYSTEM_CHAT_LOG</span>
             <span class="text-red-500 animate-pulse">● LIVE_FEED</span>
@@ -426,36 +737,515 @@
 
     <div id="youtube-player" class="hidden"></div>
     
-    <div id="project-modal" class="fixed inset-0 bg-black/95 z-[100] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 backdrop-blur-md">
-        <div id="modal-content" class="w-full max-w-5xl max-h-[90vh] flex flex-col relative shadow-[0_0_50px_rgba(6,182,212,0.3)] transform scale-95 transition-transform border border-cyan-500 clip-corner-lg bg-black/95">
-            <div class="flex justify-between items-center p-4 border-b border-cyan-500/50 bg-cyan-900/20">
-                <h2 id="modal-title" class="font-orbitron text-2xl text-cyan-400 glitch-text" data-text="TITLE">TITLE</h2>
+    <!-- TAG: MODIFIED - A modal ablak telefonra is használható lett (scrollos overflow) -->
+    <div id="project-modal" class="fixed inset-0 bg-black/95 z-[100] flex items-center justify-center p-2 sm:p-4 opacity-0 pointer-events-none transition-opacity duration-300 backdrop-blur-md">
+        <div id="modal-content" class="w-full max-w-5xl max-h-[95vh] sm:max-h-[90vh] flex flex-col relative shadow-[0_0_50px_rgba(6,182,212,0.3)] transform scale-95 transition-transform border border-cyan-500 clip-corner-lg bg-black/95 overflow-hidden">
+            <div class="flex justify-between items-center p-3 sm:p-4 border-b border-cyan-500/50 bg-cyan-900/20 shrink-0">
+                <h2 id="modal-title" class="font-orbitron text-xl sm:text-2xl text-cyan-400 glitch-text" data-text="TITLE">TITLE</h2>
                 <button id="modal-close" class="text-red-500 hover:text-white hover:bg-red-600 rounded p-1 transition-colors border border-red-500"><i data-lucide="x"></i></button>
             </div>
-            <div class="p-6 overflow-y-auto relative grid grid-cols-1 lg:grid-cols-2 gap-8 custom-scrollbar">
+            <div class="p-4 sm:p-6 overflow-y-auto relative flex-1 flex flex-col lg:grid lg:grid-cols-2 gap-4 sm:gap-8 custom-scrollbar">
                  <div class="space-y-4">
                      <div class="relative border border-slate-700 p-1 bg-black">
-                        <img id="modal-main-image" src="" class="w-full h-64 object-cover">
+                        <img id="modal-main-image" src="" class="w-full h-48 sm:h-64 object-cover" onerror="this.onerror=null; this.src='https://placehold.co/600x400/111/333?text=NO+IMAGE';">
                         <div class="absolute bottom-2 right-2"><button id="modal-zoom-btn" class="text-cyan-400 bg-black/80 p-2 border border-cyan-500 hover:bg-cyan-500 hover:text-black"><i data-lucide="maximize"></i></button></div>
                      </div>
-                     <div id="modal-thumbnails" class="flex gap-2 overflow-x-auto pb-2"></div>
+                     <div id="modal-thumbnails" class="flex gap-2 overflow-x-auto pb-2 custom-scrollbar"></div>
                 </div>
                 <div class="font-rajdhani text-slate-300">
-                    <h3 class="text-white font-bold text-xl mb-2 border-b border-slate-800 pb-1"><i data-lucide="file-code" class="inline w-5 h-5 text-purple-400"></i> MISSION_BRIEF</h3>
-                    <p id="modal-description" class="mb-6 leading-relaxed"></p>
-                    <h3 class="text-white font-bold text-xl mb-2 border-b border-slate-800 pb-1"><i data-lucide="cpu" class="inline w-5 h-5 text-pink-500"></i> TECH_ARSENAL</h3>
+                    <h3 class="text-white font-bold text-lg sm:text-xl mb-2 border-b border-slate-800 pb-1"><i data-lucide="file-code" class="inline w-4 h-4 sm:w-5 sm:h-5 text-purple-400"></i> MISSION_BRIEF</h3>
+                    <p id="modal-description" class="mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base"></p>
+                    <h3 class="text-white font-bold text-lg sm:text-xl mb-2 border-b border-slate-800 pb-1"><i data-lucide="cpu" class="inline w-4 h-4 sm:w-5 sm:h-5 text-pink-500"></i> TECH_ARSENAL</h3>
                     <div id="modal-tech-stack" class="flex flex-wrap gap-2 mt-3"></div>
                 </div>
             </div>
         </div>
     </div>
     
-    <div id="lightbox" class="fixed inset-0 bg-black/98 z-[110] hidden items-center justify-center p-4">
-        <img id="lightbox-img" class="max-w-full max-h-full border-2 border-cyan-500 shadow-[0_0_100px_cyan]">
-        <button id="lightbox-close" class="absolute top-8 right-8 text-white p-2 border border-red-500 hover:bg-red-500"><i data-lucide="x"></i></button>
+    <div id="lightbox" class="fixed inset-0 bg-black/98 z-[110] hidden items-center justify-center p-2 sm:p-4">
+        <img id="lightbox-img" class="max-w-full max-h-[90vh] border-2 border-cyan-500 shadow-[0_0_100px_cyan]">
+        <button id="lightbox-close" class="absolute top-4 right-4 sm:top-8 sm:right-8 text-white p-2 border border-red-500 hover:bg-red-500"><i data-lucide="x"></i></button>
     </div>
 
     <script src="https://www.youtube.com/iframe_api"></script>
-    <script src="script.js"></script>
+    
+    <!-- TAG: MODIFIED - JS inlined for single-file operation -->
+    <script>
+        /* === STREAM KONFIGURÁCIÓ === */
+        const STREAM_CONFIG = {
+            channelId: 'UC7-UCwDljiZ44BFhiHXF8-d1zAw', 
+            status: 'OFFLINE' 
+        };
+
+        const projectsData = {
+            project_1: {
+                images: ['IMG/pekka.gif'],
+                tech: [{ title: 'Unity' }, { title: 'C#' }, { title: 'Blender' }]
+            },
+            project_2: {
+                images: ['IMG/mindscape.jpg', 'IMG/Gallery/Mindscape/1.png', 'IMG/Gallery/Mindscape/2.png', 'IMG/Gallery/Mindscape/3.png', 'IMG/Gallery/Mindscape/4.png', 'IMG/Gallery/Mindscape/5.png',],
+                tech: [{ title: 'Unity' }, { title: 'Horror AI' }, { title: 'Lighting' }]
+            },
+            project_3: {
+                images: ['IMG/3d.jpg', 'IMG/Gallery/3d/1.jpg', 'IMG/Gallery/3d/2.jpg', 'IMG/Gallery/3d/3.jpg', 'IMG/Gallery/3d/4.jpg', 'IMG/Gallery/3d/5.jpg', 'IMG/Gallery/3d/6.jpg',],
+                tech: [{ title: 'Blender' }, { title: 'Substance' }]
+            }
+        };
+
+        const BOOT_LOGS = [
+            { text: "WAKING UP THE SYSTEM DAEMON...", delay: 200 },
+            { text: "PURGING INCOGNITO HISTORY... [SECURE]", delay: 400 }, 
+            { text: "COMPILING SPAGHETTI CODE (C#)...", delay: 300 }, 
+            { text: "INJECTING CAFFEINE INTRAVENOUSLY... [100%]", delay: 300 },
+            { text: "LOADING WAIFU TEXTURES... [SKIPPED]", delay: 200 }, 
+            { text: "IGNITING THE SWORD... [TEMP: 1500°C]", delay: 500 },
+            { text: "BYPASSING SOCIAL SKILLS PROTOCOLS...", delay: 400 }, 
+            { text: "ACCESS GRANTED. WELCOME, SAMURAI.", delay: 500 }
+        ];
+
+        window.addEventListener('load', () => {
+            runBootSequence();
+        });
+
+        async function runBootSequence() {
+            const bootScreen = document.getElementById('boot-sequence');
+            const logContainer = document.getElementById('boot-log');
+            const progressBar = document.getElementById('boot-progress');
+            const statusText = document.getElementById('boot-status');
+            const header = document.getElementById('main-header');
+            const mainContent = document.getElementById('main-content');
+
+            if (!bootScreen || !logContainer) {
+                document.body.classList.add('loaded');
+                return;
+            }
+
+            let progress = 0;
+            const totalSteps = BOOT_LOGS.length;
+
+            for (let i = 0; i < BOOT_LOGS.length; i++) {
+                const log = BOOT_LOGS[i];
+                
+                const p = document.createElement('p');
+                p.textContent = `> ${log.text}`;
+                if (i === BOOT_LOGS.length - 1) {
+                    p.classList.add('text-green-500', 'font-bold');
+                    statusText.textContent = "SYSTEM_READY";
+                    statusText.classList.remove('text-red-500', 'animate-pulse');
+                    statusText.classList.add('text-green-500');
+                }
+                
+                logContainer.appendChild(p);
+                logContainer.scrollTop = logContainer.scrollHeight;
+
+                progress = ((i + 1) / totalSteps) * 100;
+                progressBar.style.width = `${progress}%`;
+
+                await new Promise(r => setTimeout(r, log.delay));
+            }
+
+            await new Promise(r => setTimeout(r, 500)); 
+            
+            bootScreen.classList.add('boot-hidden');
+            
+            if (header) {
+                header.classList.remove('opacity-0');
+                header.classList.add('system-online');
+            }
+            if (mainContent) {
+                mainContent.classList.remove('opacity-0');
+                mainContent.classList.add('system-online');
+            }
+
+            setTimeout(() => {
+                typeWriterEffect();
+                bootScreen.style.display = 'none'; 
+            }, 1000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initApp();
+        });
+
+        function initApp() {
+            lucide.createIcons();
+            initCyberBackground();
+            initCursor(); 
+            initFakeChat();
+            initTiltEffect();
+            initMobileMenu();
+            initProjectModals();
+            initContactForm();
+            initScrollDependents();
+            initStreamPlayer(); 
+        }
+
+        function initStreamPlayer() {
+            const offlineScreen = document.getElementById('stream-offline');
+            const onlineScreen = document.getElementById('stream-online');
+            const iframe = document.getElementById('stream-iframe');
+
+            if (!offlineScreen || !onlineScreen || !iframe) return;
+
+            if (STREAM_CONFIG.status === 'ONLINE') {
+                offlineScreen.classList.add('hidden');
+                onlineScreen.classList.remove('hidden');
+                const streamUrl = `https://www.youtube.com/embed/live_stream?channel=${STREAM_CONFIG.channelId}&autoplay=1&mute=1`;
+                iframe.src = streamUrl;
+            } else {
+                offlineScreen.classList.remove('hidden');
+                onlineScreen.classList.add('hidden');
+                iframe.src = ""; 
+            }
+        }
+
+        function initScrollDependents() {
+            const header = document.getElementById('main-header');
+            let lastScrollTop = 0;
+            const delta = 10; 
+            const offset = 50; 
+
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.scrollY;
+
+                if (currentScroll <= offset) {
+                    header.classList.remove('scrolled-down');
+                    lastScrollTop = currentScroll;
+                    return;
+                }
+
+                if (Math.abs(lastScrollTop - currentScroll) <= delta) return;
+
+                if (currentScroll > lastScrollTop && currentScroll > offset) {
+                    header.classList.add('scrolled-down');
+                } 
+                else {
+                    header.classList.remove('scrolled-down');
+                }
+
+                lastScrollTop = currentScroll;
+            }, { passive: true }); 
+        }
+
+        function initCursor() {
+            const cursor = document.getElementById('cursor');
+            const follower = document.getElementById('cursor-follower');
+            
+            if (!cursor || !follower) return;
+
+            let mouseX = window.innerWidth / 2;
+            let mouseY = window.innerHeight / 2;
+            let followerX = window.innerWidth / 2;
+            let followerY = window.innerHeight / 2;
+            
+            document.addEventListener('mousemove', (e) => {
+                if (!document.body.classList.contains('custom-cursor-active')) {
+                    document.body.classList.add('custom-cursor-active');
+                    cursor.style.opacity = '1';
+                    follower.style.opacity = '1';
+                }
+
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                
+                cursor.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%) rotate(45deg)`;
+            });
+
+            document.addEventListener('mousedown', () => {
+                document.body.classList.add('clicking');
+            });
+
+            document.addEventListener('mouseup', () => {
+                document.body.classList.remove('clicking');
+            });
+
+            function animateFollower() {
+                followerX += (mouseX - followerX) * 0.15; 
+                followerY += (mouseY - followerY) * 0.15;
+                
+                follower.style.left = `${followerX}px`;
+                follower.style.top = `${followerY}px`;
+                
+                requestAnimationFrame(animateFollower);
+            }
+            animateFollower();
+
+            const interactiveElements = document.querySelectorAll('a, button, input, textarea, .stat-card, .cyber-card');
+            interactiveElements.forEach(el => {
+                el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+                el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+            });
+        }
+
+        function initFakeChat() {
+            const chatContainer = document.getElementById('chat-messages');
+            if (!chatContainer) return;
+
+            const FAKE_CHAT_CONFIG = {
+            users: [
+                'NoobMaster69', 'AnyadHata', 'RageQuit_Roli', 'KrumpliPC_Warrior', 
+                'xX_Destroyer_Xx', 'LagKing', 'SörhasPista', 'E-Girl_Hunter', 
+                'PixelPunci', 'Csőgörény', 'ToxikAvenger', 'SilentBob', 
+                'StreamSniper01', 'VakondTuro', 'JediVagyokGeci', 'Bela_a_Hentes',
+                'ZokniBáb', 'Hardstuck_Silver', 'ClickBaiter', 'ModokReme'
+            ],
+            msgs: [
+                'EZ CLAP', 'PogChamp', 'Ez beteg volt báttya!', 'OMEGALUL', 'GG WP', 
+                'Mekkora aim te jó ég!', 'Ezt klippeljétek le azonnal!', 'ISTEN VAGY!', 
+                'Na végre valami skill...', 'Hype Hype Hype 🔥', 'Ez a skin honnan van?', 
+                'Taníts mester!', 'MonkaS', 'KekW',
+                'Töröld le a játékot, könyörgöm.', 'Anyád is ezt nézi?', 
+                'Mekkora bot vagy te atyaég...', 'Ez a gameplay rákot okoz.', 
+                'Menjél vissza legózni!', 'Uninstall pls.', 'Milyen kenyérpirítón játszol?', 
+                'Lag vagy csak béna vagy?', 'Kikérem magamnak ezt a teljesítményt.', 
+                'Haver, a monitor be van kapcsolva?', 'Lépj ki, kevesebb a pingünk.',
+                'Szerintem add el a gépet.', 'Ezért kár volt elindítani a streamet.',
+                'Boostolt fiók...',
+                'Milyen egered van?', 'Mikor lesz facecam?', 'Hány FPS-ed van?', 
+                'Ez most ranked?', 'Milyen felbontás ez? 800x600?', 'Zene címe???', 
+                'Szia, bejöhetek játszani?', 'Moderátort keresel?', 'Specifikációt írd már ki lécci.',
+                'F', 'F', 'F', 'KEKW KEKW KEKW',
+                'LAGG', 'Drop?', 'Hol a macska?', 'Igyál vizet!', 'Pisilni kell...', 
+                'Ez a játék halott.', 'Mikor jön a kövi rész?',
+                'Szia Uram! Bojler eladó?', 'Józsi üzeni, hogy vidd le a szemetet.',
+                'Kappa', 'ResidentSleeper', 'Valaki adjon neki egy banánt.'
+            ],
+            colors: [
+                '#06b6d4', '#a855f7', '#ec4899', '#facc15', '#4ade80', 
+                '#ff0000', '#00ff00', '#0000ff', '#ff5733', '#c70039'
+            ]
+        };
+
+            function addMessage() {
+                const user = FAKE_CHAT_CONFIG.users[Math.floor(Math.random() * FAKE_CHAT_CONFIG.users.length)];
+                const msg = FAKE_CHAT_CONFIG.msgs[Math.floor(Math.random() * FAKE_CHAT_CONFIG.msgs.length)];
+                const color = FAKE_CHAT_CONFIG.colors[Math.floor(Math.random() * FAKE_CHAT_CONFIG.colors.length)];
+
+                const div = document.createElement('div');
+                div.className = 'flex gap-2 animate-fade-in mb-2';
+                div.innerHTML = `<span style="color:${color}; font-weight:bold; min-width:80px; font-family:'Share Tech Mono'">[${user}]</span> <span class="text-slate-300 truncate font-rajdhani">${msg}</span>`;
+                
+                chatContainer.appendChild(div);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+
+                if (chatContainer.children.length > 6) {
+                    chatContainer.removeChild(chatContainer.firstChild);
+                }
+                setTimeout(addMessage, Math.random() * 4000 + 1500);
+            }
+            setTimeout(addMessage, 2000);
+        }
+
+        function initTiltEffect() {
+            // TAG: MODIFIED - Mobilon kinyírjuk a tilt effektet mert ugrál tőle az érintés
+            if(window.innerWidth <= 768) return; 
+
+            const cards = document.querySelectorAll('.tilt-card:not(#modal-content)');
+            cards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = ((y - centerY) / centerY) * -5;
+                    const rotateY = ((x - centerX) / centerX) * 5;
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+                });
+            });
+        }
+
+        function initCyberBackground() {
+            const canvas = document.getElementById('interactive-background');
+            if(!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            const particles = [];
+            // TAG: MODIFIED - Kevesebb partikula mobilon az akksi miatt
+            const particleCount = window.innerWidth < 768 ? 10 : 20; 
+            
+            const BG_COLORS = ['#06b6d4', '#a855f7', '#ec4899'];
+
+            class Particle {
+                constructor() { this.reset(); }
+                reset() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.vx = (Math.random() - 0.5) * 0.3;
+                    this.vy = (Math.random() - 0.5) * 0.3;
+                    this.size = Math.random() * 2 + 1;
+                    this.color = BG_COLORS[Math.floor(Math.random() * BG_COLORS.length)];
+                }
+                update() {
+                    this.x += this.vx; this.y += this.vy;
+                    if(this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                    if(this.y < 0 || this.y > canvas.height) this.vy *= -1;
+                }
+                draw() {
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+            
+            for(let i=0; i<particleCount; i++) particles.push(new Particle());
+            
+            function animate() {
+                ctx.clearRect(0,0,canvas.width, canvas.height);
+                for(let i=0; i<particles.length; i++) {
+                    let p = particles[i];
+                    p.update();
+                    p.draw();
+                    for(let j=i; j<particles.length; j++) {
+                        let p2 = particles[j];
+                        let dist = Math.hypot(p.x-p2.x, p.y-p2.y);
+                        if(dist < 100) {
+                            ctx.strokeStyle = p.color;
+                            ctx.globalAlpha = 1 - (dist/100);
+                            ctx.lineWidth = 0.5;
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.stroke();
+                            ctx.globalAlpha = 1;
+                        }
+                    }
+                }
+                requestAnimationFrame(animate);
+            }
+            animate();
+            window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+        }
+
+        function typeWriterEffect() {
+            const el = document.querySelector('.typing-effect');
+            if(!el) return;
+            const text = el.textContent;
+            el.textContent = '';
+            let i = 0;
+            const interval = setInterval(() => {
+                el.textContent += text.charAt(i);
+                i++;
+                if(i >= text.length) clearInterval(interval);
+            }, 50);
+        }
+
+        function initMobileMenu() {
+            const btn = document.getElementById('menu-toggle');
+            const menu = document.getElementById('mobile-menu');
+
+            if(btn && menu) {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation(); 
+                    menu.classList.toggle('scale-y-0');
+                });
+
+                menu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        menu.classList.add('scale-y-0');
+                    });
+                });
+            }
+        }
+
+        function initContactForm() {
+            const form = document.getElementById('contact-form');
+            const status = document.getElementById('form-status');
+            if(!form) return;
+            
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                status.textContent = '> ENCRYPTING PACKET... SENDING...';
+                status.style.color = '#facc15';
+                setTimeout(() => {
+                    status.textContent = '> DATA UPLOADED. STAND BY.';
+                    status.style.color = '#4ade80';
+                    form.reset();
+                }, 2000);
+            });
+        }
+
+        function initProjectModals() {
+            const modal = document.getElementById('project-modal');
+            const closeBtn = document.getElementById('modal-close');
+            const triggers = document.querySelectorAll('[data-gallery-btn]');
+            const mTitle = document.getElementById('modal-title');
+            const mDesc = document.getElementById('modal-description');
+            const mImg = document.getElementById('modal-main-image');
+            const mTech = document.getElementById('modal-tech-stack');
+            const mThumbs = document.getElementById('modal-thumbnails');
+            
+            if(!modal) return;
+
+            function openModal(index) {
+                const data = projectsData[`project_${index}`];
+                if(!data) return;
+                mTitle.textContent = `PROJECT_FILE_0${index}`; 
+                mDesc.textContent = "CLASSIFIED PROJECT DATA DECRYPTED... ACCESSING VISUALS...";
+                mImg.src = data.images[0] || 'https://placehold.co/600x400/111/333?text=NO+IMAGE';
+                mTech.innerHTML = data.tech.map(t => `<span class="bg-slate-900 border border-cyan-500 px-2 py-1 text-xs text-cyan-400 font-mono tracking-widest">[${t.title.toUpperCase()}]</span>`).join('');
+                
+                // Képek betöltése placeholder eséllyel ha nincs meg
+                mThumbs.innerHTML = data.images.map(img => {
+                    return `<img src="${img}" onerror="this.onerror=null; this.src='https://placehold.co/100x100/111/333?text=N/A';" class="w-16 h-12 sm:w-24 sm:h-16 shrink-0 object-cover border border-slate-700 hover:border-cyan-400 cursor-pointer transition-colors" onclick="document.getElementById('modal-main-image').src='${img}'">`;
+                }).join('');
+                
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                const modalContent = modal.querySelector('#modal-content');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+                modalContent.style.transform = "none";
+            }
+
+            triggers.forEach((btn, idx) => { btn.addEventListener('click', (e) => { e.preventDefault(); openModal(idx + 1); }); });
+            
+            closeBtn.addEventListener('click', () => { 
+                modal.classList.add('opacity-0', 'pointer-events-none'); 
+                const modalContent = modal.querySelector('#modal-content');
+                modalContent.classList.add('scale-95'); 
+                modalContent.classList.remove('scale-100'); 
+            });
+            
+            const zoomBtn = document.getElementById('modal-zoom-btn');
+            const lightbox = document.getElementById('lightbox');
+            const lbImg = document.getElementById('lightbox-img');
+            const lbClose = document.getElementById('lightbox-close');
+            if(zoomBtn && lightbox) {
+                zoomBtn.addEventListener('click', () => { lbImg.src = mImg.src; lightbox.classList.remove('hidden'); lightbox.classList.add('flex'); });
+                lbClose.addEventListener('click', () => { lightbox.classList.add('hidden'); lightbox.classList.remove('flex'); });
+            }
+        }
+        
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault(); 
+            
+            const cursor = document.getElementById('cursor');
+            const follower = document.getElementById('cursor-follower');
+            
+            if(cursor && follower) {
+                const originalColor = cursor.style.backgroundColor;
+                cursor.style.backgroundColor = '#ef4444'; 
+                cursor.style.boxShadow = '0 0 20px #ef4444';
+                follower.style.borderColor = '#ef4444';
+                
+                setTimeout(() => {
+                    cursor.style.backgroundColor = ''; 
+                    cursor.style.boxShadow = '';
+                    follower.style.borderColor = '';
+                }, 300);
+            }
+            
+            return false;
+        });
+    </script>
 </body>
 </html>
+
