@@ -1,461 +1,327 @@
 <!DOCTYPE html>
-<html class="dark" lang="hu" style="scroll-behavior: smooth;">
-
+<html lang="hu">
 <head>
     <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>GS | GRILLEDSWORD</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Karbantartás Alatt</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com" rel="preconnect" />
-    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="style.css">
-</head>
 
-<!-- TAG: MODIFIED - Kivettem a 'cursor-none' class-t, hogy ne legyen vakrepülés, ha a JS késik -->
-<body class="antialiased overflow-x-hidden">
+    <style>
+        :root {
+            --font-display: 'Orbitron', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
 
-    <div id="cursor"></div>
-    <div id="cursor-follower"></div>
-    <div class="crt-overlay"></div>
-    <div class="vignette"></div>
-    <div class="cyber-grid-bg"></div>
-    <canvas id="interactive-background"></canvas>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #030712; /* Tailwind gray-950 */
+            color: #f3f4f6;
+            font-family: var(--font-body);
+            overflow: hidden; /* Nincs görgetés ezen az oldalon */
+            cursor: none; /* Egyedi kurzor miatt elrejtjük az alapértelmezettet */
+        }
 
-<div id="boot-sequence" class="fixed inset-0 bg-black z-[9999] flex flex-col items-center justify-center overflow-hidden cursor-none">
-    <div class="crt-overlay pointer-events-none absolute inset-0 z-50"></div>
-    <div class="scanline pointer-events-none absolute inset-0 z-40"></div>
-    
-    <div class="w-full max-w-4xl p-8 relative z-30 font-share text-cyan-500 text-sm md:text-base leading-tight">
-        <div id="boot-log" class="mb-4 h-64 overflow-hidden flex flex-col justify-end border-l-2 border-cyan-500/30 pl-4 opacity-80">
-            </div>
+        .font-display {
+            font-family: var(--font-display);
+        }
+
+        /* Egyedi kurzor */
+        #custom-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(6, 182, 212, 0.8);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 9999;
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+            mix-blend-mode: difference;
+        }
+
+        #custom-cursor-dot {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 4px;
+            background-color: #06b6d4;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 10000;
+        }
+
+        body.hovering #custom-cursor {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(6, 182, 212, 0.1);
+        }
+
+        /* Háttér finom rács */
+        .bg-grid {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: 1;
+            pointer-events: none;
+            mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+        }
+
+        @media (pointer: coarse), (hover: none) {
+            body, html {
+                cursor: auto;
+            }
+            #custom-cursor, #custom-cursor-dot {
+                display: none;
+            }
+        }
+
+        /* Animált progress bar */
+        @keyframes progress-slide {
+            0% { width: 10%; transform: translateX(0); }
+            50% { width: 50%; transform: translateX(50%); }
+            100% { width: 10%; transform: translateX(900%); }
+        }
+
+        .animate-progress {
+            animation: progress-slide 3s ease-in-out infinite alternate;
+        }
+
+        /* Glassmorphism panel megjelenési animáció */
+        @keyframes fade-up {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         
-        <div class="border-t border-cyan-500/50 pt-4 flex items-center justify-between">
-            <div class="flex flex-col w-3/4">
-                <span class="text-xs text-slate-500 mb-1">SYSTEM_INTEGRITY_CHECK</span>
-                <div class="h-2 bg-slate-900 w-full relative overflow-hidden">
-                    <div id="boot-progress" class="absolute top-0 left-0 h-full bg-cyan-500 shadow-[0_0_10px_cyan] transition-all duration-100" style="width: 0%"></div>
+        .glass-panel {
+            animation: fade-up 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-cyan-500 selection:text-white">
+
+    <!-- Egyedi Kurzor -->
+    <div id="custom-cursor"></div>
+    <div id="custom-cursor-dot"></div>
+
+    <!-- Interaktív Canvas Háttér -->
+    <canvas id="bg-canvas" class="absolute inset-0 z-0"></canvas>
+    <div class="bg-grid"></div>
+
+    <!-- Fő tartalom -->
+    <main class="relative z-10 w-full h-full flex items-center justify-center p-4">
+        
+        <!-- Üveghatású (Glassmorphism) kártya -->
+        <div class="glass-panel w-full max-w-2xl p-6 sm:p-8 md:p-12 bg-gray-900/40 backdrop-blur-xl border border-gray-700/50 rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col items-center text-center relative overflow-hidden group mx-4 sm:mx-auto">
+            
+            <!-- Finom belső fény effektus -->
+            <div class="absolute -top-32 -left-32 w-64 h-64 bg-cyan-500/20 rounded-full blur-[80px] pointer-events-none group-hover:bg-cyan-500/30 transition-colors duration-700"></div>
+            <div class="absolute -bottom-32 -right-32 w-64 h-64 bg-purple-500/20 rounded-full blur-[80px] pointer-events-none group-hover:bg-purple-500/30 transition-colors duration-700"></div>
+
+            <!-- Ikon / Logó rész -->
+            <div class="relative mb-6 sm:mb-8">
+                <!-- Ragyogás az ikon mögött -->
+                <div class="absolute inset-0 bg-cyan-500 blur-2xl opacity-30 rounded-full animate-pulse"></div>
+                <div class="relative w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center bg-gray-800/50 border border-gray-600/50 rounded-2xl backdrop-blur-sm shadow-inner">
+                    <!-- Forgó fogaskerék ikon -->
+                    <i data-lucide="settings" class="w-10 h-10 sm:w-12 sm:h-12 text-cyan-400 animate-[spin_8s_linear_infinite]"></i>
                 </div>
             </div>
-            <div class="font-orbitron font-bold text-xl animate-pulse text-red-500" id="boot-status">INITIALIZING</div>
+
+            <!-- Szöveges tartalom -->
+            <h1 class="font-display text-2xl sm:text-3xl md:text-5xl font-black mb-3 sm:mb-4 tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 uppercase px-2">
+                Rendszer Frissítés
+            </h1>
+            
+            <p class="text-gray-400 text-base sm:text-lg md:text-xl font-light max-w-lg mb-8 sm:mb-10 leading-relaxed px-2">
+                Jelenleg karbantartást végzek az oldalon, hogy hamarosan még jobb formában térhessen vissza. Kérlek, nézz vissza egy kicsit később!
+            </p>
+
+            <!-- Státusz / Töltőcsík -->
+            <div class="w-full max-w-md mb-8 sm:mb-10 px-4 sm:px-0">
+                <div class="flex justify-between text-xs text-gray-500 mb-2 font-mono uppercase tracking-widest">
+                    <span>Státusz</span>
+                    <span class="text-cyan-400 animate-pulse">Folyamatban...</span>
+                </div>
+                <div class="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden relative">
+                    <div class="absolute top-0 left-0 h-full bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full animate-progress"></div>
+                </div>
+            </div>
+
+            <!-- Gomb (pl. Kapcsolat vagy Vissza) -->
+            <a href="mailto:hello@example.com" class="interactive-el relative inline-flex items-center justify-center gap-2 px-6 py-2.5 sm:px-8 sm:py-3 bg-gray-800/80 hover:bg-gray-700/80 border border-gray-600 rounded-full text-white font-medium transition-all duration-300 hover:shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:-translate-y-1 text-sm sm:text-base mb-2">
+                <i data-lucide="mail" class="w-4 h-4 text-cyan-400"></i>
+                <span>Kapcsolatfelvétel</span>
+            </a>
+
         </div>
-    </div>
+    </main>
 
-    <div class="absolute bottom-4 right-4 text-xs text-slate-600 font-mono">
-        BIOS_VER: 2077.5.1 // GRILLED_KERNEL
-    </div>
-</div>
+    <script>
+        // Inicializáljuk az ikonokat
+        lucide.createIcons();
 
-<header class="fixed top-0 left-0 right-0 z-50 p-2 md:p-4 transition-all duration-300 opacity-0" id="main-header">
-    <div class="cyber-border container mx-auto max-w-[1600px] bg-slate-900/95 backdrop-blur-sm relative rounded-lg clip-header mt-2">
-            
-        <div class="corner-bracket top-left"></div>
-        <div class="corner-bracket top-right"></div>
-        <div class="corner-bracket bottom-left"></div>
-        <div class="corner-bracket bottom-right"></div>
+        // 1. Egyedi kurzor logika
+        const cursor = document.getElementById('custom-cursor');
+        const cursorDot = document.getElementById('custom-cursor-dot');
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let cursorX = window.innerWidth / 2;
+        let cursorY = window.innerHeight / 2;
 
-        <div class="px-6 py-3 flex items-center justify-between h-full header-content">
-            
-            <div class="flex items-center gap-4">
-                <div class="logo-box glitch-hover">
-                    <span class="font-orbitron font-black text-2xl text-cyan-400 drop-shadow-[0_0_10px_rgba(6,182,212,0.8)]">GS</span>
-                </div>
-                <div class="hidden md:block">
-                    <h1 class="font-rajdhani font-bold text-xl text-white leading-none tracking-widest">GRILLEDSWORD</h1>
-                    <span class="text-xs text-pink-500 tracking-[0.3em] font-share">OFFICIAL</span>
-                </div>
-            </div>
+        const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
 
-            <div class="hidden lg:flex items-center gap-6 absolute left-1/2 transform -translate-x-1/2">
-                <div class="status-badge flex items-center gap-2 border border-slate-700 bg-black/60 px-4 py-1 clip-badge">
-                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> 
-                    <span class="text-xs font-bold text-green-500 font-orbitron tracking-widest">SYSTEM_ONLINE</span>
-                </div>
-            </div>
-
-            <div class="flex items-center gap-4">
-                <nav class="hidden md:flex gap-6 font-share font-bold text-lg tracking-wide">
-                    <a href="#profile" class="nav-item hover:text-cyan-400 transition-colors" data-hover-text="PROFILE">PROFILE</a>
-                    <a href="#gear" class="nav-item hover:text-purple-400 transition-colors" data-hover-text="GEAR">GEAR</a>
-                    <a href="#projects" class="nav-item hover:text-pink-500 transition-colors" data-hover-text="PROJECTS">PROJECTS</a>
-                    <a href="#social-hub" class="nav-item hover:text-red-500 transition-colors" data-hover-text="SOCIAL">SOCIAL</a>
-                    <a href="#contact" class="nav-item hover:text-yellow-400 transition-colors" data-hover-text="CONTACT">CONTACT</a>
-                </nav>
+        if (!isTouchDevice) {
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
                 
-                <button id="music-toggle" class="cyber-btn-icon text-cyan-400 hover:text-white transition-colors" aria-label="Toggle Music">
-                    <i data-lucide="music"></i>
-                </button>
+                // A kis pont azonnal követi az egeret
+                cursorDot.style.left = `${mouseX}px`;
+                cursorDot.style.top = `${mouseY}px`;
+            });
+
+            // A nagy kör finoman, késleltetve követi (lerp)
+            function animateCursor() {
+                cursorX += (mouseX - cursorX) * 0.2;
+                cursorY += (mouseY - cursorY) * 0.2;
                 
-                <button class="md:hidden cyber-btn-icon text-cyan-400" id="menu-toggle">
-                    <i data-lucide="menu"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="mobile-menu" class="absolute top-full left-0 w-full bg-slate-900/95 backdrop-blur-xl border-b-2 border-cyan-500 transform scale-y-0 origin-top transition-transform duration-300 md:hidden z-40">
-            <nav class="flex flex-col p-6 gap-4 font-orbitron text-center">
-            <a href="#profile" class="text-white hover:text-cyan-400 py-2 border-b border-slate-800">PROFILE</a>
-            <a href="#gear" class="text-white hover:text-purple-400 py-2 border-b border-slate-800">GEAR</a>
-            <a href="#projects" class="text-white hover:text-pink-500 py-2 border-b border-slate-800">PROJECTS</a>
-            <a href="#social-hub" class="text-white hover:text-red-500 py-2 border-b border-slate-800">SOCIAL</a>
-            <a href="#contact" class="text-white hover:text-yellow-400 py-2">CONTACT</a>
-            </nav>
-    </div>
-</header>
-
-<main class="container mx-auto px-4 relative z-10 opacity-0" id="main-content">
-    <section class="min-h-[85vh] grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-32 lg:pt-40 mb-24 relative" id="home">
-            <div class="absolute -left-20 top-20 font-orbitron text-[8rem] lg:text-[12rem] text-white opacity-[0.02] -rotate-90 pointer-events-none select-none">GRILLEDSWORD</div>
-            
-            <div class="lg:col-span-7 flex flex-col justify-start order-2 lg:order-1 relative z-10">
-                <div class="inline-flex items-center gap-2 mb-6 text-cyan-400 font-share text-sm border-l-2 border-cyan-500 pl-3 bg-gradient-to-r from-cyan-500/10 to-transparent py-1 w-fit">
-                    <i data-lucide="terminal" class="w-4 h-4"></i>
-                    <span class="typing-effect">LOGIN: GRILLEDSWORDOFFICIAL</span>
-                </div>
-                <h1 class="font-orbitron font-black text-5xl sm:text-7xl lg:text-8xl text-white mb-4 leading-none tracking-tighter layer-glitch" data-text="GRILLED SWORD">
-                    KISS <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 drop-shadow-[0_0_10px_rgba(168,85,247,0.5)]">NORBERT</span>
-                </h1>
-                <h2 class="font-rajdhani font-bold text-2xl sm:text-3xl text-slate-300 mb-8 flex flex-wrap items-center gap-2">
-                    <span class="text-purple-400 text-4xl">&lt;</span> 
-                    <span class="glitch-text hover:text-cyan-400 transition-colors" data-text="Game Dev">Game Dev</span> <span class="text-slate-600">/</span> 
-                    <span class="glitch-text hover:text-purple-400 transition-colors" data-text="Streamer">Streamer</span> <span class="text-slate-600">/</span> 
-                    <span class="glitch-text hover:text-pink-500 transition-colors" data-text="Tech Artist">Tech Artist</span> 
-                    <span class="text-purple-400 text-4xl">/&gt;</span>
-                </h2>
-                <p class="text-slate-400 text-lg max-w-2xl mb-10 leading-relaxed font-rajdhani border-l-4 border-purple-500 pl-6 bg-slate-900/50 py-4 cyber-clip-box">
-    Üdv a bázison, Choom! Az építőiparból jöttem, de a kódolásban találtam meg a végzetem. Itt találod a játékokat, amiket építek, és a tartalmat, amit gyártok.
-    
-    <span class="text-yellow-400 font-bold font-share block mt-2 tracking-wider">
-        Wake up to reality!
-    </span>
-</p>
-                <div class="flex flex-wrap gap-4">
-                    <a href="#projects" class="cyber-btn primary group">
-                        <span class="btn-content group-hover:text-black">ACCESS PROJECTS</span>
-                        <div class="glitch-effect"></div>
-                    </a>
-                    <a href="https://twitch.tv/grilledswordofficial" target="_blank" class="cyber-btn secondary">
-                        <span class="btn-content flex items-center gap-2"><i data-lucide="twitch" class="w-4 h-4"></i> JACK IN (LIVE)</span>
-                    </a>
-                </div>
-            </div>
-
-            <div class="lg:col-span-5 relative order-1 lg:order-2 flex justify-center mt-10 lg:mt-0">
-                <div class="avatar-container relative group w-full max-w-md">
-                    <div class="absolute inset-0 bg-gradient-to-t from-cyan-500/30 to-transparent opacity-60 hologram-scan"></div>
-                    <div class="cyber-frame p-1 bg-black clip-path-polygon relative z-10 border border-slate-700 group-hover:border-cyan-500 transition-colors duration-300">
-                        <img src="IMG/profile.png" alt="Profile" class="w-full h-auto object-cover grayscale contrast-125 brightness-90 group-hover:grayscale-0 transition-all duration-500 sepia-[.3]">
-                        <div class="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-cyan-500"></div>
-                        <div class="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-pink-500"></div>
-                        
-                        <div class="absolute top-4 right-4 bg-red-600 text-white text-xs font-bold px-3 py-1 font-share tracking-widest shadow-[0_0_15px_red] animate-pulse">
-                            TARGET FOUND [●]
-                        </div>
-                        <div class="absolute bottom-4 left-4 text-cyan-400 font-mono text-xs typing-loop">
-                            SCANNING_TARGET...
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="profile" class="mb-32 relative pt-10">
-             <div class="absolute right-0 top-0 font-orbitron text-8xl text-white opacity-[0.03] pointer-events-none select-none">STATS</div>
-            <div class="section-header mb-12 flex items-end gap-4 border-b border-slate-800 pb-4 relative">
-                <div class="absolute bottom-0 left-0 w-1/3 h-[2px] bg-cyan-500 shadow-[0_0_15px_#06b6d4]"></div>
-                <h2 class="font-orbitron text-4xl text-white glitch-text-big" data-text="PLAYER_STATS">PLAYER_STATS</h2>
-                <span class="font-share text-black bg-cyan-500 text-sm mb-2 px-2 font-bold transform -skew-x-12">ID: GS-OFFICIAL</span>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- CODING -->
-                <div class="stat-card tilt-card group bg-black/40 p-6 border border-slate-700 hover:border-cyan-500 transition-colors clip-corner-sm relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-8 h-8 border-t border-r border-cyan-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 class="font-rajdhani font-bold text-xl text-white group-hover:text-cyan-400 transition-colors">CODING (C#)</h3>
-                        <span class="text-cyan-400 font-share">LVL 85</span>
-                    </div>
-                    <div class="stat-bar-bg"><div class="stat-bar-fill cyan" style="width: 85%;"></div></div>
-                </div>
-                <!-- CREATIVITY -->
-                 <div class="stat-card tilt-card group bg-black/40 p-6 border border-slate-700 hover:border-purple-500 transition-colors clip-corner-sm relative">
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 class="font-rajdhani font-bold text-xl text-white group-hover:text-purple-400 transition-colors">CREATIVITY</h3>
-                        <span class="text-purple-400 font-share">LVL 99</span>
-                    </div>
-                <!-- UNITY ENGINE -->
-                    <div class="stat-bar-bg"><div class="stat-bar-fill purple" style="width: 99%;"></div></div>
-                </div>
-                 <div class="stat-card tilt-card group bg-black/40 p-6 border border-slate-700 hover:border-pink-500 transition-colors clip-corner-sm relative">
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 class="font-rajdhani font-bold text-xl text-white group-hover:text-pink-500 transition-colors">GAMING</h3>
-                        <span class="text-pink-500 font-share">LVL 80</span>
-                    </div>
-                <!-- CAFFEINE -->
-                    <div class="stat-bar-bg"><div class="stat-bar-fill pink" style="width: 80%;"></div></div>
-                </div>
-                 <div class="stat-card tilt-card group bg-black/40 p-6 border border-slate-700 hover:border-yellow-400 transition-colors clip-corner-sm relative">
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 class="font-rajdhani font-bold text-xl text-white group-hover:text-yellow-400 transition-colors">CAFFEINE</h3>
-                        <span class="text-yellow-400 font-share animate-pulse">OVERLOAD</span>
-                    </div>
-                    <div class="stat-bar-bg"><div class="stat-bar-fill yellow stripes" style="width: 100%;"></div></div>
-                </div>
-            </div>
-            
-            <div class="mt-8 p-6 bg-slate-900/40 border-l-4 border-cyan-500 relative overflow-hidden group cyber-box backdrop-blur-sm">
-                <h3 class="font-orbitron text-lg text-slate-400 mb-4 flex items-center gap-2"><i data-lucide="cpu" class="text-cyan-500"></i> EQUIPPED_SKILLS:</h3>
-                <div class="flex flex-wrap gap-8 justify-center md:justify-start">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unity/unity-original.svg" class="w-12 h-12 grayscale hover:grayscale-0 duration-300" title="Unity">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg" class="w-12 h-12 grayscale hover:grayscale-0 duration-300" title="C#">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg" class="w-12 h-12 grayscale hover:grayscale-0 duration-300" title="Blender">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/visualstudio/visualstudio-plain.svg" class="w-12 h-12 grayscale hover:grayscale-0 duration-300" title="VS">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/photoshop/photoshop-plain.svg" class="w-12 h-12 grayscale hover:grayscale-0 duration-300" title="Photoshop">
-                </div>
-            </div>
-        </section>
-
-        <section id="gear" class="mb-32">
-            <div class="section-header mb-12 text-right border-b border-slate-800 pb-4 relative">
-                 <div class="absolute bottom-0 right-0 w-1/3 h-[2px] bg-purple-500 shadow-[0_0_15px_#a855f7]"></div>
-                <h2 class="font-orbitron text-4xl text-white glitch-text-big" data-text="BATTLE_STATION">BATTLE_STATION</h2>
-                <span class="font-share text-purple-500 text-sm mb-2 tracking-widest">[ HARDWARE_CONFIG_V2.0 ]</span>
-            </div>
-            
-            <div class="bg-black/60 border border-slate-800 p-8 relative overflow-hidden group clip-corner-lg">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-12 font-rajdhani text-lg relative z-10">
-                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="monitor" class="text-cyan-400"></i><div class="flex flex-col"><span class="text-slate-500 text-xs font-share">MAIN_DISPLAY</span><span class="text-white font-bold text-xl">Samsung M7 32"</span></div></div></div>
-                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="layers" class="text-cyan-400"></i><div class="flex flex-col"><span class="text-slate-500 text-xs font-share">SEC_DISPLAYS</span><span class="text-white font-bold text-xl">2x Eizo FlexScan EV2456</span></div></div></div>
-                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="cpu" class="text-purple-400"></i><div class="flex flex-col"><span class="text-slate-500 text-xs font-share">CPU_UNIT</span><span class="text-white font-bold text-xl">Ryzen 7 9800X3D</span></div></div></div>
-                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="zap" class="text-yellow-400"></i><div class="flex flex-col"><span class="text-slate-500 text-xs font-share">GPU_ENGINE</span><span class="text-white font-bold text-xl">RTX 5060 Ti</span></div></div></div>
-                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="hard-drive" class="text-pink-500"></i><div class="flex flex-col"><span class="text-slate-500 text-xs font-share">MEMORY_BANK</span><span class="text-white font-bold text-xl">64GB RAM</span></div></div></div>
-                    <div class="gear-item"><div class="flex items-center gap-4 border-b border-slate-800 pb-2"><i data-lucide="keyboard" class="text-green-400"></i><div class="flex flex-col"><span class="text-slate-500 text-xs font-share">PERIPHERALS</span><span class="text-white font-bold text-xl">Asus TUF Gaming Combo</span></div></div></div>
-                </div>
-            </div>
-        </section>
-
-        <section id="projects" class="mb-32">
-            <div class="flex items-center justify-between mb-12 border-b border-slate-800 pb-4">
-                <h2 class="font-orbitron text-4xl text-white glitch-text-big" data-text="QUEST_LOG">QUEST_LOG</h2>
-                <div class="flex gap-2">
-                    <div class="w-3 h-3 bg-cyan-500 animate-pulse"></div><div class="w-3 h-3 bg-purple-500 animate-pulse delay-75"></div><div class="w-3 h-3 bg-pink-500 animate-pulse delay-150"></div>
-                </div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="cyber-card group" data-gallery-btn>
-                    <div class="card-image-wrapper">
-                        <img src="IMG/pekka.gif" alt="Pekka Kana 3D" class="card-img">
-                        <div class="card-overlay"><i data-lucide="crosshair" class="text-cyan-400 w-12 h-12"></i></div>
-                    </div>
-                    <div class="card-content">
-                        <h3 class="font-orbitron text-xl text-white mb-2 group-hover:text-cyan-400 transition-colors">PEKKA KANA 3D</h3>
-                        <div class="flex gap-2 mb-4"><span class="badge unity">UNITY</span><span class="badge code">C#</span></div>
-                        <p class="font-rajdhani text-slate-400 text-sm leading-relaxed">A klasszikus újragondolása. Modern fizika, retro hangulat.</p>
-                    </div>
-                    <div class="card-footer">
-                        <span class="text-xs text-cyan-500 font-share blink">STATUS: BETA</span>
-                        <button class="cyber-btn-mini text-cyan-400 border border-cyan-500/50 hover:bg-cyan-500 hover:text-black transition-all">OPEN</button>
-                    </div>
-                </div>
-                <div class="cyber-card group" data-gallery-btn>
-                    <div class="card-image-wrapper">
-                        <img src="IMG/mindscape.jpg" alt="Mindscape" class="card-img">
-                         <div class="card-overlay"><i data-lucide="skull" class="text-purple-400 w-12 h-12"></i></div>
-                    </div>
-                    <div class="card-content">
-                        <h3 class="font-orbitron text-xl text-white mb-2 group-hover:text-purple-400 transition-colors">MINDSCAPE</h3>
-                        <div class="flex gap-2 mb-4"><span class="badge unity">UNITY</span><span class="badge horror">HORROR</span></div>
-                        <p class="font-rajdhani text-slate-400 text-sm leading-relaxed">Interaktív anomália vadászat.</p>
-                    </div>
-                    <div class="card-footer"><span class="text-xs text-purple-500 font-share">STATUS: RELEASED</span><button class="cyber-btn-mini text-purple-400 border border-purple-500/50 hover:bg-purple-500 hover:text-black transition-all">OPEN</button></div>
-                </div>
-                 <div class="cyber-card group" data-gallery-btn>
-                    <div class="card-image-wrapper">
-                        <img src="IMG/3d.jpg" alt="3D Gallery" class="card-img">
-                         <div class="card-overlay"><i data-lucide="box" class="text-pink-500 w-12 h-12"></i></div>
-                    </div>
-                    <div class="card-content">
-                        <h3 class="font-orbitron text-xl text-white mb-2 group-hover:text-pink-500 transition-colors">3D ARTWORKS</h3>
-                        <div class="flex gap-2 mb-4"><span class="badge blender">BLENDER</span><span class="badge art">ART</span></div>
-                        <p class="font-rajdhani text-slate-400 text-sm leading-relaxed">High-poly modellek, környezetek.</p>
-                    </div>
-                    <div class="card-footer"><span class="text-xs text-pink-500 font-share">STATUS: ONGOING</span><button class="cyber-btn-mini text-pink-500 border border-pink-500/50 hover:bg-pink-500 hover:text-black transition-all">OPEN</button></div>
-                </div>
-            </div>
-        </section>
-
-<section id="social-hub" class="mb-32">
-            <div class="flex items-center justify-between mb-12 border-b border-slate-800 pb-4">
-                <h2 class="font-orbitron text-4xl text-white glitch-text-big" data-text="SOCIAL_HUB">SOCIAL_HUB</h2>
-                <span class="font-share text-cyan-500">LIVE_FEED_AGGREGATE</span>
-            </div>
-
-            <div class="cyber-border-box mb-12 p-1 border border-cyan-500/30 bg-black/60 clip-corner-lg relative group">
-                <div class="absolute top-0 left-0 bg-red-600 text-white px-4 py-1 font-bold text-xs z-10 font-share animate-pulse">LIVE SIGNAL CHECK</div>
+                cursor.style.left = `${cursorX}px`;
+                cursor.style.top = `${cursorY}px`;
                 
-                <div class="aspect-video w-full relative">
+                requestAnimationFrame(animateCursor);
+            }
+            animateCursor();
+        }
+
+        // Hover effektus interaktív elemeken
+        const interactiveElements = document.querySelectorAll('a, button, .interactive-el');
+        if (!isTouchDevice) {
+            interactiveElements.forEach(el => {
+                el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+                el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+            });
+        }
+
+        // 2. Interaktív Canvas Háttér (Hálózat/Részecskék)
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let particles = [];
+        
+        // Konfiguráció
+        const config = {
+            particleCount: window.innerWidth < 768 ? 40 : 80,
+            particleColor: 'rgba(6, 182, 212, 0.5)', // Cyan
+            lineColor: 'rgba(168, 85, 247, 0.2)',    // Purple
+            maxDistance: 150,
+            speed: 0.5
+        };
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * config.speed;
+                this.vy = (Math.random() - 0.5) * config.speed;
+                this.radius = Math.random() * 2 + 0.5;
+            }
+
+            update() {
+                // Egér interakció: finoman elmozdulnak az egér elől, de csak asztalin
+                if (!isTouchDevice) {
+                    const dx = mouseX - this.x;
+                    const dy = mouseY - this.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
                     
-                    <div id="stream-offline" class="offline-placeholder">
-                        <div class="offline-icon"><i data-lucide="wifi-off"></i></div>
-                        <h3 class="offline-text glitch-text" data-text="STREAM_OFFLINE">STREAM_OFFLINE</h3>
-                        <p class="offline-sub">AWAITING_SIGNAL...</p>
-                        <div class="absolute inset-0 pointer-events-none bg-[url('https://media.giphy.com/media/3o7qE1YN7aQfVUTTLy/giphy.gif')] opacity-5 mix-blend-screen"></div>
-                    </div>
+                    if (distance < 100) {
+                        this.x -= dx * 0.01;
+                        this.y -= dy * 0.01;
+                    }
+                }
 
-                    <div id="stream-online" class="hidden absolute inset-0 w-full h-full">
-                        <iframe id="stream-iframe" class="w-full h-full" 
-                            src="" 
-                            title="GrilledSword Live Stream" 
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                            allowfullscreen>
-                        </iframe>
-                    </div>
+                // Mozgás
+                this.x += this.vx;
+                this.y += this.vy;
 
-                </div>
-            </div>
+                // Képernyő szélének visszapattanás
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <a href="https://www.tiktok.com/@grilledswordofficial" target="_blank" class="social-card group border border-slate-800 hover:border-pink-500 bg-black/50 p-4 transition-all hover:-translate-y-2 relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-pink-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="p-2 bg-black rounded border border-slate-700"><svg class="w-6 h-6 text-pink-500" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></div>
-                        <div><h4 class="font-bold text-white">TIKTOK</h4><p class="text-xs text-pink-400 font-mono">STREAMER</p></div>
-                    </div>
-                    <div class="h-40 bg-slate-900/50 rounded overflow-hidden border border-slate-700 group-hover:border-pink-500 relative">
-                        <img src="IMG/tiktok_post.jpg" alt="Latest TikTok" class="w-full h-full object-cover"> 
-                        <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-white font-bold">WATCH NOW</span></div>
-                    </div>
-                </a>
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = config.particleColor;
+                ctx.fill();
+            }
+        }
 
-                <a href="https://www.twitch.tv/grilledswordofficial" target="_blank" class="social-card group border border-slate-800 hover:border-purple-500 bg-black/50 p-4 transition-all hover:-translate-y-2 relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="p-2 bg-black rounded border border-slate-700"><i data-lucide="twitch" class="w-6 h-6 text-purple-500"></i></div>
-                        <div><h4 class="font-bold text-white">TWITCH</h4><p class="text-xs text-purple-400 font-mono">STREAMER</p></div>
-                    </div>
-                    <div class="h-40 bg-slate-900/50 rounded overflow-hidden border border-slate-700 group-hover:border-purple-500 relative">
-                        <img src="IMG/twitch_post.png" alt="Twitch Live" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-white font-bold">WATCH NOW</span></div>
-                    </div>
-                </a>
+        // Részecskék létrehozása
+        for (let i = 0; i < config.particleCount; i++) {
+            particles.push(new Particle());
+        }
 
-                <a href="https://www.instagram.com/grilledswordofficial" target="_blank" class="social-card group border border-slate-800 hover:border-yellow-500 bg-black/50 p-4 transition-all hover:-translate-y-2 relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-yellow-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="p-2 bg-black rounded border border-slate-700"><i data-lucide="instagram" class="w-6 h-6 text-yellow-500"></i></div>
-                        <div><h4 class="font-bold text-white">INSTAGRAM</h4><p class="text-xs text-yellow-400 font-mono">GALLERY</p></div>
-                    </div>
-                    <div class="h-40 bg-slate-900/50 rounded overflow-hidden border border-slate-700 group-hover:border-yellow-500 relative">
-                        <img src="IMG/insta_post.jpg" alt="Latest Instagram" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-white font-bold">WATCH NOW</span></div>
-                    </div>
-                </a>
+        // Animációs ciklus
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
 
-                <a href="https://www.facebook.com/grilledswordofficial" target="_blank" class="social-card group border border-slate-800 hover:border-blue-500 bg-black/50 p-4 transition-all hover:-translate-y-2 relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="p-2 bg-black rounded border border-slate-700"><i data-lucide="facebook" class="w-6 h-6 text-blue-500"></i></div>
-                        <div><h4 class="font-bold text-white">FACEBOOK</h4><p class="text-xs text-blue-400 font-mono">GALLERY</p></div>
-                    </div>
-                    <div class="h-40 bg-slate-900/50 rounded overflow-hidden border border-slate-700 group-hover:border-blue-500 relative">
-                        <img src="IMG/facebook_post.jpg" alt="Latest Facebook" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity"><span class="text-white font-bold">WATCH NOW</span></div>
-                    </div>
-                </a>
+            // Részecskék frissítése és összekötése
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
 
-            </div>
-        </section>
+                // Vonalak rajzolása a közeli részecskék között
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
 
-        <section id="contact" class="mb-20">
-            <div class="cyber-border-box p-8 bg-black/80 backdrop-blur-sm relative overflow-hidden clip-corner-lg border border-slate-700">
-                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 relative z-10">
-                    <div>
-                        <h2 class="font-orbitron text-3xl text-white mb-6 glitch-text" data-text="ESTABLISH_UPLINK">ESTABLISH_UPLINK</h2>
-                        <form id="contact-form" class="space-y-6">
-                            <div class="input-group"><label class="input-label">CODENAME</label><input type="text" name="name" required class="cyber-input"><div class="input-line"></div></div>
-                            <div class="input-group"><label class="input-label">FREQUENCY (EMAIL)</label><input type="email" name="email" required class="cyber-input"><div class="input-line"></div></div>
-                            <div class="input-group"><label class="input-label">TRANSMISSION DATA</label><textarea name="message" rows="4" required class="cyber-input"></textarea><div class="input-line"></div></div>
-                            <button type="submit" class="cyber-btn primary w-full group"><span class="group-hover:text-black transition-colors">SEND TRANSMISSION</span></button>
-                            <p id="form-status" class="mt-2 text-center text-sm font-mono"></p>
-                        </form>
-                    </div>
-                    
-                    <div class="flex flex-col justify-center gap-4">
-                        <a href="https://www.tiktok.com/@grilledswordofficial" target="_blank" class="contact-btn tiktok group">
-                            <div class="icon-box"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></div>
-                            <span class="text-lg font-bold">TIKTOK</span><i data-lucide="external-link" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
-                        </a>
-                        <a href="https://youtube.com/@grilledswordofficial" target="_blank" class="contact-btn youtube group">
-                            <div class="icon-box"><i data-lucide="youtube" class="w-6 h-6"></i></div>
-                            <span class="text-lg font-bold">YOUTUBE</span><i data-lucide="external-link" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
-                        </a>
-                        <a href="https://twitch.tv/grilledswordofficial" target="_blank" class="contact-btn twitch group">
-                            <div class="icon-box"><i data-lucide="twitch" class="w-6 h-6"></i></div>
-                            <span class="text-lg font-bold">TWITCH</span><i data-lucide="external-link" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
-                        </a>
-                        <a href="https://www.instagram.com/grilledswordofficial" target="_blank" class="contact-btn instagram group">
-                            <div class="icon-box"><i data-lucide="instagram" class="w-6 h-6"></i></div>
-                            <span class="text-lg font-bold">INSTAGRAM</span><i data-lucide="external-link" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
-                        </a>
-                        <a href="https://www.facebook.com/grilledswordofficial" target="_blank" class="contact-btn facebook group">
-                            <div class="icon-box"><i data-lucide="facebook" class="w-6 h-6"></i></div>
-                            <span class="text-lg font-bold">FACEBOOK</span><i data-lucide="external-link" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
-                        </a>
-                        <a href="mailto:kiss.norbert.reall@gmail.com" class="contact-btn email group">
-                            <div class="icon-box"><i data-lucide="mail" class="w-6 h-6"></i></div>
-                            <span class="text-lg font-bold">EMAIL</span><i data-lucide="arrow-right" class="ml-auto w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
+                    if (distance < config.maxDistance) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        // A vonal átlátszósága a távolságtól függ
+                        const opacity = 1 - (distance / config.maxDistance);
+                        ctx.strokeStyle = `rgba(168, 85, 247, ${opacity * 0.3})`;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+                }
+            }
 
-</main>
+            requestAnimationFrame(animate);
+        }
 
-    <div id="chat-overlay" class="fixed bottom-4 right-4 w-80 h-64 bg-black/80 backdrop-blur-md border border-cyan-500/30 overflow-hidden hidden md:flex flex-col z-40 pointer-events-none shadow-[0_0_20px_rgba(6,182,212,0.1)] clip-corner-top-right">
-        <div class="bg-cyan-900/20 p-2 text-xs font-bold text-cyan-400 flex justify-between px-3 border-b border-cyan-500/30">
-            <span class="flex items-center gap-2"><i data-lucide="message-square" class="w-3 h-3"></i> SYSTEM_CHAT_LOG</span>
-            <span class="text-red-500 animate-pulse">● LIVE_FEED</span>
-        </div>
-        <div id="chat-messages" class="flex-1 overflow-hidden flex flex-col justify-end p-3 space-y-2 font-share text-sm text-shadow-sm"></div>
-    </div>
-
-    <div id="youtube-player" class="hidden"></div>
-    
-    <div id="project-modal" class="fixed inset-0 bg-black/95 z-[100] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 backdrop-blur-md">
-        <div id="modal-content" class="w-full max-w-5xl max-h-[90vh] flex flex-col relative shadow-[0_0_50px_rgba(6,182,212,0.3)] transform scale-95 transition-transform border border-cyan-500 clip-corner-lg bg-black/95">
-            <div class="flex justify-between items-center p-4 border-b border-cyan-500/50 bg-cyan-900/20">
-                <h2 id="modal-title" class="font-orbitron text-2xl text-cyan-400 glitch-text" data-text="TITLE">TITLE</h2>
-                <button id="modal-close" class="text-red-500 hover:text-white hover:bg-red-600 rounded p-1 transition-colors border border-red-500"><i data-lucide="x"></i></button>
-            </div>
-            <div class="p-6 overflow-y-auto relative grid grid-cols-1 lg:grid-cols-2 gap-8 custom-scrollbar">
-                 <div class="space-y-4">
-                     <div class="relative border border-slate-700 p-1 bg-black">
-                        <img id="modal-main-image" src="" class="w-full h-64 object-cover">
-                        <div class="absolute bottom-2 right-2"><button id="modal-zoom-btn" class="text-cyan-400 bg-black/80 p-2 border border-cyan-500 hover:bg-cyan-500 hover:text-black"><i data-lucide="maximize"></i></button></div>
-                     </div>
-                     <div id="modal-thumbnails" class="flex gap-2 overflow-x-auto pb-2"></div>
-                </div>
-                <div class="font-rajdhani text-slate-300">
-                    <h3 class="text-white font-bold text-xl mb-2 border-b border-slate-800 pb-1"><i data-lucide="file-code" class="inline w-5 h-5 text-purple-400"></i> MISSION_BRIEF</h3>
-                    <p id="modal-description" class="mb-6 leading-relaxed"></p>
-                    <h3 class="text-white font-bold text-xl mb-2 border-b border-slate-800 pb-1"><i data-lucide="cpu" class="inline w-5 h-5 text-pink-500"></i> TECH_ARSENAL</h3>
-                    <div id="modal-tech-stack" class="flex flex-wrap gap-2 mt-3"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div id="lightbox" class="fixed inset-0 bg-black/98 z-[110] hidden items-center justify-center p-4">
-        <img id="lightbox-img" class="max-w-full max-h-full border-2 border-cyan-500 shadow-[0_0_100px_cyan]">
-        <button id="lightbox-close" class="absolute top-8 right-8 text-white p-2 border border-red-500 hover:bg-red-500"><i data-lucide="x"></i></button>
-    </div>
-
-    <script src="https://www.youtube.com/iframe_api"></script>
-    <script src="script.js"></script>
+        animate();
+    </script>
 </body>
 </html>

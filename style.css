@@ -562,3 +562,20 @@ body.clicking #cursor-follower {
     box-shadow: 0 0 10px rgba(6, 182, 212, 0.4);
     border-color: var(--color-cyan);
 }
+
+/* TAG: NEW - Traffic Widget Styles */
+
+/* Ha változik az érték, villanjon fel */
+@keyframes value-update {
+    0% { color: white; text-shadow: none; }
+    50% { color: var(--color-cyan); text-shadow: 0 0 10px var(--color-cyan); }
+    100% { color: white; text-shadow: none; }
+}
+
+.stat-update {
+    animation: value-update 0.2s ease-out;
+}
+
+/* Ha az "online" user növekszik/csökken */
+.trend-up { color: #4ade80 !important; } /* Zöld */
+.trend-down { color: #ef4444 !important; } /* Piros */
