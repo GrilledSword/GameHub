@@ -372,33 +372,9 @@ button, input, textarea {
   left: 50%;
   transform: translateX(-50%);
   width: min(100% - 32px, var(--container-max) + 80px);
-  border-radius: 32px;
-  background:
-    linear-gradient(
-      160deg,
-      color-mix(in srgb, var(--glass-bg-strong) 80%, transparent) 0%,
-      color-mix(in srgb, var(--bg-deep) 55%, transparent) 100%
-    );
-  border: 1px solid var(--border-glass);
-  box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
   pointer-events: none;
   z-index: -1;
   opacity: 0.75;
-}
-
-.section-alt::before {
-  background:
-    linear-gradient(
-      160deg,
-      color-mix(in srgb, var(--accent) 8%, var(--glass-bg-strong)) 0%,
-      color-mix(in srgb, var(--bg-deep) 60%, transparent) 100%
-    );
-  border-color: color-mix(in srgb, var(--accent) 15%, var(--border-glass));
-  opacity: 0.85;
 }
 
 /* Hero stays open – no panel */
