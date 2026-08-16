@@ -68,7 +68,7 @@ const translations = {
     "contact.send": "Üzenet küldése",
     "contact.infoTitle": "Elérhetőségek",
     "contact.infoText": "A leggyorsabban emailben érhetsz el minket. Válaszolunk minden komoly megkeresésre.",
-    "contact.success": "Köszönjük! Az üzeneted sikeresen elküldve (demo).",
+    "contact.success": "Köszönjük! Az üzeneted sikeresen elküldve.",
     "contact.error": "Kérjük töltsd ki az összes mezőt.",
     
     // Footer
@@ -140,7 +140,7 @@ const translations = {
     "contact.send": "Send Message",
     "contact.infoTitle": "Get in Touch",
     "contact.infoText": "Email is the fastest way to reach us. We reply to every serious inquiry.",
-    "contact.success": "Thank you! Your message has been sent successfully (demo).",
+    "contact.success": "Thank you! Your message has been sent successfully.",
     "contact.error": "Please fill in all fields.",
     
     // Footer
