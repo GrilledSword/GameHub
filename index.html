@@ -1,327 +1,229 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="hu" data-theme="dark">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Karbantartás Alatt</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-
-    <style>
-        :root {
-            --font-display: 'Orbitron', sans-serif;
-            --font-body: 'Inter', sans-serif;
-        }
-
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #030712; /* Tailwind gray-950 */
-            color: #f3f4f6;
-            font-family: var(--font-body);
-            overflow: hidden; /* Nincs görgetés ezen az oldalon */
-            cursor: none; /* Egyedi kurzor miatt elrejtjük az alapértelmezettet */
-        }
-
-        .font-display {
-            font-family: var(--font-display);
-        }
-
-        /* Egyedi kurzor */
-        #custom-cursor {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(6, 182, 212, 0.8);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 9999;
-            transition: width 0.2s, height 0.2s, background-color 0.2s;
-            mix-blend-mode: difference;
-        }
-
-        #custom-cursor-dot {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 4px;
-            background-color: #06b6d4;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 10000;
-        }
-
-        body.hovering #custom-cursor {
-            width: 40px;
-            height: 40px;
-            background-color: rgba(6, 182, 212, 0.1);
-        }
-
-        /* Háttér finom rács */
-        .bg-grid {
-            position: absolute;
-            inset: 0;
-            background-image: 
-                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-            z-index: 1;
-            pointer-events: none;
-            mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
-        }
-
-        @media (pointer: coarse), (hover: none) {
-            body, html {
-                cursor: auto;
-            }
-            #custom-cursor, #custom-cursor-dot {
-                display: none;
-            }
-        }
-
-        /* Animált progress bar */
-        @keyframes progress-slide {
-            0% { width: 10%; transform: translateX(0); }
-            50% { width: 50%; transform: translateX(50%); }
-            100% { width: 10%; transform: translateX(900%); }
-        }
-
-        .animate-progress {
-            animation: progress-slide 3s ease-in-out infinite alternate;
-        }
-
-        /* Glassmorphism panel megjelenési animáció */
-        @keyframes fade-up {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .glass-panel {
-            animation: fade-up 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="OverBitCore – Indie Game Development Studio. Immersive indie games crafted with passion.">
+  <meta name="theme-color" content="#0a0a1a">
+  <title>OverBitCore | Indie Game Developer</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/main.css">
+  
+  <link rel="icon" type="image/svg+xml" href="img/logo.svg">
 </head>
-<body class="antialiased selection:bg-cyan-500 selection:text-white">
+<body>
+  <!-- SVG Filters -->
+  <svg class="svg-filters" aria-hidden="true">
+    <defs>
+      <filter id="liquid-distortion" x="-20%" y="-20%" width="140%" height="140%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.012 0.018" numOctaves="2" seed="7" result="noise" />
+        <feGaussianBlur in="noise" stdDeviation="1.2" result="blurred" />
+        <feDisplacementMap in="SourceGraphic" in2="blurred" scale="8" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </defs>
+  </svg>
 
-    <!-- Egyedi Kurzor -->
-    <div id="custom-cursor"></div>
-    <div id="custom-cursor-dot"></div>
+  <!-- ========== 3D PARALLAX + VERTEX SCENE ========== -->
+  <div class="parallax-scene" id="parallaxScene" aria-hidden="true">
+    <div class="bg-gradient"></div>
+    <div class="bg-noise"></div>
 
-    <!-- Interaktív Canvas Háttér -->
-    <canvas id="bg-canvas" class="absolute inset-0 z-0"></canvas>
-    <div class="bg-grid"></div>
+    <!-- Canvas: scroll-driven vertex assembly -->
+    <canvas id="vertexCanvas" class="vertex-canvas"></canvas>
 
-    <!-- Fő tartalom -->
-    <main class="relative z-10 w-full h-full flex items-center justify-center p-4">
-        
-        <!-- Üveghatású (Glassmorphism) kártya -->
-        <div class="glass-panel w-full max-w-2xl p-6 sm:p-8 md:p-12 bg-gray-900/40 backdrop-blur-xl border border-gray-700/50 rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col items-center text-center relative overflow-hidden group mx-4 sm:mx-auto">
-            
-            <!-- Finom belső fény effektus -->
-            <div class="absolute -top-32 -left-32 w-64 h-64 bg-cyan-500/20 rounded-full blur-[80px] pointer-events-none group-hover:bg-cyan-500/30 transition-colors duration-700"></div>
-            <div class="absolute -bottom-32 -right-32 w-64 h-64 bg-purple-500/20 rounded-full blur-[80px] pointer-events-none group-hover:bg-purple-500/30 transition-colors duration-700"></div>
+    <!-- Soft glowing orbs -->
+    <div class="parallax-layer layer-orbs" data-depth="0.2">
+      <div class="bg-orb orb-a"></div>
+      <div class="bg-orb orb-b"></div>
+      <div class="bg-orb orb-c"></div>
+    </div>
 
-            <!-- Ikon / Logó rész -->
-            <div class="relative mb-6 sm:mb-8">
-                <!-- Ragyogás az ikon mögött -->
-                <div class="absolute inset-0 bg-cyan-500 blur-2xl opacity-30 rounded-full animate-pulse"></div>
-                <div class="relative w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center bg-gray-800/50 border border-gray-600/50 rounded-2xl backdrop-blur-sm shadow-inner">
-                    <!-- Forgó fogaskerék ikon -->
-                    <i data-lucide="settings" class="w-10 h-10 sm:w-12 sm:h-12 text-cyan-400 animate-[spin_8s_linear_infinite]"></i>
-                </div>
-            </div>
+    <!-- Floating HUD / tech elements -->
+    <div class="parallax-layer layer-hud" data-depth="0.45">
+      <div class="hud-panel hud-1">
+        <span class="hud-label">X</span>
+        <div class="hud-bar"><i style="width:62%"></i></div>
+      </div>
+      <div class="hud-panel hud-2">
+        <span class="hud-label">Y</span>
+        <div class="hud-bar"><i style="width:38%"></i></div>
+      </div>
+      <div class="hud-panel hud-3">
+        <span class="hud-label">Z</span>
+        <div class="hud-bar"><i style="width:81%"></i></div>
+      </div>
+      <div class="hud-crosshair ch-1"></div>
+      <div class="hud-crosshair ch-2"></div>
+    </div>
+  </div>
 
-            <!-- Szöveges tartalom -->
-            <h1 class="font-display text-2xl sm:text-3xl md:text-5xl font-black mb-3 sm:mb-4 tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 uppercase px-2">
-                Rendszer Frissítés
-            </h1>
-            
-            <p class="text-gray-400 text-base sm:text-lg md:text-xl font-light max-w-lg mb-8 sm:mb-10 leading-relaxed px-2">
-                Jelenleg karbantartást végzek az oldalon, hogy hamarosan még jobb formában térhessen vissza. Kérlek, nézz vissza egy kicsit később!
-            </p>
+  <!-- Navigation -->
+  <header class="navbar glass liquid-glass" id="navbar">
+    <div class="container nav-container">
+      <a href="#hero" class="logo">
+        <span class="logo-icon">
+          <img src="img/logo.svg" class="svg-content" alt="Logo">
+        </span>
+        <span class="logo-text">OverBitCore</span>
+      </a>
+      
+      <nav class="nav-links" id="navLinks">
+        <a href="#about" class="nav-link" data-i18n="nav.about">Rólam</a>
+        <a href="#projects" class="nav-link" data-i18n="nav.projects">Projektek</a>
+        <a href="#skills" class="nav-link" data-i18n="nav.skills">Készségek</a>
+        <a href="#contact" class="nav-link" data-i18n="nav.contact">Kapcsolat</a>
+      </nav>
+      
+      <div class="nav-actions">
+        <button class="theme-toggle glass-sm" id="themeToggle" aria-label="Toggle dark/light theme" title="Theme">
+          <span class="icon-moon">🌙</span>
+          <span class="icon-sun">☀️</span>
+        </button>
 
-            <!-- Státusz / Töltőcsík -->
-            <div class="w-full max-w-md mb-8 sm:mb-10 px-4 sm:px-0">
-                <div class="flex justify-between text-xs text-gray-500 mb-2 font-mono uppercase tracking-widest">
-                    <span>Státusz</span>
-                    <span class="text-cyan-400 animate-pulse">Folyamatban...</span>
-                </div>
-                <div class="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden relative">
-                    <div class="absolute top-0 left-0 h-full bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full animate-progress"></div>
-                </div>
-            </div>
-
-            <!-- Gomb (pl. Kapcsolat vagy Vissza) -->
-            <a href="mailto:overbitcore@gmail.com" class="interactive-el relative inline-flex items-center justify-center gap-2 px-6 py-2.5 sm:px-8 sm:py-3 bg-gray-800/80 hover:bg-gray-700/80 border border-gray-600 rounded-full text-white font-medium transition-all duration-300 hover:shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:-translate-y-1 text-sm sm:text-base mb-2">
-                <i data-lucide="mail" class="w-4 h-4 text-cyan-400"></i>
-                <span>Kapcsolatfelvétel</span>
-            </a>
-
+        <div class="lang-switcher glass-sm" role="group" aria-label="Language switcher">
+          <button class="lang-btn active" data-lang="hu" aria-pressed="true">HU</button>
+          <button class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
         </div>
-    </main>
-
-    <script>
-        // Inicializáljuk az ikonokat
-        lucide.createIcons();
-
-        // 1. Egyedi kurzor logika
-        const cursor = document.getElementById('custom-cursor');
-        const cursorDot = document.getElementById('custom-cursor-dot');
-        let mouseX = window.innerWidth / 2;
-        let mouseY = window.innerHeight / 2;
-        let cursorX = window.innerWidth / 2;
-        let cursorY = window.innerHeight / 2;
-
-        const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
-
-        if (!isTouchDevice) {
-            document.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-                
-                // A kis pont azonnal követi az egeret
-                cursorDot.style.left = `${mouseX}px`;
-                cursorDot.style.top = `${mouseY}px`;
-            });
-
-            // A nagy kör finoman, késleltetve követi (lerp)
-            function animateCursor() {
-                cursorX += (mouseX - cursorX) * 0.2;
-                cursorY += (mouseY - cursorY) * 0.2;
-                
-                cursor.style.left = `${cursorX}px`;
-                cursor.style.top = `${cursorY}px`;
-                
-                requestAnimationFrame(animateCursor);
-            }
-            animateCursor();
-        }
-
-        // Hover effektus interaktív elemeken
-        const interactiveElements = document.querySelectorAll('a, button, .interactive-el');
-        if (!isTouchDevice) {
-            interactiveElements.forEach(el => {
-                el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
-                el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
-            });
-        }
-
-        // 2. Interaktív Canvas Háttér (Hálózat/Részecskék)
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
         
-        let width, height;
-        let particles = [];
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section id="hero" class="hero">
+      <div class="container hero-content">
+        <div class="hero-badge glass-sm liquid-glass" data-i18n="hero.badge">Indie Game Developer</div>
+        <h1 class="hero-title">
+          <span class="gradient-text">OverBitCore</span>
+        </h1>
+        <p class="hero-tagline" data-i18n="hero.tagline">Immerszív világokat építünk bitről bitre.</p>
+        <p class="hero-desc" data-i18n="hero.desc">Független játékfejlesztő stúdió, ahol a kreativitás találkozik a precíz kóddal. Hamarosan itt mutatjuk be a projektjeinket.</p>
         
-        // Konfiguráció
-        const config = {
-            particleCount: window.innerWidth < 768 ? 40 : 80,
-            particleColor: 'rgba(6, 182, 212, 0.5)', // Cyan
-            lineColor: 'rgba(168, 85, 247, 0.2)',    // Purple
-            maxDistance: 150,
-            speed: 0.5
-        };
+        <div class="hero-cta">
+          <a href="#projects" class="btn btn-primary glass-btn" data-i18n="hero.ctaProjects">Projektek megtekintése</a>
+          <a href="#contact" class="btn btn-secondary glass-btn liquid-glass" data-i18n="hero.ctaContact">Kapcsolatfelvétel</a>
+        </div>
+      </div>
+    </section>
 
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        }
+    <!-- About – rendered from rolam.js -->
+    <section id="about" class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-label" data-i18n="about.label">Rólunk</span>
+          <h2 class="section-title" data-i18n="about.title">A stúdió mögött</h2>
+        </div>
+        
+        <div class="about-grid" id="aboutGrid">
+          <!-- JS tölti fel a rolam.js alapján -->
+        </div>
+      </div>
+    </section>
 
-        window.addEventListener('resize', resize);
-        resize();
+    <!-- Projects – rendered from projektek.js -->
+    <section id="projects" class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-label" data-i18n="projects.label">Portfólió</span>
+          <h2 class="section-title" data-i18n="projects.title">Aktuális & közelgő projektek</h2>
+          <p class="section-desc" data-i18n="projects.desc">Jelenleg a stúdió alapításának és az első játékok fejlesztésének fázisában vagyunk. Hamarosan frissítjük ezt a részt!</p>
+        </div>
+        
+        <div class="projects-grid" id="projectsGrid">
+          <!-- JS tölti fel -->
+        </div>
+      </div>
+    </section>
 
-        class Particle {
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.vx = (Math.random() - 0.5) * config.speed;
-                this.vy = (Math.random() - 0.5) * config.speed;
-                this.radius = Math.random() * 2 + 0.5;
-            }
+    <!-- Skills – rendered from keszsegek.js -->
+    <section id="skills" class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-label" data-i18n="skills.label">Szakértelem</span>
+          <h2 class="section-title" data-i18n="skills.title">Amivel dolgozunk</h2>
+        </div>
+        
+        <div class="skills-grid" id="skillsGrid">
+          <!-- JS tölti fel a keszsegek.js alapján -->
+        </div>
+      </div>
+    </section>
 
-            update() {
-                // Egér interakció: finoman elmozdulnak az egér elől, de csak asztalin
-                if (!isTouchDevice) {
-                    const dx = mouseX - this.x;
-                    const dy = mouseY - this.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    
-                    if (distance < 100) {
-                        this.x -= dx * 0.01;
-                        this.y -= dy * 0.01;
-                    }
-                }
+    <!-- Contact -->
+    <section id="contact" class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-label" data-i18n="contact.label">Kapcsolat</span>
+          <h2 class="section-title" data-i18n="contact.title">Dolgozzunk együtt</h2>
+          <p class="section-desc" data-i18n="contact.desc">Van egy ötleted, vagy csak beszélgetnél? Írj nekünk bátran!</p>
+        </div>
+        
+        <div class="contact-wrapper">
+          <form class="contact-form glass liquid-glass" id="contactForm">
+            <div class="form-group">
+              <label for="name" data-i18n="contact.name">Név</label>
+              <input type="text" id="name" name="name" required data-i18n-placeholder="contact.namePlaceholder" placeholder="A neved">
+            </div>
+            <div class="form-group">
+              <label for="email" data-i18n="contact.email">Email</label>
+              <input type="email" id="email" name="email" required data-i18n-placeholder="contact.emailPlaceholder" placeholder="te@pelda.hu">
+            </div>
+            <div class="form-group">
+              <label for="message" data-i18n="contact.message">Üzenet</label>
+              <textarea id="message" name="message" rows="5" required data-i18n-placeholder="contact.messagePlaceholder" placeholder="Az üzeneted..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary glass-btn full-width" data-i18n="contact.send">Üzenet küldése</button>
+            <div class="form-status" id="formStatus" hidden></div>
+          </form>
+          
+          <div class="contact-info">
+            <div class="info-card glass liquid-glass">
+              <h4 data-i18n="contact.infoTitle">Elérhetőségek</h4>
+              <p data-i18n="contact.infoText">A leggyorsabban emailben érhetsz el minket. Válaszolunk minden komoly megkeresésre.</p>
+              
+              <a href="#" class="contact-email" id="contactEmail">hello@overbitcore.com</a>
+              
+              <div class="social-links" id="socialLinks">
+                <!-- JS tölti fel -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
-                // Mozgás
-                this.x += this.vx;
-                this.y += this.vy;
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-brand">
+        <span class="logo-icon">
+          <img src="img/logo.svg" class="svg-content" alt="Logo">
+        </span>
+        <span>OverBitCore</span>
+      </div>
+      <p class="footer-copy">
+        © <span id="year"></span> OverBitCore. 
+        <span data-i18n="footer.rights">Minden jog fenntartva.</span>
+      </p>
+    </div>
+  </footer>
 
-                // Képernyő szélének visszapattanás
-                if (this.x < 0 || this.x > width) this.vx *= -1;
-                if (this.y < 0 || this.y > height) this.vy *= -1;
-            }
-
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = config.particleColor;
-                ctx.fill();
-            }
-        }
-
-        // Részecskék létrehozása
-        for (let i = 0; i < config.particleCount; i++) {
-            particles.push(new Particle());
-        }
-
-        // Animációs ciklus
-        function animate() {
-            ctx.clearRect(0, 0, width, height);
-
-            // Részecskék frissítése és összekötése
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
-
-                // Vonalak rajzolása a közeli részecskék között
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-
-                    if (distance < config.maxDistance) {
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        // A vonal átlátszósága a távolságtól függ
-                        const opacity = 1 - (distance / config.maxDistance);
-                        ctx.strokeStyle = `rgba(168, 85, 247, ${opacity * 0.3})`;
-                        ctx.lineWidth = 1;
-                        ctx.stroke();
-                    }
-                }
-            }
-
-            requestAnimationFrame(animate);
-        }
-
-        animate();
-    </script>
+  <!-- Scripts – sorrend fontos -->
+  <script src="js/hivatkozasok.js"></script>
+  <script src="js/projektek.js"></script>
+  <script src="js/keszsegek.js"></script>
+  <script src="js/rolam.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>
