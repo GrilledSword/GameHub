@@ -1,15 +1,6 @@
 /* ============================================
    OverBitCore – Készségek / Skills Data
-   Itt szerkeszd a készségeket.
    ============================================ */
-
-/**
- * Mezők:
- * - id:        egyedi azonosító
- * - icon:      emoji vagy SVG string
- * - title:     { hu, en }  – ha csak string, mindkét nyelven ugyanaz
- * - description: { hu, en }
- */
 
 const SKILLS = [
   {
@@ -75,14 +66,6 @@ const SKILLS = [
       en: "Atmosphere and feedback design"
     }
   }
-
-  // Új készség:
-  // {
-  //   id: "blender",
-  //   icon: "🧊",
-  //   title: "Blender",
-  //   description: { hu: "3D modellezés és animáció", en: "3D modeling and animation" }
-  // },
 ];
 
 window.SKILLS = SKILLS;

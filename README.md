@@ -1,93 +1,36 @@
-# OverBitCore – Személyes / Stúdió weboldal
+# OverBitCore – Personal portfolio site
 
-Modern, moduláris, kétnyelvű (HU/EN) portfólió oldal Liquid Glass stílussal, 3D parallax háttérrel + sötét/világos téma.
+Moduláris, bilingual (HU/EN) portfolio liquid glass dizájnnal és scroll-vezérelt 3D Core / reaktor háttérrel.
 
-## Fájlstruktúra
+## Fájlok
 
-```
-overbitcore/
-├── index.html
-├── css/
-│   └── main.css
-├── js/
-│   ├── hivatkozasok.js   ← IDE ÍRD BE A LINKJEIDET
-│   ├── projektek.js      ← IDE TEDD FEL A PROJEKTJEIDET
-│   ├── keszsegek.js      ← IDE A KÉSZSÉGEK
-│   ├── rolam.js          ← IDE A RÓLAM / STÚDIÓ KÁRTYÁK
-│   ├── i18n.js           ← fordítások
-│   └── main.js           ← logika + 3D parallax
-└── README.md
-```
+| Fájl | Szerep |
+|------|--------|
+| `index.html` | Struktúra |
+| `css/main.css` | Stílusok, téma, responsive |
+| `js/parallax.js` | **3D háttér** (vertex → face → solid mesh) |
+| `js/main.js` | Téma, rendererek, interakciók |
+| `js/i18n.js` | Fordítások |
+| `js/projektek.js` | Projektek adatai |
+| `js/hivatkozasok.js` | Email + social linkek + SVG ikonok |
+| `js/keszsegek.js` | Készségek |
+| `js/rolam.js` | Rólam kártyák |
 
-## Hol mit állíts?
+## Tartalom szerkesztése
 
-### 1. Linkek és közösségi profilok
-**Fájl:** `js/hivatkozasok.js`
-
-```js
-email: "hello@overbitcore.com",
-
-social: [
-  {
-    id: "twitter",
-    label: "Twitter / X",
-    url: "https://x.com/TEFELHASZNALONEVED",
-    icon: ICONS.twitter,   // hivatalos SVG ikon
-    enabled: true
-  },
-  // ...
-]
-```
-
-### 2. Projektek
-**Fájl:** `js/projektek.js`
-
-```js
-{
-  id: "uj-jatek",
-  title: { hu: "Az én játékom", en: "My Game" },
-  description: { hu: "...", en: "..." },
-  tags: ["2D", "Puzzle"],
-  status: "dev",               // dev | concept | experimental | released
-  image: "assets/projects/kep.jpg",
-  link: "https://...",
-  year: 2026
-}
-```
-
-### 3. Készségek
-**Fájl:** `js/keszsegek.js`
-
-```js
-{
-  id: "blender",
-  icon: "🧊",
-  title: "Blender",
-  description: { hu: "3D modellezés", en: "3D modeling" }
-}
-```
-
-### 4. Rólam / Stúdió kártyák
-**Fájl:** `js/rolam.js`
-
-```js
-{
-  id: "values",
-  icon: "❤️",
-  title: { hu: "Értékeink", en: "Our Values" },
-  description: { hu: "...", en: "..." }
-}
-```
-
-## Főbb funkciók
-
-- **3D Parallax háttér** – egérkövető mélységi rétegek, forgó gyűrűk, lebegő kockák, perspektív rács
-- **Liquid Glass** hatás
-- **Sötét / Világos téma** váltó
-- **HU / EN** nyelvváltó
-- Teljesen reszponzív (telefon + tablet finomhangolva)
-- Moduláris adatfájlok
+- **Projektek** → `js/projektek.js`
+- **Linkek / social** → `js/hivatkozasok.js`
+- **Készségek** → `js/keszsegek.js`
+- **Rólam** → `js/rolam.js`
+- **Szövegek (HU/EN)** → `js/i18n.js`
 
 ## Futtatás
 
-Nyisd meg az `index.html`-t böngészőben, vagy tedd fel Netlify / Vercel / GitHub Pages-re.
+Nyisd meg az `index.html`-t, vagy:
+
+```bash
+cd overbitcore
+python3 -m http.server 8080
+```
+
+Majd: http://localhost:8080
