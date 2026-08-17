@@ -1109,7 +1109,7 @@ main {
   }
 
   .nav-container {
-    padding: 14px 18px;
+    padding: 1rem 2rem;
     gap: 12px;
   }
 
@@ -1274,7 +1274,6 @@ main {
     width: calc(100% - 16px);
   }
 
-  /* [MODIF] - Logo text elrejtése kis képernyőn a zsúfoltság elkerülése érdekében */
   .logo-text {
     display: none;
   }
