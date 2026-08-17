@@ -1109,7 +1109,7 @@ main {
   }
 
   .nav-container {
-    padding: 1rem 2rem;
+    padding: 14px 18px;
     gap: 12px;
   }
 
@@ -1272,6 +1272,11 @@ main {
 
   .navbar {
     width: calc(100% - 16px);
+  }
+
+.nav-container {
+    padding: 14px 2rem;
+    gap: 12px;
   }
 
   .logo-text {
