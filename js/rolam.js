@@ -7,36 +7,39 @@ const ABOUT = [
     id: "mission",
     icon: "🎯",
     title: {
-      hu: "Küldetésem",
-      en: "My Mission"
+      // MÓDOSÍTVA: Céges duma lecserélve a valódi indie dev célra
+      hu: "A Küldetés",
+      en: "The Mission"
     },
     description: {
-      hu: "Olyan játékokat készítek, amelyek érzelmeket váltanak ki, és emlékezetes élményt adnak. Minden projektben a minőség és a kreativitás áll a középpontban.",
-      en: "I create games that evoke emotion and leave a lasting experience. Quality and creativity sit at the heart of every project."
+      hu: "Feltámasztani a gyermekkori klasszikusokat és olyan játékokat rakni össze Unity-ben, amikből nem spóroltuk ki a lelket.",
+      en: "Reviving childhood classics and crafting Unity games that don't lack soul or nostalgia."
     }
   },
   {
-    id: "vision",
-    icon: "💡",
-    title: {
-      hu: "Látomásom",
-      en: "My Vision"
-    },
-    description: {
-      hu: "Hiszek abban, hogy egyetlen fejlesztő is nagy hatással lehet. A bitről bitre épített világok gazdagabbá és innovatívabbá tehetik az indie szcénát.",
-      en: "I believe a single developer can make a real impact. Worlds built bit by bit help make the indie scene richer and more innovative."
-    }
-  },
-  {
-    id: "approach",
+    id: "craft",
     icon: "🛠️",
     title: {
-      hu: "Megközelítésem",
-      en: "My Approach"
+      // MÓDOSÍTVA: Szoftver + Hardver megközelítés
+      hu: "Szoftver & Forrasztópáka",
+      en: "Software & Hardware"
     },
     description: {
-      hu: "Modern eszközökkel és klasszikus játéktervezési elvekkel dolgozom. A játékos élmény mindig elsőbbséget élvez a technikai megoldások felett.",
-      en: "I work with modern tools and classic game design principles. Player experience always comes before technical showpieces."
+      hu: "A C# kódok írása és a Blender 3D modellezés mellett a hardveres oldalt sem félek megfogni, ha egyedi audióról vagy áramkörökről van szó.",
+      en: "Beyond writing C# code and modeling in Blender, I enjoy dirtying my hands with soldering and custom hardware builds."
+    }
+  },
+  {
+    id: "mindset",
+    icon: "⚡",
+    title: {
+      // MÓDOSÍTVA: Tiszta, lényegre törő szemlélet
+      hu: "A Hozzáállás",
+      en: "The Mindset"
+    },
+    description: {
+      hu: "Zéró céges mellébeszélés, moduláris és átlátható kódok, éjszakába nyúló Blender session-ök és végtelen mennyiségű kávé.",
+      en: "Zero corporate fluff, modular and clean code, late-night Blender sessions, and endless coffee."
     }
   }
 ];

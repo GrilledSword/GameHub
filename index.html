@@ -16,13 +16,32 @@
   <link rel="icon" type="image/svg+xml" href="img/logo.svg">
 </head>
 <body>
-  <!-- SVG Filters -->
+  <!-- SVG Filters – Liquid Glass refraction -->
   <svg class="svg-filters" aria-hidden="true">
     <defs>
-      <filter id="liquid-distortion" x="-20%" y="-20%" width="140%" height="140%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.012 0.018" numOctaves="2" seed="7" result="noise" />
-        <feGaussianBlur in="noise" stdDeviation="1.2" result="blurred" />
-        <feDisplacementMap in="SourceGraphic" in2="blurred" scale="8" xChannelSelector="R" yChannelSelector="G" />
+      <!-- Soft organic liquid distortion -->
+      <filter id="liquid-distortion" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="0.008 0.014" numOctaves="3" seed="3" result="noise" />
+        <feGaussianBlur in="noise" stdDeviation="1.8" result="blurred" />
+        <feDisplacementMap in="SourceGraphic" in2="blurred" scale="14" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+
+      <!-- Stronger edge refraction for glass panels -->
+      <filter id="liquid-glass-refract" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+        <feTurbulence type="turbulence" baseFrequency="0.015 0.02" numOctaves="2" seed="12" result="turb" />
+        <feDisplacementMap in="SourceGraphic" in2="turb" scale="9" xChannelSelector="R" yChannelSelector="B" result="disp" />
+        <feGaussianBlur in="disp" stdDeviation="0.6" result="soft" />
+        <feComposite in="soft" in2="SourceGraphic" operator="atop" />
+      </filter>
+
+      <!-- Specular highlight map -->
+      <filter id="liquid-specular" x="-10%" y="-10%" width="120%" height="120%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur" />
+        <feSpecularLighting in="blur" surfaceScale="3" specularConstant="1.1" specularExponent="18" lighting-color="#ffffff" result="spec">
+          <fePointLight x="-40" y="-60" z="120" />
+        </feSpecularLighting>
+        <feComposite in="spec" in2="SourceAlpha" operator="in" result="specOut" />
+        <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" k1="0" k2="1" k3="0.55" k4="0" />
       </filter>
     </defs>
   </svg>
@@ -60,6 +79,12 @@
       <div class="hud-crosshair ch-2"></div>
     </div>
   </div>
+
+  <!-- Liquid Glass panels (uveg effect on cards / nav / footer) -->
+  <canvas id="liquidGlassCanvas" class="liquid-glass-canvas" aria-hidden="true"></canvas>
+
+  <!-- Live backdrop under navbar (samples real page content) -->
+  <div id="navGlassBackdrop" class="nav-glass-backdrop" aria-hidden="true"></div>
 
   <!-- Navigation -->
   <header class="navbar glass liquid-glass" id="navbar">
@@ -110,7 +135,7 @@
         <p class="hero-desc" data-i18n="hero.desc">Egyedül dolgozom indie játékokon – ahol a kreativitás találkozik a precíz kóddal. Hamarosan itt mutatom be a projektjeimet.</p>
         
         <div class="hero-cta">
-          <a href="#projects" class="btn btn-primary glass-btn" data-i18n="hero.ctaProjects">Projektek megtekintése</a>
+          <a href="#projects" class="btn btn-primary glass-btn liquid-glass" data-i18n="hero.ctaProjects">Projektek megtekintése</a>
           <a href="#contact" class="btn btn-secondary glass-btn liquid-glass" data-i18n="hero.ctaContact">Kapcsolatfelvétel</a>
         </div>
       </div>
@@ -203,7 +228,7 @@
     </section>
   </main>
 
-  <footer class="footer">
+  <footer class="footer liquid-glass">
     <div class="container footer-content">
       <div class="footer-brand">
         <span class="logo-icon">
@@ -225,6 +250,7 @@
   <script src="js/rolam.js"></script>
   <script src="js/i18n.js"></script>
   <script src="js/parallax.js"></script>
+  <script src="js/liquid-glass.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

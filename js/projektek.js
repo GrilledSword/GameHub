@@ -4,64 +4,44 @@
 
 const PROJECTS = [
   {
-    id: "alpha",
+    id: "mindscape",
     title: {
-      hu: "Projekt Alpha",
-      en: "Project Alpha"
+      hu: "Mindscape",
+      en: "Mindscape"
     },
     description: {
-      hu: "Atmoszférikus 2D kalandjáték prototípusa. A történet és a gameplay fejlesztés alatt áll.",
-      en: "Prototype of an atmospheric 2D adventure. Story and gameplay are under development."
+      hu: "Ebben az egyjátékos anomália-vadász élményben folyamatosan változó szobák sorát fedezheted fel, ahol mindegyik finom torzulásokat rejt. Tárgyak mozdulnak el, tűnnek el, vagy bukkannak fel ott, ahová nem valók — de nem minden anomália látható azonnal. A feladatod? Találd meg őket, mielőtt a valóság összeomlik.",
+      en: "In this single-player anomaly-hunting experience, you'll explore an ever-shifting series of rooms, each hiding subtle distortions. Objects shift, vanish, or appear where they don’t belong—but not all anomalies are immediately visible. Your task? Find them before reality collapses."
     },
-    tags: ["Prototype", "2D"],
-    status: "dev",
+    tags: ["Unity", "3D / Puzzle", "Horror"],
+    status: "completed",
     statusText: {
-      hu: "Fejlesztés alatt",
+      hu: "Elkészült",
+      en: "Completed"
+    },
+    image: "img/project/mindscape/main.jpg",
+    link: "https://grilledsword.itch.io/mindscape",
+    year: 2026
+  },
+    {
+    id: "comming-soon",
+    title: {
+      hu: "Coming Soon",
+      en: "Coming Soon"
+    },
+    description: {
+      hu: "",
+      en: ""
+    },
+    tags: [""],
+    status: "inDevelopment",
+    statusText: {
+      hu: "Fejlesztés Alatt",
       en: "In Development"
     },
     image: null,
     link: null,
-    year: 2026
-  },
-  {
-    id: "beta",
-    title: {
-      hu: "Projekt Beta",
-      en: "Project Beta"
-    },
-    description: {
-      hu: "Innovatív puzzle-mechanika körül épülő játékötlet. A koncepció és a core loop tervezése zajlik.",
-      en: "A game idea built around innovative puzzle mechanics. Concept and core loop design are in progress."
-    },
-    tags: ["Concept", "Puzzle"],
-    status: "concept",
-    statusText: {
-      hu: "Koncepció",
-      en: "Concept"
-    },
-    image: null,
-    link: null,
-    year: 2026
-  },
-  {
-    id: "experimental",
-    title: {
-      hu: "Kísérletek",
-      en: "Experiments"
-    },
-    description: {
-      hu: "Kisebb jam-ek, prototípusok és technikai próbák. Ezekből születnek a nagyobb ötletek.",
-      en: "Smaller jams, prototypes and technical experiments. This is where bigger ideas are born."
-    },
-    tags: ["Experimental"],
-    status: "experimental",
-    statusText: {
-      hu: "Folyamatos",
-      en: "Ongoing"
-    },
-    image: null,
-    link: null,
-    year: null
+    year: 2027
   }
 ];
 

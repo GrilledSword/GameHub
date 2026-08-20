@@ -11,6 +11,10 @@ document.addEventListener('DOMContentLoaded', () => {
     window.OverBitParallax.init();
   }
 
+  if (window.OverBitLiquidGlass) {
+    window.OverBitLiquidGlass.init();
+  }
+
   if (window.OverBitI18n) {
     window.OverBitI18n.initI18n();
   }

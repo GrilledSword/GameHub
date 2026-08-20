@@ -1,7 +1,6 @@
 /* ============================================
    OverBitCore – 3D Vertex / Core Scene
-   Scroll-driven assembly: particles → edges → faces → solid core
-   Separate module so main.js stays lean.
+   Scroll-driven assembly (GPU-optimized)
    ============================================ */
 
 (function () {
@@ -13,7 +12,7 @@
     if (!scene || !canvas) return;
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
     const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
     let W = 0, H = 0, dpr = 1;
@@ -21,6 +20,8 @@
     let smoothMX = 0, smoothMY = 0;
     let formAmount = 0;
     let time = 0;
+    let running = true;
+    let frame = 0;
 
     /* ---------- Geometry: geodesic sphere ---------- */
     function createGeodesic(scale, subdivisions) {
@@ -92,7 +93,6 @@
       return { verts: scaled, faces, edges };
     }
 
-    /* ---------- Torus ring (reactor shell) ---------- */
     function createTorus(R, r, segMajor, segMinor) {
       const verts = [];
       const edges = [];
@@ -118,16 +118,11 @@
       return { verts, edges };
     }
 
-    // Inner core (dense geodesic) + outer shell rings
-    const core = createGeodesic(0.72, 3);
-    const shell = createGeodesic(1.05, 2);
-    const ringA = createTorus(1.45, 0.12, 48, 8);
-    const ringB = createTorus(1.7, 0.08, 40, 6);
-
-    const CORE_N = core.verts.length;
-    const SHELL_N = shell.verts.length;
-    const RING_A_N = ringA.verts.length;
-    const RING_B_N = ringB.verts.length;
+    // Lower subdivisions / segments – big GPU win, still looks solid
+    const core = createGeodesic(0.72, 2);
+    const shell = createGeodesic(1.05, 1);
+    const ringA = createTorus(1.45, 0.12, 28, 6);
+    const ringB = createTorus(1.7, 0.08, 24, 4);
 
     function scatterParticle(target, spread) {
       return {
@@ -145,9 +140,9 @@
     const ringAParts = ringA.verts.map(v => scatterParticle(v, 12));
     const ringBParts = ringB.verts.map(v => scatterParticle(v, 13));
 
-    // Orbiting energy nodes
+    // Fewer orbits & dust
     const orbits = [];
-    for (let i = 0; i < 90; i++) {
+    for (let i = 0; i < 36; i++) {
       orbits.push({
         radius: 1.9 + Math.random() * 0.55,
         speed: 0.4 + Math.random() * 0.9,
@@ -157,9 +152,8 @@
       });
     }
 
-    // Ambient dust
     const dust = [];
-    for (let i = 0; i < 180; i++) {
+    for (let i = 0; i < 70; i++) {
       dust.push({
         x: (Math.random() - 0.5) * 10,
         y: (Math.random() - 0.5) * 10,
@@ -170,7 +164,8 @@
     }
 
     function resize() {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // Cap DPR lower = less fill-rate cost
+      dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       W = window.innerWidth;
       H = window.innerHeight;
       canvas.width = Math.floor(W * dpr);
@@ -187,12 +182,12 @@
       const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
       const y1 = y * cosX - z1 * sinX;
       const z2 = y * sinX + z1 * cosX;
-      
-      const baseFov = 740; 
+
+      const baseFov = 740;
       const zoomFactor = 1 + (currentFormAmount * 0.45);
       const fov = baseFov / zoomFactor;
       const scale = fov / (fov + z2 * 100 + 140);
-      
+
       return {
         x: W * 0.5 + x1 * (350 / zoomFactor) * scale + smoothMX * 32,
         y: H * 0.48 + y1 * (350 / zoomFactor) * scale + smoothMY * 22,
@@ -247,12 +242,10 @@
       return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
     }
 
-    /* MODIFICATION START: Staggered intervals to prevent layer overlapping / visual mass */
-    function stageSolid(f)  { return 1 - Math.max(0, Math.min(1, f / 0.3)); }           // Elsőként a tömör mag tűnik el
-    function stageFace(f)   { return 1 - Math.max(0, Math.min(1, (f - 0.15) / 0.35)); } // Utána a lapok esnek szét
-    function stageEdge(f)   { return 1 - Math.max(0, Math.min(1, (f - 0.35) / 0.35)); } // Majd a hálós élek
-    function stageVertex(f) { return 1 - Math.max(0, Math.min(1, (f - 0.55) / 0.45)); } // Végül a pontok/veretexek
-    /* MODIFICATION END */
+    function stageSolid(f)  { return 1 - Math.max(0, Math.min(1, f / 0.3)); }
+    function stageFace(f)   { return 1 - Math.max(0, Math.min(1, (f - 0.15) / 0.35)); }
+    function stageEdge(f)   { return 1 - Math.max(0, Math.min(1, (f - 0.35) / 0.35)); }
+    function stageVertex(f) { return 1 - Math.max(0, Math.min(1, (f - 0.55) / 0.45)); }
 
     function updateParts(parts, stage) {
       for (let i = 0; i < parts.length; i++) {
@@ -276,62 +269,59 @@
       ctx.lineWidth = width;
       ctx.strokeStyle = color;
       ctx.globalAlpha = alpha;
-      edges.forEach(([ia, ib]) => {
+      ctx.beginPath();
+      for (let e = 0; e < edges.length; e++) {
+        const ia = edges[e][0], ib = edges[e][1];
         const a = parts[ia], b = parts[ib];
-        if (!a || !b) return;
-        ctx.beginPath();
+        if (!a || !b) continue;
         ctx.moveTo(a.px, a.py);
         ctx.lineTo(b.px, b.py);
-        ctx.stroke();
-      });
+      }
+      ctx.stroke();
       ctx.globalAlpha = 1;
     }
 
     function drawFaces(parts, faces, fillColor, strokeColor, alpha, solidBoost) {
       if (alpha < 0.02) return;
-      const faceList = [];
-      for (let fi = 0; fi < faces.length; fi++) {
+      // Skip expensive sort when mostly transparent; sample subset when dense
+      const step = faces.length > 120 ? 2 : 1;
+      for (let fi = 0; fi < faces.length; fi += step) {
         const [ia, ib, ic] = faces[fi];
         const a = parts[ia], b = parts[ib], d = parts[ic];
-        faceList.push({ a, b, d, avgZ: (a.pz + b.pz + d.pz) / 3 });
-      }
-      faceList.sort((u, v) => u.avgZ - v.avgZ);
+        if (!a || !b || !d) continue;
 
-      faceList.forEach(({ a, b, d }) => {
         const e1x = b.x - a.x, e1y = b.y - a.y, e1z = b.z - a.z;
         const e2x = d.x - a.x, e2y = d.y - a.y, e2z = d.z - a.z;
         const nx = e1y * e2z - e1z * e2y;
         const ny = e1z * e2x - e1x * e2z;
         const nz = e1x * e2y - e1y * e2x;
         const nl = Math.hypot(nx, ny, nz) || 1;
-        const lit = Math.max(0.12, Math.min(1, (nz / nl) * 0.75 + 0.4));
+        if (nz / nl < -0.15 && solidBoost < 0.5) continue; // back-face cull
 
+        const lit = Math.max(0.12, Math.min(1, (nz / nl) * 0.75 + 0.4));
         ctx.beginPath();
         ctx.moveTo(a.px, a.py);
         ctx.lineTo(b.px, b.py);
         ctx.lineTo(d.px, d.py);
         ctx.closePath();
         ctx.globalAlpha = alpha * lit * (0.55 + solidBoost * 0.45);
-        ctx.fillStyle = solidBoost > 0.3 ? fillColor : fillColor;
+        ctx.fillStyle = fillColor;
         ctx.fill();
-        ctx.globalAlpha = alpha * 0.45;
-        ctx.strokeStyle = strokeColor;
-        ctx.lineWidth = 0.7;
-        ctx.stroke();
-      });
+      }
       ctx.globalAlpha = 1;
     }
 
     function drawVertices(parts, color, glowColor, alpha, size) {
       if (alpha < 0.02) return;
-      for (let i = 0; i < parts.length; i++) {
+      const step = parts.length > 80 ? 2 : 1;
+      for (let i = 0; i < parts.length; i += step) {
         const p = parts[i];
         const r = size * p.sc;
-        if (r < 0.35) continue;
-        ctx.globalAlpha = alpha * 0.35;
+        if (r < 0.4) continue;
+        ctx.globalAlpha = alpha * 0.3;
         ctx.beginPath();
         ctx.fillStyle = glowColor;
-        ctx.arc(p.px, p.py, r * 2.4, 0, Math.PI * 2);
+        ctx.arc(p.px, p.py, r * 2.0, 0, Math.PI * 2);
         ctx.fill();
         ctx.globalAlpha = alpha;
         ctx.beginPath();
@@ -342,7 +332,14 @@
       ctx.globalAlpha = 1;
     }
 
+    // Cache colors – only refresh on theme change
+    let cachedColors = getColors();
+    let lastTheme = document.documentElement.getAttribute('data-theme');
+
     function draw() {
+      if (!running) return;
+      frame++;
+
       time += 0.009;
       smoothMX += (mouseX - smoothMX) * 0.07;
       smoothMY += (mouseY - smoothMY) * 0.07;
@@ -354,7 +351,13 @@
       const rotY = time * 0.28 + smoothMX * 0.4;
       const rotX = 0.42 + smoothMY * 0.25 + Math.sin(time * 0.22) * 0.05;
 
-      const c = getColors();
+      const theme = document.documentElement.getAttribute('data-theme');
+      if (theme !== lastTheme) {
+        lastTheme = theme;
+        cachedColors = getColors();
+      }
+      const c = cachedColors;
+
       const vS = stageVertex(formAmount);
       const eS = stageEdge(formAmount);
       const fS = stageFace(formAmount);
@@ -362,22 +365,22 @@
 
       ctx.clearRect(0, 0, W, H);
 
-      // --- Floor grid ---
-      const gN = 10, gS = 0.5;
+      // Floor grid – fewer lines
+      const gN = 7, gS = 0.55;
       ctx.lineWidth = 1;
       ctx.strokeStyle = c.grid;
+      ctx.beginPath();
       for (let i = -gN; i <= gN; i++) {
         const a1 = project(-gN * gS, 1.75, i * gS, rotY, rotX, formAmount);
         const b1 = project(gN * gS, 1.75, i * gS, rotY, rotX, formAmount);
         const a2 = project(i * gS, 1.75, -gN * gS, rotY, rotX, formAmount);
         const b2 = project(i * gS, 1.75, gN * gS, rotY, rotX, formAmount);
-        ctx.beginPath();
         ctx.moveTo(a1.x, a1.y); ctx.lineTo(b1.x, b1.y);
         ctx.moveTo(a2.x, a2.y); ctx.lineTo(b2.x, b2.y);
-        ctx.stroke();
       }
+      ctx.stroke();
 
-      // --- Axes ---
+      // Axes
       const O = project(0, 0, 0, rotY, rotX, formAmount);
       function drawAxis(tx, ty, tz, col, label) {
         const p = project(tx, ty, tz, rotY, rotX, formAmount);
@@ -399,7 +402,6 @@
       drawAxis(0, -2.0, 0, c.axisY, 'Y');
       drawAxis(0, 0, 2.0, c.axisZ, 'Z');
 
-      // --- Update positions with staggered stages ---
       updateParts(coreParts, vS);
       updateParts(shellParts, Math.min(1, vS * 1.15));
       updateParts(ringAParts, Math.min(1, vS * 1.25));
@@ -410,15 +412,12 @@
       projectParts(ringAParts, rotY, rotX, formAmount);
       projectParts(ringBParts, rotY, rotX, formAmount);
 
-      // --- Outer rings ---
       drawEdges(ringBParts, ringB.edges, c.ring2, eS * 0.45, 0.9);
       drawEdges(ringAParts, ringA.edges, c.ring, eS * 0.55, 1.0);
 
-      // --- Shell wireframe then faces ---
       drawEdges(shellParts, shell.edges, c.line, eS * 0.5, 0.9);
       drawFaces(shellParts, shell.faces, c.face, c.faceStroke, fS * 0.55, sS * 0.4);
 
-      // --- Core faces ---
       drawFaces(
         coreParts,
         core.faces,
@@ -429,7 +428,6 @@
       );
       drawEdges(coreParts, core.edges, c.lineStrong, eS * (1 - sS * 0.5), 1.15);
 
-      // --- Core energy glow ---
       if (sS > 0.15) {
         const coreCenter = project(0, 0, 0, rotY, rotX, formAmount);
         const pulse = 0.7 + Math.sin(time * 2.2) * 0.3;
@@ -448,14 +446,13 @@
         ctx.globalAlpha = 1;
       }
 
-      // --- Vertices ---
       const vertAlpha = vS * (1 - sS * 0.7);
       drawVertices(coreParts, c.point, c.glow, vertAlpha, 2.0);
       drawVertices(shellParts, c.point, c.glow, vertAlpha * 0.55, 1.4);
 
-      // --- Orbiting energy nodes ---
       if (eS > 0.1) {
-        orbits.forEach(o => {
+        for (let oi = 0; oi < orbits.length; oi++) {
+          const o = orbits[oi];
           const ang = time * o.speed + o.phase;
           const x = Math.cos(ang) * o.radius;
           const z = Math.sin(ang) * o.radius;
@@ -467,43 +464,51 @@
           ctx.fillStyle = c.orbit;
           ctx.arc(pr.x, pr.y, r, 0, Math.PI * 2);
           ctx.fill();
-          ctx.globalAlpha = ctx.globalAlpha * 0.4;
-          ctx.beginPath();
-          ctx.arc(pr.x, pr.y, r * 2.5, 0, Math.PI * 2);
-          ctx.fill();
-        });
+        }
         ctx.globalAlpha = 1;
       }
 
-      // --- Ambient dust ---
-      dust.forEach(p => {
-        const t = time * p.speed + p.phase;
-        const ax = p.x + Math.sin(t * 0.6) * 0.3;
-        const ay = p.y + Math.cos(t * 0.5) * 0.25;
-        const az = p.z + Math.sin(t * 0.4) * 0.3;
-        const pr = project(ax, ay, az, rotY, rotX, formAmount);
-        const r = 1.1 * pr.scale;
-        if (r < 0.25) return;
-        ctx.globalAlpha = 0.35 + Math.sin(t * 2) * 0.12;
-        ctx.beginPath();
-        ctx.fillStyle = c.ambient;
-        ctx.arc(pr.x, pr.y, r, 0, Math.PI * 2);
-        ctx.fill();
-      });
-      ctx.globalAlpha = 1;
+      // Dust every other frame
+      if (frame % 2 === 0) {
+        for (let di = 0; di < dust.length; di++) {
+          const p = dust[di];
+          const t = time * p.speed + p.phase;
+          const ax = p.x + Math.sin(t * 0.6) * 0.3;
+          const ay = p.y + Math.cos(t * 0.5) * 0.25;
+          const az = p.z + Math.sin(t * 0.4) * 0.3;
+          const pr = project(ax, ay, az, rotY, rotX, formAmount);
+          const r = 1.1 * pr.scale;
+          if (r < 0.25) continue;
+          ctx.globalAlpha = 0.35 + Math.sin(t * 2) * 0.12;
+          ctx.beginPath();
+          ctx.fillStyle = c.ambient;
+          ctx.arc(pr.x, pr.y, r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+      }
 
-      // HUD parallax layers
-      scene.querySelectorAll('[data-depth]').forEach(layer => {
-        const depth = parseFloat(layer.getAttribute('data-depth')) || 0.2;
-        layer.style.transform =
-          `translate3d(${(smoothMX * depth * 34).toFixed(1)}px, ${(smoothMY * depth * 22).toFixed(1)}px, 0)`;
-      });
+      // HUD parallax – throttle DOM writes
+      if (frame % 2 === 0) {
+        scene.querySelectorAll('[data-depth]').forEach(layer => {
+          const depth = parseFloat(layer.getAttribute('data-depth')) || 0.2;
+          layer.style.transform =
+            'translate3d(' + (smoothMX * depth * 34).toFixed(1) + 'px, ' +
+            (smoothMY * depth * 22).toFixed(1) + 'px, 0)';
+        });
+      }
 
-      if (!reducedMotion) requestAnimationFrame(draw);
+      if (!reducedMotion && running) requestAnimationFrame(draw);
     }
 
     resize();
     window.addEventListener('resize', resize, { passive: true });
+
+    // Pause when tab hidden
+    document.addEventListener('visibilitychange', () => {
+      running = !document.hidden;
+      if (running && !reducedMotion) requestAnimationFrame(draw);
+    });
 
     if (!isTouch && !reducedMotion) {
       window.addEventListener('mousemove', (e) => {

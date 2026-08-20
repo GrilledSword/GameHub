@@ -6,64 +6,54 @@ const SKILLS = [
   {
     id: "unity",
     icon: "🎮",
-    title: "Unity",
+    title: "Unity & C#",
     description: {
-      hu: "2D/3D játékfejlesztés, C# scripting",
-      en: "2D/3D game development, C# scripting"
+      // MÓDOSÍTVA: Godot és GDScript törölve, fókuszban a Unity és a tiszta C# kód
+      hu: "A fő fegyverem. Komplett játéklogikák, 2D/3D fizika és az elavult Unity függvények könyörtelen gyomlálása.",
+      en: "My main weapon. Full game logic, 2D/3D physics, and relentlessly purging deprecated Unity methods."
     }
   },
   {
-    id: "godot",
-    icon: "🦊",
-    title: "Godot",
-    description: {
-      hu: "Könnyűsúlyú, nyílt forráskódú motor",
-      en: "Lightweight, open-source engine"
-    }
-  },
-  {
-    id: "code",
-    icon: "💻",
-    title: "C# & GDScript",
-    description: {
-      hu: "Tiszta, karbantartható kód",
-      en: "Clean, maintainable code"
-    }
-  },
-  {
-    id: "art",
+    id: "blender",
     icon: "🎨",
-    title: {
-      hu: "Pixel & Digitális művészet",
-      en: "Pixel & Digital Art"
-    },
+    title: "Blender 3D",
     description: {
-      hu: "Karakterek, környezetek, UI",
-      en: "Characters, environments, UI"
+      // MÓDOSÍTVA: Hozzáadva a 3D modellezés és animáció
+      hu: "Low-poly és high-poly 3D modellezés, textúrázás, karakterek és környezetépítés a játékokhoz.",
+      en: "Low-poly and high-poly 3D modeling, texturing, characters, and environment design for games."
     }
   },
   {
-    id: "design",
-    icon: "🧠",
-    title: {
-      hu: "Játéktervezés",
-      en: "Game Design"
-    },
+    id: "kotlin",
+    icon: "📱",
+    title: "Kotlin & Android",
     description: {
-      hu: "Mechanikák, balance, történet",
-      en: "Mechanics, balance, narrative"
+      // MÓDOSÍTVA: Hozzáadva a natív Android app fejlesztés
+      hu: "Natív Android fejlesztés, autófejegység médialejátszók és egyedi mobilos felületek építése.",
+      en: "Native Android development, custom car head unit media players, and UI logic."
     }
   },
   {
-    id: "audio",
-    icon: "🔊",
+    id: "web",
+    icon: "💻",
+    title: "Web & Front-end",
+    description: {
+      // MÓDOSÍTVA: Hozzáadva a reszponzív webfejlesztés
+      hu: "HTML5, CSS3, JavaScript és GitHub. Tiszta, moduláris weboldalak reszponzív elrendezéssel.",
+      en: "HTML5, CSS3, JavaScript, and GitHub. Clean, modular websites with fully responsive layouts."
+    }
+  },
+  {
+    id: "hardware",
+    icon: "🔌",
     title: {
-      hu: "Hang & Zene",
-      en: "Sound & Music"
+      hu: "Hardver & Elektronika",
+      en: "Hardware & Electronics"
     },
     description: {
-      hu: "Atmoszféra és feedback tervezés",
-      en: "Atmosphere and feedback design"
+      // MÓDOSÍTVA: Hozzáadva a DIY forrasztás és audió építés
+      hu: "Forrasztópáka, tápok átalakítása, egyedi audió rendszerek és áramkörök hibaelhárítása.",
+      en: "Soldering, power supply modifications, custom audio systems, and circuit troubleshooting."
     }
   }
 ];

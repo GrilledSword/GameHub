@@ -4,86 +4,90 @@
    ============================================ */
 
 const translations = {
-  hu: {
+hu: {
+    // MÓDOSÍTVA: Rövid, letisztult nav elemek. A 'Készségek' helyett jöhet a profibb tech megnevezés.
     "nav.about": "Rólam",
     "nav.projects": "Projektek",
-    "nav.skills": "Készségek",
+    "nav.skills": "Tech Stack", 
     "nav.contact": "Kapcsolat",
 
-    "hero.badge": "Indie játékfejlesztő",
-    "hero.tagline": "Immerszív világokat építek bitről bitre.",
-    "hero.desc": "Egyedül dolgozom indie játékokon – ahol a kreativitás találkozik a precíz kóddal. Hamarosan itt mutatom be a projektjeimet.",
-    "hero.ctaProjects": "Projektek megtekintése",
-    "hero.ctaContact": "Kapcsolatfelvétel",
+    // MÓDOSÍTVA: Személyre szabott szövegek, fókuszban a Unity, Blender és a konkrét folytatások.
+    "hero.badge": "Indie Játékfejlesztő & 3D Artist",
+    "hero.tagline": "Klasszikusok öröksége, modern motorokban újraálmodva.",
+    "hero.desc": "Szóló fejlesztőként a kód és a dizájn határán egyensúlyozom. Jelenleg olyan projekteken pörgök Unity-ben és Blenderben, mint a Pekka Kana 2 és a Heavy Metal F.A.K.K. 2 folytatása.",
+    "hero.ctaProjects": "Munkáim",
+    "hero.ctaContact": "Dobj egy üzit",
 
     "about.label": "Rólam",
-    "about.title": "Ki áll a név mögött",
+    "about.title": "A kódok és modellek mögött", 
 
     "projects.label": "Portfólió",
-    "projects.title": "Aktuális & közelgő projektek",
-    "projects.desc": "Jelenleg az első játékok fejlesztésén dolgozom. Ez a rész hamarosan frissül!",
+    "projects.title": "Aktuális & közelgő megjelenések",
+    "projects.desc": "Unity projektek, amiken épp a lelkemet is kihajtom. A kódolás és a Blender sosem áll meg!",
 
-    "skills.label": "Szakértelem",
-    "skills.title": "Amivel dolgozom",
+    "skills.label": "Eszköztár",
+    "skills.title": "Amiket napi szinten nyúzok",
 
+    // MÓDOSÍTVA: Lazább, őszintébb kapcsolatfelvételi blokk.
     "contact.label": "Kapcsolat",
-    "contact.title": "Dolgozzunk együtt",
-    "contact.desc": "Van egy ötleted, vagy csak beszélgetnél? Írj bátran!",
+    "contact.title": "Lépjünk kapcsolatba",
+    "contact.desc": "Van egy jó ötleted, vagy csak elmondanád, hogy szar a kódom? Ne tartsd magadban!",
     "contact.name": "Név",
-    "contact.namePlaceholder": "A neved",
+    "contact.namePlaceholder": "Hogy hívnak?",
     "contact.email": "Email",
     "contact.emailPlaceholder": "te@pelda.hu",
     "contact.message": "Üzenet",
-    "contact.messagePlaceholder": "Az üzeneted...",
-    "contact.send": "Üzenet küldése",
-    "contact.infoTitle": "Elérhetőségek",
-    "contact.infoText": "A leggyorsabban emailben érhetsz el. Minden komoly megkeresésre válaszolok.",
-    "contact.success": "Köszönöm! Az üzeneted megérkezett (demo).",
-    "contact.error": "Kérlek töltsd ki az összes mezőt.",
+    "contact.messagePlaceholder": "Ide lőheted az üzenetet...",
+    "contact.send": "Küldés",
+    "contact.infoTitle": "Elérhetőség",
+    "contact.infoText": "Emailen érsz el a leggyorsabban. Ha nem egy nigériai herceg vagy, válaszolok is.",
+    "contact.success": "Köszi! Az üzenet landolt a szerveren.",
+    "contact.error": "Hé, töltsd ki az összes kibaszott mezőt!", 
 
     "footer.rights": "Minden jog fenntartva.",
-    "footer.made": "Készült szeretettel az indie játékok iránt."
+    "footer.made": "Készült kávéból, Unity-ből és rengeteg kitartásból."
   },
 
-  en: {
+ en: {
+    // MÓDOSÍTVA: Angol verzió, teljes mértékben igazítva a magyar lazaságához.
     "nav.about": "About",
     "nav.projects": "Projects",
-    "nav.skills": "Skills",
+    "nav.skills": "Tech Stack",
     "nav.contact": "Contact",
 
-    "hero.badge": "Indie Game Developer",
-    "hero.tagline": "Crafting immersive worlds, one bit at a time.",
-    "hero.desc": "I build indie games solo – where creativity meets precise code. My projects will appear here soon.",
-    "hero.ctaProjects": "View Projects",
-    "hero.ctaContact": "Get in Touch",
+    "hero.badge": "Indie Game Developer & 3D Artist",
+    "hero.tagline": "Reviving classics and forging new worlds.",
+    "hero.desc": "I'm a solo dev bringing old-school vibes to modern engines. Currently knee-deep in Blender and C#, working on sequels to classics like Pekka Kana 2 and Heavy Metal F.A.K.K. 2.",
+    "hero.ctaProjects": "See My Work",
+    "hero.ctaContact": "Ping Me",
 
     "about.label": "About",
-    "about.title": "Who's behind the name",
+    "about.title": "The dev behind the screen",
 
     "projects.label": "Portfolio",
-    "projects.title": "Current & upcoming projects",
-    "projects.desc": "I'm currently developing my first games. This section will be updated soon!",
+    "projects.title": "Current & upcoming releases",
+    "projects.desc": "My current Unity projects. The daily grind between Visual Studio and Blender never stops!",
 
-    "skills.label": "Expertise",
-    "skills.title": "What I work with",
+    "skills.label": "Toolkit",
+    "skills.title": "My daily drivers",
 
     "contact.label": "Contact",
-    "contact.title": "Let's work together",
-    "contact.desc": "Have an idea, or just want to chat? Feel free to reach out!",
+    "contact.title": "Let's connect",
+    "contact.desc": "Got an idea, a job offer, or just want to tell me my code sucks? Drop a line!",
     "contact.name": "Name",
-    "contact.namePlaceholder": "Your name",
+    "contact.namePlaceholder": "Who are you?",
     "contact.email": "Email",
     "contact.emailPlaceholder": "you@example.com",
     "contact.message": "Message",
-    "contact.messagePlaceholder": "Your message...",
-    "contact.send": "Send Message",
+    "contact.messagePlaceholder": "Shoot your message...",
+    "contact.send": "Send It",
     "contact.infoTitle": "Get in touch",
-    "contact.infoText": "Email is the fastest way to reach me. I reply to every serious inquiry.",
-    "contact.success": "Thank you! Your message has been received (demo).",
-    "contact.error": "Please fill in all fields.",
+    "contact.infoText": "Email is the fastest way to reach me. Unless you're trying to sell me SEO services, I'll definitely reply.",
+    "contact.success": "Thanks! Your message hit the server.",
+    "contact.error": "Hey, fill in all the damn fields!",
 
     "footer.rights": "All rights reserved.",
-    "footer.made": "Made with love for indie games."
+    "footer.made": "Powered by coffee, Unity, and sheer fucking will."
   }
 };
 
