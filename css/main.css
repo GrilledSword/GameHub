@@ -901,9 +901,10 @@ main {
 }
 
 .project-title {
-  font-size: 1.22rem;
+  font-size: 1.7rem;
   font-weight: 600;
   margin-bottom: 10px;
+  text-align: center;
 }
 
 .project-desc {
@@ -958,6 +959,49 @@ main {
   color: var(--accent-hover);
 }
 
+.project-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* Általános stílus mindkét akció gombnak (átvéve a .btn-download mintájára) */
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 1; /* Egyenlő arányban osztoznak a helyen, így szimmetrikusak lesznek */
+  padding: 10px 14px;
+  background: var(--border-glass, rgba(255, 255, 255, 0.03));
+  border: 1px solid var(--border-glass-strong, rgba(255, 255, 255, 0.1));
+  border-radius: 8px;
+  color: var(--text-primary, #fff);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(5px);
+  cursor: pointer;
+}
+
+.btn-action:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Opcionális finomhangolás ikonokhoz */
+.btn-action svg {
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.btn-action:hover svg {
+  opacity: 1;
+}
+
 /* ---------- Skills ---------- */
 .skills-grid {
   display: grid;
@@ -966,6 +1010,9 @@ main {
 }
 
 .skill-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   padding: 28px 20px;
   text-align: center;
   transition: all var(--transition);
@@ -980,21 +1027,73 @@ main {
 }
 
 .skill-icon {
-  font-size: 2rem;
+  font-size: 3rem;
   margin-bottom: 14px;
 }
 
+.skill-icon svg {
+  width: 48px;
+  height: 48px;
+  display: block;
+  margin: 0 auto;
+}
+
 .skill-card h4 {
-  font-size: 1rem;
+  font-size: 1.5rem !important;
   font-weight: 600;
   margin-bottom: 8px;
 }
 
 .skill-card p {
-  font-size: 0.82rem;
+  font-size: 0.85rem !important;
   color: var(--text-muted);
-  line-height: 1.5;
+  line-height: 2;
 }
+
+.skill-link {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: var(--accent);
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.skill-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+  padding-top: 20px;
+  width: 100%;
+}
+
+.btn-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--border-glass);
+  border: 1px solid var(--border-glass-strong);
+  border-radius: 8px;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(5px);
+}
+
+.btn-download:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-download svg {
+  stroke-width: 2.5;
+}
+
 
 /* ---------- Contact ---------- */
 .contact-wrapper {

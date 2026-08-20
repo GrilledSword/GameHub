@@ -20,28 +20,30 @@ const PROJECTS = [
       en: "Completed"
     },
     image: "img/project/mindscape/main.jpg",
-    link: "https://grilledsword.itch.io/mindscape",
+    downloadLink: "https://grilledsword.itch.io/mindscape",
+    watchHtml: null,
     year: 2026
   },
     {
-    id: "comming-soon",
+    id: null,
     title: {
-      hu: "Coming Soon",
-      en: "Coming Soon"
+      hu: null,
+      en: null,
     },
     description: {
-      hu: "",
-      en: ""
+      hu: null,
+      en: null,
     },
     tags: [""],
-    status: "inDevelopment",
+    status: null,
     statusText: {
-      hu: "Fejlesztés Alatt",
-      en: "In Development"
+      hu: null,
+      en: null,
     },
     image: null,
-    link: null,
-    year: 2027
+    downloadLink: null,
+    watchHtml: null,
+    year: null,
   }
 ];
 

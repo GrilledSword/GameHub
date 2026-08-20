@@ -7,39 +7,36 @@ const ABOUT = [
     id: "mission",
     icon: "🎯",
     title: {
-      // MÓDOSÍTVA: Céges duma lecserélve a valódi indie dev célra
-      hu: "A Küldetés",
-      en: "The Mission"
+      hu: "Küldetés",
+      en: "Mission"
     },
     description: {
-      hu: "Feltámasztani a gyermekkori klasszikusokat és olyan játékokat rakni össze Unity-ben, amikből nem spóroltuk ki a lelket.",
-      en: "Reviving childhood classics and crafting Unity games that don't lack soul or nostalgia."
+      hu: "Minőségi indie játékok és szoftveres megoldások fejlesztése, amelyek ötvözik a retro hangulatot a modern technológiával.",
+      en: "Developing quality indie games and software solutions that combine retro aesthetics with modern technology."
     }
   },
   {
     id: "craft",
     icon: "🛠️",
     title: {
-      // MÓDOSÍTVA: Szoftver + Hardver megközelítés
-      hu: "Szoftver & Forrasztópáka",
-      en: "Software & Hardware"
+      hu: "Fejlesztés & Design",
+      en: "Development & Design"
     },
     description: {
-      hu: "A C# kódok írása és a Blender 3D modellezés mellett a hardveres oldalt sem félek megfogni, ha egyedi audióról vagy áramkörökről van szó.",
-      en: "Beyond writing C# code and modeling in Blender, I enjoy dirtying my hands with soldering and custom hardware builds."
+      hu: "A tiszta kódírás és a 3D modellezés harmonikus egyensúlya a projektek minden fázisában.",
+      en: "A balanced approach combining clean code practices and 3D modeling across all project phases."
     }
   },
   {
     id: "mindset",
     icon: "⚡",
     title: {
-      // MÓDOSÍTVA: Tiszta, lényegre törő szemlélet
-      hu: "A Hozzáállás",
-      en: "The Mindset"
+      hu: "Szemléletmód",
+      en: "Mindset"
     },
     description: {
-      hu: "Zéró céges mellébeszélés, moduláris és átlátható kódok, éjszakába nyúló Blender session-ök és végtelen mennyiségű kávé.",
-      en: "Zero corporate fluff, modular and clean code, late-night Blender sessions, and endless coffee."
+      hu: "Strukturált felépítés, moduláris szemlélet és folyamatos szakmai fejlődés.",
+      en: "Structured architecture, modular design, and continuous professional growth."
     }
   }
 ];

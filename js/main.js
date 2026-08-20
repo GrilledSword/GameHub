@@ -1,7 +1,6 @@
 /* ============================================
    OverBitCore – Main JavaScript
    Theme, Renderers, Interactions
-   (3D scene lives in parallax.js)
    ============================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -189,17 +188,28 @@ function renderSkills() {
 
   grid.innerHTML = window.SKILLS.map(skill => {
     const title = typeof skill.title === 'object'
-      ? (skill.title[lang] || skill.title.en)
+      ? (skill.title[lang] || skill.title.en || 'Untitled')
       : skill.title;
     const desc = typeof skill.description === 'object'
-      ? (skill.description[lang] || skill.description.en)
+      ? (skill.description[lang] || skill.description.en || '')
       : skill.description;
+    
+    // A gomb logikája: ha van link, akkor kap egy menő osztályt és egy ikon helyét
+    const linkHtml = skill.link 
+      ? `<a href="${skill.link}" target="_blank" class="btn-download">
+           <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+           <span>${lang === 'hu' ? 'Letöltés' : 'Download'}</span>
+         </a>` 
+      : '';
 
     return `
       <div class="skill-card glass liquid-glass">
         <div class="skill-icon">${skill.icon || ''}</div>
         <h4>${title}</h4>
         <p>${desc}</p>
+        <div class="skill-footer">
+          ${linkHtml}
+        </div>
       </div>
     `;
   }).join('');
@@ -219,11 +229,23 @@ function renderProjects() {
     const statusClass = p.status || 'dev';
     const placeholderClass = index % 3 === 1 ? 'alt' : (index % 3 === 2 ? 'alt2' : '');
     const tagsHtml = (p.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
+    
     const imageHtml = p.image
       ? `<img src="${p.image}" alt="${title}" loading="lazy">`
       : `<span class="placeholder-text">${p.status === 'released' ? 'Released' : 'Coming Soon'}</span>`;
-    const linkHtml = p.link
-      ? `<a href="${p.link}" class="project-link" target="_blank" rel="noopener">→ ${lang === 'hu' ? 'Megnyitás' : 'Open'}</a>`
+
+    const downloadHtml = p.downloadLink
+      ? `<a href="${p.downloadLink}" target="_blank" class="btn-action download">
+           <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+           <span>${lang === 'hu' ? 'Letöltés' : 'Download'}</span>
+         </a>`
+      : '';
+
+    const watchHtml = p.watchHtml
+      ? `<a href="${p.watchHtml}" target="_blank" class="btn-action watch">
+           <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M23 12l-2.44-2.44C16.94 5.56 12.56 5.56 8.56 9.56L6.12 12l2.44 2.44c4 4 8.38 4 12.44 0L23 12z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+           <span>${lang === 'hu' ? 'Nézd meg' : 'Watch'}</span>
+         </a>`
       : '';
 
     return `
@@ -239,7 +261,10 @@ function renderProjects() {
             <span class="status-dot ${statusClass}"></span>
             <span>${statusText}</span>
           </div>
-          ${linkHtml}
+          <div class="project-actions">
+            ${downloadHtml}
+            ${watchHtml}
+          </div>
         </div>
       </article>
     `;

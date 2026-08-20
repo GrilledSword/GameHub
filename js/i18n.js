@@ -5,89 +5,85 @@
 
 const translations = {
 hu: {
-    // MÓDOSÍTVA: Rövid, letisztult nav elemek. A 'Készségek' helyett jöhet a profibb tech megnevezés.
     "nav.about": "Rólam",
     "nav.projects": "Projektek",
     "nav.skills": "Tech Stack", 
     "nav.contact": "Kapcsolat",
 
-    // MÓDOSÍTVA: Személyre szabott szövegek, fókuszban a Unity, Blender és a konkrét folytatások.
     "hero.badge": "Indie Játékfejlesztő & 3D Artist",
-    "hero.tagline": "Klasszikusok öröksége, modern motorokban újraálmodva.",
-    "hero.desc": "Szóló fejlesztőként a kód és a dizájn határán egyensúlyozom. Jelenleg olyan projekteken pörgök Unity-ben és Blenderben, mint a Pekka Kana 2 és a Heavy Metal F.A.K.K. 2 folytatása.",
+    "hero.tagline": "Klasszikusok modern motorokban, szenvedéllyel építve.",
+    "hero.desc": "Önálló fejlesztőként a programozás és a vizuális dizájn határán dolgozom. Célom, hogy maradandó élményeket hozzak létre modern technológiákkal.",
     "hero.ctaProjects": "Munkáim",
-    "hero.ctaContact": "Dobj egy üzit",
+    "hero.ctaContact": "Kapcsolat",
 
     "about.label": "Rólam",
-    "about.title": "A kódok és modellek mögött", 
+    "about.title": "A fejlesztő a képernyő mögött", 
 
     "projects.label": "Portfólió",
-    "projects.title": "Aktuális & közelgő megjelenések",
-    "projects.desc": "Unity projektek, amiken épp a lelkemet is kihajtom. A kódolás és a Blender sosem áll meg!",
+    "projects.title": "Kiemelt projektek",
+    "projects.desc": "Eddigi munkáim és fejlesztés alatt álló játékaim gyűjteménye.",
 
-    "skills.label": "Eszköztár",
-    "skills.title": "Amiket napi szinten nyúzok",
+    "skills.label": "Tech Stack",
+    "skills.title": "Eszközök és technológiák",
 
-    // MÓDOSÍTVA: Lazább, őszintébb kapcsolatfelvételi blokk.
     "contact.label": "Kapcsolat",
     "contact.title": "Lépjünk kapcsolatba",
-    "contact.desc": "Van egy jó ötleted, vagy csak elmondanád, hogy szar a kódom? Ne tartsd magadban!",
+    "contact.desc": "Keress bátran kérdésekkel, projektekkel vagy együttműködési lehetőségekkel kapcsolatban.",
     "contact.name": "Név",
-    "contact.namePlaceholder": "Hogy hívnak?",
+    "contact.namePlaceholder": "Az Ön neve",
     "contact.email": "Email",
-    "contact.emailPlaceholder": "te@pelda.hu",
+    "contact.emailPlaceholder": "pelda@email.hu",
     "contact.message": "Üzenet",
-    "contact.messagePlaceholder": "Ide lőheted az üzenetet...",
+    "contact.messagePlaceholder": "Írja ide az üzenetet...",
     "contact.send": "Küldés",
-    "contact.infoTitle": "Elérhetőség",
-    "contact.infoText": "Emailen érsz el a leggyorsabban. Ha nem egy nigériai herceg vagy, válaszolok is.",
-    "contact.success": "Köszi! Az üzenet landolt a szerveren.",
-    "contact.error": "Hé, töltsd ki az összes kibaszott mezőt!", 
+    "contact.infoTitle": "Elérhetőségek",
+    "contact.infoText": "Az alábbi űrlapon vagy közvetlen e-mailben is felveheti velem a kapcsolatot.",
+    "contact.success": "Köszönöm! Az üzenet sikeresen elküldve.",
+    "contact.error": "Kérjük, töltsön ki minden mezőt helyesen.", 
 
     "footer.rights": "Minden jog fenntartva.",
-    "footer.made": "Készült kávéból, Unity-ből és rengeteg kitartásból."
+    "footer.made": "Modern webes technológiákkal és gondossággal készítve."
   },
 
- en: {
-    // MÓDOSÍTVA: Angol verzió, teljes mértékben igazítva a magyar lazaságához.
+  en: {
     "nav.about": "About",
     "nav.projects": "Projects",
     "nav.skills": "Tech Stack",
     "nav.contact": "Contact",
 
     "hero.badge": "Indie Game Developer & 3D Artist",
-    "hero.tagline": "Reviving classics and forging new worlds.",
-    "hero.desc": "I'm a solo dev bringing old-school vibes to modern engines. Currently knee-deep in Blender and C#, working on sequels to classics like Pekka Kana 2 and Heavy Metal F.A.K.K. 2.",
-    "hero.ctaProjects": "See My Work",
-    "hero.ctaContact": "Ping Me",
+    "hero.tagline": "Reviving classics and building new worlds.",
+    "hero.desc": "Solo developer working at the intersection of programming and visual design. Focused on creating engaging experiences with modern engines.",
+    "hero.ctaProjects": "View Projects",
+    "hero.ctaContact": "Get in Touch",
 
     "about.label": "About",
-    "about.title": "The dev behind the screen",
+    "about.title": "The developer behind the screen",
 
     "projects.label": "Portfolio",
-    "projects.title": "Current & upcoming releases",
-    "projects.desc": "My current Unity projects. The daily grind between Visual Studio and Blender never stops!",
+    "projects.title": "Featured Projects",
+    "projects.desc": "A collection of my past work and games currently in development.",
 
-    "skills.label": "Toolkit",
-    "skills.title": "My daily drivers",
+    "skills.label": "Tech Stack",
+    "skills.title": "Tools and Technologies",
 
     "contact.label": "Contact",
-    "contact.title": "Let's connect",
-    "contact.desc": "Got an idea, a job offer, or just want to tell me my code sucks? Drop a line!",
+    "contact.title": "Let's Connect",
+    "contact.desc": "Feel free to reach out for questions, projects, or collaboration opportunities.",
     "contact.name": "Name",
-    "contact.namePlaceholder": "Who are you?",
+    "contact.namePlaceholder": "Your Name",
     "contact.email": "Email",
     "contact.emailPlaceholder": "you@example.com",
     "contact.message": "Message",
-    "contact.messagePlaceholder": "Shoot your message...",
-    "contact.send": "Send It",
-    "contact.infoTitle": "Get in touch",
-    "contact.infoText": "Email is the fastest way to reach me. Unless you're trying to sell me SEO services, I'll definitely reply.",
-    "contact.success": "Thanks! Your message hit the server.",
-    "contact.error": "Hey, fill in all the damn fields!",
+    "contact.messagePlaceholder": "Type your message here...",
+    "contact.send": "Send Message",
+    "contact.infoTitle": "Contact Info",
+    "contact.infoText": "You can reach out using the form or directly via email.",
+    "contact.success": "Thank you! Your message has been sent.",
+    "contact.error": "Please fill in all required fields correctly.",
 
     "footer.rights": "All rights reserved.",
-    "footer.made": "Powered by coffee, Unity, and sheer fucking will."
+    "footer.made": "Built with modern web standards and care."
   }
 };
 
