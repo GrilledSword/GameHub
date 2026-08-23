@@ -11,7 +11,7 @@ const PROJECTS = [
     },
     description: {
       hu: "Ebben az egyjátékos anomália-vadász élményben folyamatosan változó szobák sorát fedezheted fel, ahol mindegyik finom torzulásokat rejt. Tárgyak mozdulnak el, tűnnek el, vagy bukkannak fel ott, ahová nem valók — de nem minden anomália látható azonnal. A feladatod? Találd meg őket, mielőtt a valóság összeomlik.",
-      en: "In this single-player anomaly-hunting experience, you'll explore an ever-shifting series of rooms, each hiding subtle distortions. Objects shift, vanish, or appear where they don’t belong—but not all anomalies are immediately visible. Your task? Find them before reality collapses."
+      en: "In this single-player anomaly-hunting experience, you'll explore an ever-shifting series of rooms, each hiding subtle distortions. Objects shift, vanish, or appear where they don't belong—but not all anomalies are immediately visible. Your task? Find them before reality collapses."
     },
     tags: ["Unity", "3D / Puzzle", "Horror"],
     status: "completed",
@@ -24,68 +24,68 @@ const PROJECTS = [
     watchHtml: null,
     year: 2026
   },
-    {
+  {
     id: "project1",
     title: {
       hu: "Project: Pale Flame",
-      en: "Project: Pale Flame",
+      en: "Project: Pale Flame"
     },
     description: {
-      hu: null,
-      en: null,
+      hu: "Egy kemény, módszeres harcra épülő akció-RPG egy romba dőlt birodalom romjai között. Minden halál tanulság, minden győzelem vérbe kerül. Fedezd fel az összefüggő világot, szembesülj istenné torzult lényekkel, és döntsd el a világ sorsát: helyreállítod a régi rendet, vagy hamujából újat építesz. Készülj fel rá — sokszor fogsz halni.",
+      en: "A punishing action-RPG set among the ruins of a fallen empire, built on deliberate, methodical combat. Every death is a lesson, every victory paid in blood. Explore an interconnected world, face beings twisted into gods, and decide the fate of the world: restore the old order, or build a new one from the ashes. Prepare to die—often."
     },
-    tags: [""],
+    tags: ["Unity", "3D / Action-RPG", "Souls-Like", "Dark Fantasy"],
     status: "InDevelopment",
     statusText: {
       hu: "Fejlesztés Alatt",
-      en: "In Development",
+      en: "In Development"
     },
     image: null,
     downloadLink: null,
     watchHtml: null,
-    year: 2026,
+    year: 2026
   },
-{
+  {
     id: "project2",
     title: {
       hu: "Project: Corridor Zero",
-      en: "Project: Corridor Zero",
+      en: "Project: Corridor Zero"
     },
     description: {
-      hu: null,
-      en: null,
+      hu: "Éjszakai műszak egy földalatti kutatóbázison, ahol a folyosók sosem olyanok, mint emlékszel rá. Figyeld a részleteket: ha bármi másképp néz ki, mint az előző körben — fordulj vissza és zárd be magad mögött az ajtót. Ha nem veszed észre időben az anomáliát... a létesítmény észrevesz téged.",
+      en: "Night shift in an underground research facility where the corridors are never quite how you remember them. Watch the details: if anything seems off from the previous loop—turn back and seal the door behind you. Fail to spot the anomaly in time... and the facility will notice you."
     },
-    tags: [""],
+    tags: ["Unity", "3D / Horror", "Anomaly Hunting", "Loop-Based"],
     status: "InDevelopment",
     statusText: {
       hu: "Fejlesztés Alatt",
-      en: "In Development",
+      en: "In Development"
     },
     image: null,
     downloadLink: null,
     watchHtml: null,
-    year: 2026,
+    year: 2026
   },
-{
+  {
     id: "project3",
     title: {
       hu: "Project: Kimi no Shirayuki",
-      en: "Project: Kimi no Shirayuki",
+      en: "Project: Kimi no Shirayuki"
     },
     description: {
-      hu: null,
-      en: null,
+      hu: "Átöltöztél egy új iskolába, és ő az első, aki mosolyog rád. Shirayuki tökéletes — kedves, szép, gondoskodó. Talán... túl gondoskodó. Amikor észreveszed, hogy a naplód lapjai eltűntek, a telefonod figyelve van, és a barátaid sorban tűnnek el, már késő. Rejtőzz el, oldj meg rejtvényeket, és menekülj — miközben végig hallod a hangját a folyosón. Nem a szörnytől menekülsz. Hanem valakitől, aki azt hiszi, szeretsz.",
+      en: "You've transferred to a new school, and she's the first one to smile at you. Shirayuki is perfect—kind, beautiful, caring. Maybe... too caring. When pages go missing from your diary, your phone feels watched, and your friends start disappearing one by one, it's already too late. Hide, solve puzzles, and escape—while her voice echoes through the halls. You're not running from a monster. You're running from someone who believes she loves you."
     },
-    tags: [""],
+    tags: ["Unity", "3D / Horror", "Psychological", "Escape"],
     status: "InDevelopment",
     statusText: {
       hu: "Fejlesztés Alatt",
-      en: "In Development",
+      en: "In Development"
     },
     image: null,
     downloadLink: null,
     watchHtml: null,
-    year: 2026,
+    year: 2026
   }
 ];
 
