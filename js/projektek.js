@@ -35,7 +35,7 @@ const PROJECTS = [
       en: null,
     },
     tags: [""],
-    status: inDevelopment,
+    status: "InDevelopment",
     statusText: {
       hu: "Fejlesztés Alatt",
       en: "In Development",
@@ -56,7 +56,7 @@ const PROJECTS = [
       en: null,
     },
     tags: [""],
-    status: inDevelopment,
+    status: "InDevelopment",
     statusText: {
       hu: "Fejlesztés Alatt",
       en: "In Development",
@@ -77,7 +77,7 @@ const PROJECTS = [
       en: null,
     },
     tags: [""],
-    status: "inDevelopment",
+    status: "InDevelopment",
     statusText: {
       hu: "Fejlesztés Alatt",
       en: "In Development",
