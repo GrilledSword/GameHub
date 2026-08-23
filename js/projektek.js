@@ -25,25 +25,67 @@ const PROJECTS = [
     year: 2026
   },
     {
-    id: null,
+    id: "project1",
     title: {
-      hu: null,
-      en: null,
+      hu: "Project: Pale Flame",
+      en: "Project: Pale Flame",
     },
     description: {
       hu: null,
       en: null,
     },
     tags: [""],
-    status: null,
+    status: inDevelopment,
     statusText: {
-      hu: null,
-      en: null,
+      hu: "Fejlesztés Alatt",
+      en: "In Development",
     },
     image: null,
     downloadLink: null,
     watchHtml: null,
-    year: null,
+    year: 2026,
+  },
+{
+    id: "project2",
+    title: {
+      hu: "Project: Corridor Zero",
+      en: "Project: Corridor Zero",
+    },
+    description: {
+      hu: null,
+      en: null,
+    },
+    tags: [""],
+    status: inDevelopment,
+    statusText: {
+      hu: "Fejlesztés Alatt",
+      en: "In Development",
+    },
+    image: null,
+    downloadLink: null,
+    watchHtml: null,
+    year: 2026,
+  },
+{
+    id: "project3",
+    title: {
+      hu: "Project: Kimi no Shirayuki",
+      en: "Project: Kimi no Shirayuki",
+    },
+    description: {
+      hu: null,
+      en: null,
+    },
+    tags: [""],
+    status: "inDevelopment",
+    statusText: {
+      hu: "Fejlesztés Alatt",
+      en: "In Development",
+    },
+    image: null,
+    downloadLink: null,
+    watchHtml: null,
+    year: 2026,
   }
 ];
 
