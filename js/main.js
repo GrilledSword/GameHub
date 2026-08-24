@@ -76,28 +76,64 @@ document.addEventListener('DOMContentLoaded', () => {
   const formStatus = document.getElementById('formStatus');
 
   if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const name = contactForm.querySelector('#name').value.trim();
-      const email = contactForm.querySelector('#email').value.trim();
-      const message = contactForm.querySelector('#message').value.trim();
-      const lang = document.documentElement.lang || 'hu';
-      const t = window.OverBitI18n?.translations?.[lang] || {};
+  contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-      if (!name || !email || !message) {
-        formStatus.hidden = false;
-        formStatus.className = 'form-status error';
-        formStatus.textContent = t['contact.error'] || 'Please fill in all fields.';
-        return;
-      }
+    const name = contactForm.querySelector('#name').value.trim();
+    const email = contactForm.querySelector('#email').value.trim();
+    const message = contactForm.querySelector('#message').value.trim();
+    const lang = document.documentElement.lang || 'hu';
+    const t = window.OverBitI18n?.translations?.[lang] || {};
 
+    if (!name || !email || !message) {
       formStatus.hidden = false;
-      formStatus.className = 'form-status success';
-      formStatus.textContent = t['contact.success'] || 'Thank you! Message sent (demo).';
-      contactForm.reset();
-      setTimeout(() => { formStatus.hidden = true; }, 5000);
-    });
-  }
+      formStatus.className = 'form-status error';
+      formStatus.textContent = t['contact.error'] || 'Please fill in all fields.';
+      return;
+    }
+
+    // Loading állapot
+    const submitBtn = contactForm.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = lang === 'hu' ? 'Küldés...' : 'Sending...';
+
+    try {
+      const res = await fetch('https://formspree.io/f/meajwnnb', {   // ← ide a te Formspree ID-d
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          message,
+          _subject: `OverBitCore – Üzenet: ${name}`
+        })
+      });
+
+      if (res.ok) {
+        formStatus.hidden = false;
+        formStatus.className = 'form-status success';
+        formStatus.textContent = t['contact.success'] || 'Thank you! Message sent.';
+        contactForm.reset();
+      } else {
+        throw new Error('Send failed');
+      }
+    } catch (err) {
+      formStatus.hidden = false;
+      formStatus.className = 'form-status error';
+      formStatus.textContent = lang === 'hu' 
+        ? 'Hiba történt a küldés során. Próbáld újra később.' 
+        : 'Something went wrong. Please try again later.';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalText;
+      setTimeout(() => { formStatus.hidden = true; }, 6000);
+    }
+  });
+}
 
   if ('IntersectionObserver' in window) {
     const observer = new IntersectionObserver((entries) => {
