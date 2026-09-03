@@ -40,7 +40,7 @@ const PROJECTS = [
       hu: "Fejlesztés Alatt",
       en: "In Development"
     },
-    image: null,
+    image: "img/project/paleFlame.png",
     downloadLink: null,
     watchHtml: null,
     year: 2026
@@ -61,7 +61,7 @@ const PROJECTS = [
       hu: "Fejlesztés Alatt",
       en: "In Development"
     },
-    image: null,
+    image: "img/project/corridorZero.png",
     downloadLink: null,
     watchHtml: null,
     year: 2026
@@ -82,7 +82,7 @@ const PROJECTS = [
       hu: "Fejlesztés Alatt",
       en: "In Development"
     },
-    image: null,
+    image: "img/project/kimiNoShirayuki.png",
     downloadLink: null,
     watchHtml: null,
     year: 2026
