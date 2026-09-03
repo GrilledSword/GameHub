@@ -86,6 +86,27 @@ const PROJECTS = [
     downloadLink: null,
     watchHtml: null,
     year: 2026
+  },
+  {
+    id: "determination",
+    title: {
+      hu: "Determination",
+      en: "Determination"
+    },
+    description: {
+      hu: "",
+      en: ""
+    },
+    tags: ["Unity", "2D"],
+    status: "InDevelopment",
+    statusText: {
+      hu: "Fejlesztés Alatt",
+      en: "In Development"
+    },
+    image: "img/project/determination.png",
+    downloadLink: null,
+    watchHtml: null,
+    year: 2026
   }
 ];
 
