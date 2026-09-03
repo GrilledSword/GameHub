@@ -25,10 +25,10 @@ const PROJECTS = [
     year: 2026
   },
   {
-    id: "project1",
+    id: "paleFlame",
     title: {
-      hu: "Project: Pale Flame",
-      en: "Project: Pale Flame"
+      hu: "Pale Flame",
+      en: "Pale Flame"
     },
     description: {
       hu: "Egy kemény, módszeres harcra épülő akció-RPG egy romba dőlt birodalom romjai között. Minden halál tanulság, minden győzelem vérbe kerül. Fedezd fel az összefüggő világot, szembesülj istenné torzult lényekkel, és döntsd el a világ sorsát: helyreállítod a régi rendet, vagy hamujából újat építesz. Készülj fel rá — sokszor fogsz halni.",
@@ -46,10 +46,10 @@ const PROJECTS = [
     year: 2026
   },
   {
-    id: "project2",
+    id: "corridorZero",
     title: {
-      hu: "Project: Corridor Zero",
-      en: "Project: Corridor Zero"
+      hu: "Corridor Zero",
+      en: "Corridor Zero"
     },
     description: {
       hu: "Éjszakai műszak egy földalatti kutatóbázison, ahol a folyosók sosem olyanok, mint emlékszel rá. Figyeld a részleteket: ha bármi másképp néz ki, mint az előző körben — fordulj vissza és zárd be magad mögött az ajtót. Ha nem veszed észre időben az anomáliát... a létesítmény észrevesz téged.",
@@ -67,10 +67,10 @@ const PROJECTS = [
     year: 2026
   },
   {
-    id: "project3",
+    id: "kimiNoShirayuki",
     title: {
-      hu: "Project: Kimi no Shirayuki",
-      en: "Project: Kimi no Shirayuki"
+      hu: "Kimi no Shirayuki",
+      en: "Kimi no Shirayuki"
     },
     description: {
       hu: "Átöltöztél egy új iskolába, és ő az első, aki mosolyog rád. Shirayuki tökéletes — kedves, szép, gondoskodó. Talán... túl gondoskodó. Amikor észreveszed, hogy a naplód lapjai eltűntek, a telefonod figyelve van, és a barátaid sorban tűnnek el, már késő. Rejtőzz el, oldj meg rejtvényeket, és menekülj — miközben végig hallod a hangját a folyosón. Nem a szörnytől menekülsz. Hanem valakitől, aki azt hiszi, szeretsz.",
