@@ -107,6 +107,27 @@ const PROJECTS = [
     downloadLink: null,
     watchHtml: null,
     year: 2026
+  },
+  {
+    id: "cluckQuest",
+    title: {
+      hu: "Cluck Quest",
+      en: "Cluck Quest"
+    },
+    description: {
+      hu: "",
+      en: ""
+    },
+    tags: ["Unity", "2D / Puzzle", "Platformer"],
+    status: "in-development",
+    statusText: {
+      hu: "Fejlesztés Alatt",
+      en: "In Development"
+    },
+    image: "img/project/cluckQuest.png"
+    downloadLink: null,
+    watchHtml: null,
+    year: 2026
   }
 ];
 
