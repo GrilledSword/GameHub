@@ -94,12 +94,8 @@ const PROJECTS = [
       en: "Determination"
     },
     description: {
-      hu: "Egy retro 2D-s RPG, ahol minden döntésed nyomot hagy.
-
-A régi legenda szerint aki felmászik a Fekete Csúcsra, sosem tér vissza. ",
-      en: "A retro 2D RPG carved by every choice you leave behind.
-
-Old tales whisper that those who dare scale the Black Peak are swallowed by the dark, never to return."
+      hu: "Egy retro 2D-s RPG, ahol minden döntésed nyomot hagy. A régi legenda szerint aki felmászik a Fekete Csúcsra, sosem tér vissza. ",
+      en: "A retro 2D RPG carved by every choice you leave behind. Old tales whisper that those who dare scale the Black Peak are swallowed by the dark, never to return."
     },
     tags: ["Unity", "2D"],
     status: "InDevelopment",
