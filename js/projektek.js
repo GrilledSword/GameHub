@@ -124,7 +124,7 @@ const PROJECTS = [
       hu: "Fejlesztés Alatt",
       en: "In Development"
     },
-    image: "img/project/cluckQuest.png"
+    image: "img/project/cluckQuest.png",
     downloadLink: null,
     watchHtml: null,
     year: 2026
